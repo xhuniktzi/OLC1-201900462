@@ -1,0 +1,72 @@
+// este es un comentario de una linea
+/*
+	Este comentario contiene varios caracteres
+esta distribuidio en varias lineas
+*/
+
+inicio
+	33 + 54.2
+	20 - 10
+	40*10
+	50     / 2
+	30 potencia 3
+	10 mod 5
+"soy un string"
+'c'
+_sdas_
+zzz
+
+(5 + 3 /34 potencia 2);,,,,
+ingresar _var1_ como Boolean con_valor Verdadero;
+ingresar _var1_ como Boolean con_valor Falso;
+
+_var1_ -> 54;
+_var1_, _var2_ -> 45;
+
+si 5 > 4 entonces
+	33+40
+o_si 3< 5 entonces
+_sdf_ -> 4
+de_lo_contrario
+"sdsads"
+fin_si
+
+segun "sdsa" hacer
+"sadas"  entonces
+	'c'
+
+?
+
+fin_segun
+
+para "sdasdsa" -> 1 hasta 0 hacer
+
+fin_para
+
+para "sdasdsa" -> 1 hasta 0 con incremental 3 hacer
+
+fin_para
+
+mientras d > 5 hacer
+fin_mientras
+
+repetir
+
+hasta_que 4 > 4
+
+retornar 4;
+
+metodo d
+fin_metodo
+
+metodo dfs con_parametros(avc Numero,dfd Cadena,asd Boolean)
+fin_metodo
+
+funcion
+fin_funcion
+
+ejecutar sfdas();
+
+imprimir "sdasda";
+imprimir_nl "sdada";
+fin

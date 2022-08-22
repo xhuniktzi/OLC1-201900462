@@ -1,0 +1,109 @@
+package olc1.project1.analizadores;
+
+import java_cup.runtime.Symbol;
+import java.util.LinkedList;
+import olc1.project1.instructions.Statement;
+
+parser code 
+{:
+     public LinkedList<Statement> AST;
+
+    public void syntax_error(Symbol s){ 
+            System.err.println("Error Sintáctico en la linea: " + (s.left) + " y columna : " + s.right + ". No se esperaba este token: " + s.value + "."); 
+    } 
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
+            System.err.println("Error síntactico irrecuperable en la línea " + (s.left) + " y columna " + s.right + ". Componente " + s.value + " no reconocido."); 
+    }  
+  
+:}
+
+terminal String MAJOR, MINOR, MAJOREQUALS, MINOREQUALS, EQUALS;
+terminal String COMMA, DOTCOMMA, OPENQUESTION, CLOSEQUESTION;
+terminal String ADD, SUBSTRACT, MULTIPLY, DIVISION;
+terminal String POW, MODULE;
+terminal String PARSTART, PAREND;
+terminal String START, END;
+terminal String ARROW;
+terminal String ENTER, AS, WITH_VALUE;
+terminal String IF, THEN, ENDIF, ELSE, ELIF;
+terminal String SWITCH, DO, ENDSWITCH;
+terminal String FOR, TO, ENDFOR, WITHINCREMENTAL;
+terminal String WHILE, ENDWHILE;
+terminal String REPEAT, ENDREPEAT;
+terminal String RETURN, DEFPROCEDURE, ENDPROCEDURE, PARAMS;
+terminal String FUNCTION, ENDFUNCTION, EXEC;
+terminal String PRINT, PRINTLN;
+terminal String NUM, STR, BOOLEAN, CHAR;
+terminal String TYPEDEF, ID, FUNCID;
+
+
+non terminal ini;
+
+non terminal statements;
+non terminal statement;
+non terminal name_list;
+non terminal expr;
+non terminal params_list;
+non terminal args_list;
+non terminal numeric;
+non terminal logical;
+
+precedence left ADD, SUBSTRACT;
+precedence left MULTIPLY, DIVISION;
+precedence left POW, MODULE;
+
+start with ini;
+
+ini ::= START statements END;
+
+statements ::= statements statement
+| statement;
+
+statement ::= ENTER name_list AS TYPEDEF WITH_VALUE expr DOTCOMMA
+| name_list ARROW expr DOTCOMMA
+| IF logical THEN statements ENDIF
+| IF logical THEN statements ELSE statements ENDIF
+| FOR ID ARROW numeric TO numeric DO statements ENDFOR
+| FOR ID ARROW numeric TO numeric WITHINCREMENTAL numeric DO statements ENDFOR
+| WHILE logical DO statements ENDWHILE
+| REPEAT statements ENDREPEAT logical
+| RETURN expr DOTCOMMA
+| DEFPROCEDURE FUNCID statements ENDPROCEDURE
+| DEFPROCEDURE FUNCID PARAMS PARSTART params_list PAREND statements ENDPROCEDURE
+| FUNCTION FUNCID TYPEDEF statements ENDFUNCTION
+| FUNCTION FUNCID TYPEDEF PARAMS PARSTART params_list PAREND statements ENDFUNCTION
+| EXEC FUNCID PARSTART PAREND
+| EXEC FUNCID PARSTART args_list PAREND
+| PRINT STR
+| PRINTLN STR;
+
+params_list ::= ID TYPEDEF COMMA params_list
+| ID TYPEDEF;
+
+args_list ::= ID COMMA args_list
+| ID;
+
+expr ::= numeric
+| logical
+| STR
+| CHAR
+| BOOLEAN;
+
+name_list ::= ID COMMA name_list
+| ID;
+
+numeric ::= SUBSTRACT numeric
+| numeric ADD numeric
+| numeric SUBSTRACT numeric
+| numeric MULTIPLY numeric
+| numeric DIVISION numeric
+| numeric POW numeric
+| numeric MODULE numeric
+| PARSTART numeric PAREND
+| NUM;
+
+logical ::= numeric MAJOR numeric
+| numeric MINOR numeric
+| numeric MAJOREQUALS numeric
+| numeric MINOREQUALS numeric
+| numeric EQUALS numeric;
