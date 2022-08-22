@@ -8,9 +8,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java_cup.runtime.Symbol;
 import olc1.project1.analizadores.Lexico;
-import olc1.project1.analizadores.sym;
+import olc1.project1.analizadores.Sintactico;
 
 /**
  *
@@ -22,20 +21,21 @@ public class Proyecto1 {
      * @param args the command line arguments
      * @throws java.io.FileNotFoundException
      */
-    public static void main(String[] args) throws FileNotFoundException, IOException {
+    public static void main(String[] args) throws FileNotFoundException, IOException, Exception {
         String path = "./test.txt";
         // TODO code application logic here
         Lexico scanner = new Lexico(new FileReader(new File(path)));
-        
+        Sintactico parser = new Sintactico(scanner);
+        parser.parse();
        
-        Symbol s = scanner.next_token();
-
-        while (s.value != null){
-            
-            System.out.println("Simbolo: " + s.value + " Token: " + sym.terminalNames[s.sym]);
-           
-            s = scanner.next_token();
-        }
+//        Symbol s = scanner.next_token();
+//
+//        while (s.value != null){
+//            
+//            System.out.println("Simbolo: " + s.value + " Token: " + sym.terminalNames[s.sym]);
+//           
+//            s = scanner.next_token();
+//        }
                   
                 
            

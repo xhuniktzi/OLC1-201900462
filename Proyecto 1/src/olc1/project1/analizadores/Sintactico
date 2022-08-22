@@ -54,7 +54,8 @@ precedence left POW, MODULE;
 
 start with ini;
 
-ini ::= START statements END;
+ini ::= START statements END
+| START END;
 
 statements ::= statements statement
 | statement;
@@ -65,8 +66,12 @@ statement ::= ENTER name_list AS TYPEDEF WITH_VALUE expr DOTCOMMA
 | IF logical THEN statements ELSE statements ENDIF
 | FOR ID ARROW numeric TO numeric DO statements ENDFOR
 | FOR ID ARROW numeric TO numeric WITHINCREMENTAL numeric DO statements ENDFOR
+| FOR ID ARROW numeric TO numeric DO ENDFOR
+| FOR ID ARROW numeric TO numeric WITHINCREMENTAL numeric DO ENDFOR
 | WHILE logical DO statements ENDWHILE
 | REPEAT statements ENDREPEAT logical
+| WHILE logical DO ENDWHILE
+| REPEAT ENDREPEAT logical
 | RETURN expr DOTCOMMA
 | DEFPROCEDURE FUNCID statements ENDPROCEDURE
 | DEFPROCEDURE FUNCID PARAMS PARSTART params_list PAREND statements ENDPROCEDURE
@@ -87,7 +92,10 @@ expr ::= numeric
 | logical
 | STR
 | CHAR
-| BOOLEAN;
+| BOOLEAN
+| ID
+| FUNCID PARSTART PAREND
+| FUNCID PARSTART args_list PAREND;
 
 name_list ::= ID COMMA name_list
 | ID;
