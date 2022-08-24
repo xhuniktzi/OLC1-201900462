@@ -22,7 +22,7 @@ public class Proyecto1 {
      * @throws java.io.FileNotFoundException
      */
     public static void main(String[] args) throws FileNotFoundException, IOException, Exception {
-        String path = "./test.txt";
+        String path = "./Entrada.txt";
         // TODO code application logic here
         Lexico scanner = new Lexico(new FileReader(new File(path)));
         Sintactico parser = new Sintactico(scanner);

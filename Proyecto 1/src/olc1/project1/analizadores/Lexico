@@ -35,7 +35,11 @@ TYPEDEF = Numero|Cadena|Boolean|Caracter
 "<"                 {return new Symbol(sym.MINOR, yyline,(int) yychar, yytext());}
 ">="                {return new Symbol(sym.MAJOREQUALS, yyline,(int) yychar, yytext());}
 "<="                {return new Symbol(sym.MINOREQUALS, yyline,(int) yychar, yytext());}
-"="                 {return new Symbol(sym.EQUALS, yyline,(int) yychar, yytext());}
+"=="                 {return new Symbol(sym.EQUALS, yyline,(int) yychar, yytext());}
+"!="                 {return new Symbol(sym.NOTEQUALS, yyline,(int) yychar, yytext());}
+"!"                 {return new Symbol(sym.NOT, yyline,(int) yychar, yytext());}
+"or"                 {return new Symbol(sym.OR, yyline,(int) yychar, yytext());}
+"and"                 {return new Symbol(sym.AND, yyline,(int) yychar, yytext());}
 
 ","                 {return new Symbol(sym.COMMA, yyline,(int) yychar, yytext());}
 ";"                 {return new Symbol(sym.DOTCOMMA, yyline,(int) yychar, yytext());}

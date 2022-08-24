@@ -17,7 +17,7 @@ parser code
   
 :}
 
-terminal String MAJOR, MINOR, MAJOREQUALS, MINOREQUALS, EQUALS;
+terminal String MAJOR, MINOR, MAJOREQUALS, MINOREQUALS, EQUALS, NOTEQUALS, NOT, OR, AND;
 terminal String COMMA, DOTCOMMA, OPENQUESTION, CLOSEQUESTION;
 terminal String ADD, SUBSTRACT, MULTIPLY, DIVISION;
 terminal String POW, MODULE;
@@ -36,18 +36,19 @@ terminal String PRINT, PRINTLN;
 terminal String NUM, STR, BOOLEAN, CHAR;
 terminal String TYPEDEF, ID, FUNCID;
 
-
 non terminal ini;
 
 non terminal statements;
 non terminal statement;
-non terminal name_list;
 non terminal expr;
+non terminal name_list;
 non terminal params_list;
 non terminal args_list;
-non terminal numeric;
-non terminal logical;
+non terminal func;
+non terminal elifs;
 
+precedence left MAJOR, MINOR, MAJOREQUALS, MINOREQUALS, EQUALS, NOTEQUALS;
+precedence left AND, OR; 
 precedence left ADD, SUBSTRACT;
 precedence left MULTIPLY, DIVISION;
 precedence left POW, MODULE;
@@ -62,56 +63,62 @@ statements ::= statements statement
 
 statement ::= ENTER name_list AS TYPEDEF WITH_VALUE expr DOTCOMMA
 | name_list ARROW expr DOTCOMMA
-| IF logical THEN statements ENDIF
-| IF logical THEN statements ELSE statements ENDIF
-| FOR ID ARROW numeric TO numeric DO statements ENDFOR
-| FOR ID ARROW numeric TO numeric WITHINCREMENTAL numeric DO statements ENDFOR
-| FOR ID ARROW numeric TO numeric DO ENDFOR
-| FOR ID ARROW numeric TO numeric WITHINCREMENTAL numeric DO ENDFOR
-| WHILE logical DO statements ENDWHILE
-| REPEAT statements ENDREPEAT logical
-| WHILE logical DO ENDWHILE
-| REPEAT ENDREPEAT logical
+| IF expr THEN statements ENDIF
+| IF expr THEN statements ELSE statements ENDIF
+| IF expr THEN statements elifs ENDIF
+| IF expr THEN statements elifs ELSE statements ENDIF
+| FOR ID ARROW expr TO expr DO statements ENDFOR
+| FOR ID ARROW expr TO expr WITHINCREMENTAL expr DO statements ENDFOR
+| FOR ID ARROW expr TO expr DO ENDFOR
+| FOR ID ARROW expr TO expr WITHINCREMENTAL expr DO ENDFOR
+| WHILE expr DO statements ENDWHILE
+| REPEAT statements ENDREPEAT expr
+| WHILE expr DO ENDWHILE
+| REPEAT ENDREPEAT expr
 | RETURN expr DOTCOMMA
 | DEFPROCEDURE FUNCID statements ENDPROCEDURE
 | DEFPROCEDURE FUNCID PARAMS PARSTART params_list PAREND statements ENDPROCEDURE
 | FUNCTION FUNCID TYPEDEF statements ENDFUNCTION
 | FUNCTION FUNCID TYPEDEF PARAMS PARSTART params_list PAREND statements ENDFUNCTION
-| EXEC FUNCID PARSTART PAREND
-| EXEC FUNCID PARSTART args_list PAREND
-| PRINT STR
-| PRINTLN STR;
+| EXEC func DOTCOMMA
+| PRINT expr DOTCOMMA
+| PRINTLN expr DOTCOMMA;
 
 params_list ::= ID TYPEDEF COMMA params_list
 | ID TYPEDEF;
 
-args_list ::= ID COMMA args_list
-| ID;
-
-expr ::= numeric
-| logical
-| STR
-| CHAR
-| BOOLEAN
-| ID
-| FUNCID PARSTART PAREND
-| FUNCID PARSTART args_list PAREND;
+args_list ::= expr COMMA args_list
+| expr;
 
 name_list ::= ID COMMA name_list
 | ID;
 
-numeric ::= SUBSTRACT numeric
-| numeric ADD numeric
-| numeric SUBSTRACT numeric
-| numeric MULTIPLY numeric
-| numeric DIVISION numeric
-| numeric POW numeric
-| numeric MODULE numeric
-| PARSTART numeric PAREND
-| NUM;
+func ::= FUNCID PARSTART PAREND
+| FUNCID PARSTART args_list PAREND;
 
-logical ::= numeric MAJOR numeric
-| numeric MINOR numeric
-| numeric MAJOREQUALS numeric
-| numeric MINOREQUALS numeric
-| numeric EQUALS numeric;
+elifs ::= elifs ELIF expr THEN statements
+| ELIF expr THEN statements;
+
+expr ::= ID
+| NUM
+| STR
+| BOOLEAN
+| CHAR
+| SUBSTRACT expr
+| expr ADD expr
+| expr SUBSTRACT expr
+| expr MULTIPLY expr
+| expr DIVISION expr
+| expr POW expr
+| expr MODULE expr
+| PARSTART expr PAREND
+| NOT expr
+| expr MAJOR expr
+| expr MINOR expr
+| expr MAJOREQUALS expr
+| expr MINOREQUALS expr
+| expr EQUALS expr
+| expr NOTEQUALS expr
+| expr AND expr
+| expr OR expr
+| func;

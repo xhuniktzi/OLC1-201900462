@@ -1,0 +1,84 @@
+inicio
+//chunki puto
+ingresar _pi_ como numero con_valor 3.14156;
+ingresar _radio_ como numero con_valor 0.0;
+ingresar _altura_ como numero con_valor 0.0;
+ingresar _arealateral_ como numero con_valor 0.0;
+ingresar _areasuperficial_ como numero con_valor 0.0;
+ingresar _resultado_ como numero con_valor 0.0;
+ingresar _puto_ como boolean con_valor verdadero;
+ingresar _r_, _h_, _al_, _as_, _r_ como numero con_valor 0.0;
+_radio_ -> 12.5;
+_altura_ -> 5.0;
+_arealateral_ -> 2 * _pi_ * _radio_ * _altura_;
+// _areasuperficial_ -> _pi_ * _radio_ potencia [2];
+_r_ -> 15.0;
+_h_ -> 2.5;
+_al_ -> 2 * _pi_ * _r_ * _h_;
+// _as_ -> _pi_ * _r_ potencia [2];
+metodo judas con_parametros (_a_ numero, _b_ boolean, _c_ cadena)
+	imprimir_nl "ingresar a" + _a_;
+	imprimir 4;
+fin_metodo
+si _chunki_ == _puto_ entonces
+	imprimir "Estas en lo correcto";
+o_si Falso entonces
+	imprimir "A";
+o_si Falso entonces
+	imprimir "A";
+o_si Falso entonces
+	imprimir "A";
+de_lo_contrario
+	si _ella_ == _noteama_ entonces
+		imprimir_nl "busquese a otra" + 5 + Falso;
+	fin_si
+fin_si
+
+si _chunki_ == _puto_ entonces
+	imprimir "Estas en lo correcto";
+o_si Falso entonces
+	imprimir "A";
+o_si Falso entonces
+	imprimir "A";
+o_si Falso entonces
+	imprimir "A";
+fin_si
+
+para _x_ -> 0 hasta 50 hacer
+	para _y_ -> 0 hasta 50 con incremental 1 hacer
+		para _z_ -> 0 hasta 50 con incremental 2 hacer
+			si _judas_ == _traidor_ entonces
+				imprimir_nl "Yisus murio";
+			de_lo_contrario
+				imprimir_nl "Yisus vive :v";
+			fin_si
+		fin_para
+		mientras _j_ >= _a_ hacer
+			repetir
+				retornar _chunki_;
+			hasta_que _z_ <= _j_
+		fin_mientras
+	fin_para
+fin_para
+metodo casaca
+	mientras _yisus_ == _vivo_ hacer
+		ejecutar funcion1();
+		imprimir "alabare alabare, alabare a mi señor";
+	fin_mientras
+fin_metodo
+funcion funcion1 numero 
+	si _ella_ == _noteama_ entonces
+		ejecutar a1(_a_, _c_, _h_);
+		imprimir_nl "busquese a otra";
+	fin_si
+fin_funcion
+funcion a1 cadena con_parametros (_b_ cadena, _v_ cadena, _t_ cadena)
+	para _b_ -> 5 hasta 80 hacer 
+		mientras !!!!!!!!!!!!!!!!!!!!!!(_c_ == "" or 4) hacer
+			repetir
+				retornar _b_;
+			hasta_que _t_ == -1
+		fin_mientras
+	fin_para
+fin_funcion
+fin

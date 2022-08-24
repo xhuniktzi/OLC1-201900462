@@ -8,63 +8,67 @@ package olc1.project1.analizadores;
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
-  public static final int PAREND = 18;
-  public static final int ENTER = 22;
-  public static final int POW = 15;
-  public static final int FUNCTION = 45;
-  public static final int CHAR = 53;
-  public static final int STR = 51;
+  public static final int PAREND = 22;
+  public static final int ENTER = 26;
+  public static final int POW = 19;
+  public static final int FUNCTION = 49;
+  public static final int CHAR = 57;
+  public static final int STR = 55;
   public static final int EQUALS = 6;
   public static final int MAJOREQUALS = 4;
-  public static final int REPEAT = 39;
-  public static final int PRINTLN = 49;
+  public static final int REPEAT = 43;
+  public static final int PRINTLN = 53;
   public static final int MINOR = 3;
-  public static final int DOTCOMMA = 8;
-  public static final int FOR = 33;
-  public static final int DEFPROCEDURE = 42;
-  public static final int ENDSWITCH = 32;
-  public static final int ENDFUNCTION = 46;
-  public static final int PARSTART = 17;
-  public static final int ENDPROCEDURE = 43;
-  public static final int COMMA = 7;
+  public static final int DOTCOMMA = 12;
+  public static final int FOR = 37;
+  public static final int DEFPROCEDURE = 46;
+  public static final int NOT = 8;
+  public static final int AND = 10;
+  public static final int ENDSWITCH = 36;
+  public static final int ENDFUNCTION = 50;
+  public static final int PARSTART = 21;
+  public static final int ENDPROCEDURE = 47;
+  public static final int OR = 9;
+  public static final int COMMA = 11;
   public static final int MAJOR = 2;
-  public static final int ENDFOR = 35;
-  public static final int SUBSTRACT = 12;
-  public static final int NUM = 50;
-  public static final int TYPEDEF = 54;
-  public static final int MULTIPLY = 13;
-  public static final int IF = 25;
-  public static final int ID = 55;
-  public static final int ENDWHILE = 38;
-  public static final int WITHINCREMENTAL = 36;
-  public static final int BOOLEAN = 52;
+  public static final int ENDFOR = 39;
+  public static final int SUBSTRACT = 16;
+  public static final int NUM = 54;
+  public static final int TYPEDEF = 58;
+  public static final int MULTIPLY = 17;
+  public static final int IF = 29;
+  public static final int ID = 59;
+  public static final int ENDWHILE = 42;
+  public static final int WITHINCREMENTAL = 40;
+  public static final int BOOLEAN = 56;
   public static final int EOF = 0;
-  public static final int RETURN = 41;
+  public static final int RETURN = 45;
   public static final int error = 1;
   public static final int MINOREQUALS = 5;
-  public static final int FUNCID = 56;
-  public static final int ADD = 11;
-  public static final int START = 19;
-  public static final int PARAMS = 44;
-  public static final int SWITCH = 30;
-  public static final int MODULE = 16;
-  public static final int ARROW = 21;
-  public static final int ENDIF = 27;
-  public static final int ELSE = 28;
-  public static final int TO = 34;
-  public static final int WHILE = 37;
-  public static final int THEN = 26;
-  public static final int WITH_VALUE = 24;
-  public static final int END = 20;
-  public static final int ENDREPEAT = 40;
-  public static final int EXEC = 47;
-  public static final int AS = 23;
-  public static final int CLOSEQUESTION = 10;
-  public static final int OPENQUESTION = 9;
-  public static final int DIVISION = 14;
-  public static final int ELIF = 29;
-  public static final int PRINT = 48;
-  public static final int DO = 31;
+  public static final int FUNCID = 60;
+  public static final int ADD = 15;
+  public static final int START = 23;
+  public static final int PARAMS = 48;
+  public static final int SWITCH = 34;
+  public static final int MODULE = 20;
+  public static final int ARROW = 25;
+  public static final int ENDIF = 31;
+  public static final int ELSE = 32;
+  public static final int TO = 38;
+  public static final int WHILE = 41;
+  public static final int NOTEQUALS = 7;
+  public static final int THEN = 30;
+  public static final int WITH_VALUE = 28;
+  public static final int END = 24;
+  public static final int ENDREPEAT = 44;
+  public static final int EXEC = 51;
+  public static final int AS = 27;
+  public static final int CLOSEQUESTION = 14;
+  public static final int OPENQUESTION = 13;
+  public static final int DIVISION = 18;
+  public static final int ELIF = 33;
+  public static final int PRINT = 52;
+  public static final int DO = 35;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -73,6 +77,10 @@ public class sym {
   "MAJOREQUALS",
   "MINOREQUALS",
   "EQUALS",
+  "NOTEQUALS",
+  "NOT",
+  "OR",
+  "AND",
   "COMMA",
   "DOTCOMMA",
   "OPENQUESTION",
