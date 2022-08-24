@@ -46,6 +46,7 @@ non terminal params_list;
 non terminal args_list;
 non terminal func;
 non terminal elifs;
+non terminal cases;
 
 precedence left MAJOR, MINOR, MAJOREQUALS, MINOREQUALS, EQUALS, NOTEQUALS;
 precedence left AND, OR; 
@@ -82,7 +83,9 @@ statement ::= ENTER name_list AS TYPEDEF WITH_VALUE expr DOTCOMMA
 | FUNCTION FUNCID TYPEDEF PARAMS PARSTART params_list PAREND statements ENDFUNCTION
 | EXEC func DOTCOMMA
 | PRINT expr DOTCOMMA
-| PRINTLN expr DOTCOMMA;
+| PRINTLN expr DOTCOMMA
+| SWITCH expr DO cases ENDSWITCH
+| SWITCH expr DO cases ELSE statements ENDSWITCH;
 
 params_list ::= ID TYPEDEF COMMA params_list
 | ID TYPEDEF;
@@ -98,6 +101,9 @@ func ::= FUNCID PARSTART PAREND
 
 elifs ::= elifs ELIF expr THEN statements
 | ELIF expr THEN statements;
+
+cases ::= cases OPENQUESTION expr CLOSEQUESTION THEN statements
+| OPENQUESTION expr CLOSEQUESTION THEN statements;
 
 expr ::= ID
 | NUM

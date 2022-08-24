@@ -34,17 +34,9 @@ de_lo_contrario
 	fin_si
 fin_si
 
-si _chunki_ == _puto_ entonces
-	imprimir "Estas en lo correcto";
-o_si Falso entonces
-	imprimir "A";
-o_si Falso entonces
-	imprimir "A";
-o_si Falso entonces
-	imprimir "A";
-fin_si
-
-para _x_ -> 0 hasta 50 hacer
+segun _id_ hacer
+	¿ 2 ? entonces
+		para _x_ -> 0 hasta 50 hacer
 	para _y_ -> 0 hasta 50 con incremental 1 hacer
 		para _z_ -> 0 hasta 50 con incremental 2 hacer
 			si _judas_ == _traidor_ entonces
@@ -60,6 +52,28 @@ para _x_ -> 0 hasta 50 hacer
 		fin_mientras
 	fin_para
 fin_para
+
+	¿ 3 ? entonces
+		imprimir 6;
+
+	¿ 4 ? entonces
+		imprimir 7;
+
+	de_lo_contrario
+		imprimir_nl "ayno";
+fin_segun
+
+si _chunki_ == _puto_ entonces
+	imprimir "Estas en lo correcto";
+o_si Falso entonces
+	imprimir "A";
+o_si Falso entonces
+	imprimir "A";
+o_si Falso entonces
+	imprimir "A";
+fin_si
+
+
 metodo casaca
 	mientras _yisus_ == _vivo_ hacer
 		ejecutar funcion1();

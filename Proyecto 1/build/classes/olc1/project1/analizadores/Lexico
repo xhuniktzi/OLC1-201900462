@@ -28,6 +28,7 @@ CHAR = [\']([^\t\'\"\n]|(\\\")|(\\n)|(\\\')|(\\t))?[\']
 ID = "_"[0-9A-Za-z]+"_"
 FUNCID = [A-Za-z]+["_"0-9A-Za-z]*
 TYPEDEF = Numero|Cadena|Boolean|Caracter
+OPENQUESTION = [\¿]
 
 %%
 
@@ -43,7 +44,7 @@ TYPEDEF = Numero|Cadena|Boolean|Caracter
 
 ","                 {return new Symbol(sym.COMMA, yyline,(int) yychar, yytext());}
 ";"                 {return new Symbol(sym.DOTCOMMA, yyline,(int) yychar, yytext());}
-"¿"                 {return new Symbol(sym.OPENQUESTION, yyline,(int) yychar, yytext());}
+// "¿"                 {return new Symbol(sym.OPENQUESTION, yyline,(int) yychar, yytext());}
 "?"                 {return new Symbol(sym.CLOSEQUESTION, yyline,(int) yychar, yytext());}
 
 "+"                 {return new Symbol(sym.ADD, yyline,(int) yychar, yytext());}
@@ -113,6 +114,7 @@ TYPEDEF = Numero|Cadena|Boolean|Caracter
 {ID}                    {return new Symbol(sym.ID, yyline, (int) yychar, yytext());}
 {FUNCID}                {return new Symbol(sym.FUNCID, yyline, (int) yychar, yytext());}
 
+{OPENQUESTION}                {return new Symbol(sym.OPENQUESTION, yyline, (int) yychar, yytext());}
 
 . {
     System.err.println("Error lexico detectado: " + yytext() + ", en la linea: " + yyline + ", en la columna: " + (int) yychar);
