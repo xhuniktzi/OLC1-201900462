@@ -3,6 +3,15 @@ package olc1.project1.analizadores;
 import java_cup.runtime.Symbol;
 import java.util.LinkedList;
 import olc1.project1.instructions.Statement;
+import olc1.project1.instructions.Operation;
+import olc1.project1.instructions.Param;
+
+import olc1.project1.instructions.Assignment;
+
+import olc1.project1.instructions.EnumOperations;
+import olc1.project1.instructions.EnumTerminals;
+import olc1.project1.instructions.EnumUnitaryOperations;
+import olc1.project1.instructions.EnumTypes;
 
 parser code 
 {:
@@ -38,12 +47,12 @@ terminal String TYPEDEF, ID, FUNCID;
 
 non terminal ini;
 
-non terminal statements;
-non terminal statement;
-non terminal expr;
-non terminal name_list;
-non terminal params_list;
-non terminal args_list;
+non terminal LinkedList<Statement> statements;
+non terminal Statement statement;
+non terminal Operation expr;
+non terminal LinkedList<String> name_list;
+non terminal LinkedList<Param> params_list;
+non terminal LinkedList<Operation> args_list;
 non terminal func;
 non terminal elifs;
 non terminal cases;
@@ -56,13 +65,13 @@ precedence left POW, MODULE;
 
 start with ini;
 
-ini ::= START statements END
+ini ::= START statements:s END {:parser.AST=s;:}
 | START END;
 
-statements ::= statements statement
-| statement;
+statements ::= statements:s statement:t {:RESULT=s; RESULT.add(t);:}
+| statement:s {:RESULT = new LinkedList<Statement>(); RESULT.add(s);:};
 
-statement ::= ENTER name_list AS TYPEDEF WITH_VALUE expr DOTCOMMA
+statement ::= ENTER name_list:n AS TYPEDEF:t WITH_VALUE expr:e DOTCOMMA {:RESULT = new Assignment(n, t, e);:}
 | name_list ARROW expr DOTCOMMA
 | IF expr THEN statements ENDIF
 | IF expr THEN statements ELSE statements ENDIF
@@ -87,14 +96,14 @@ statement ::= ENTER name_list AS TYPEDEF WITH_VALUE expr DOTCOMMA
 | SWITCH expr DO cases ENDSWITCH
 | SWITCH expr DO cases ELSE statements ENDSWITCH;
 
-params_list ::= ID TYPEDEF COMMA params_list
-| ID TYPEDEF;
+params_list ::= params_list:p COMMA ID:i TYPEDEF:t {:RESULT = p; RESULT.add(new Param(i, t));:}
+| ID:i TYPEDEF:t {:RESULT = new LinkedList<Param>(); RESULT.add(new Param(i, t));:};
 
-args_list ::= expr COMMA args_list
-| expr;
+args_list ::= args_list:a COMMA expr:e {:RESULT = a; RESULT.add(e);:}
+| expr:e {:RESULT = new LinkedList<Operation>(); RESULT.add(e);:};
 
-name_list ::= ID COMMA name_list
-| ID;
+name_list ::= name_list:n COMMA ID:i {:RESULT = n; RESULT.add(i);:}
+| ID:i {:RESULT = new LinkedList<String>(); RESULT.add(i);:};
 
 func ::= FUNCID PARSTART PAREND
 | FUNCID PARSTART args_list PAREND;
@@ -105,26 +114,25 @@ elifs ::= elifs ELIF expr THEN statements
 cases ::= cases OPENQUESTION expr CLOSEQUESTION THEN statements
 | OPENQUESTION expr CLOSEQUESTION THEN statements;
 
-expr ::= ID
-| NUM
-| STR
-| BOOLEAN
-| CHAR
-| SUBSTRACT expr
-| expr ADD expr
-| expr SUBSTRACT expr
-| expr MULTIPLY expr
-| expr DIVISION expr
-| expr POW expr
-| expr MODULE expr
-| PARSTART expr PAREND
-| NOT expr
-| expr MAJOR expr
-| expr MINOR expr
-| expr MAJOREQUALS expr
-| expr MINOREQUALS expr
-| expr EQUALS expr
-| expr NOTEQUALS expr
-| expr AND expr
-| expr OR expr
-| func;
+expr ::= ID:i {:RESULT = new Operation(i, EnumTerminals.ID);:}
+| NUM:n {:RESULT = new Operation(n, EnumTerminals.NUM);:}
+| STR:s {:RESULT = new Operation(s, EnumTerminals.STR);:}
+| BOOLEAN:b {:RESULT = new Operation(b, EnumTerminals.BOOLEAN);:}
+| CHAR:c {:RESULT = new Operation(c, EnumTerminals.CHAR);:}
+| SUBSTRACT expr:e {:RESULT = new Operation(e, EnumUnitaryOperations.NEGATIVE);:}
+| NOT expr:e {:RESULT = new Operation(e, EnumUnitaryOperations.NOT);:}
+| expr:a ADD expr:b {:RESULT = new Operation(a, EnumOperations.ADD, b);:}
+| expr:a SUBSTRACT expr:b {:RESULT = new Operation(a, EnumOperations.SUBSTRACT, b);:}
+| expr:a MULTIPLY expr:b {:RESULT = new Operation(a, EnumOperations.MULTIPLY, b);:}
+| expr:a DIVISION expr:b {:RESULT = new Operation(a, EnumOperations.DIVISION, b);:}
+| expr:a POW expr:b {:RESULT = new Operation(a, EnumOperations.POW, b);:}
+| expr:a MODULE expr:b {:RESULT = new Operation(a, EnumOperations.MODULE, b);:}
+| expr:a MAJOR expr:b {:RESULT = new Operation(a, EnumOperations.MAJOR, b);:}
+| expr:a MINOR expr:b {:RESULT = new Operation(a, EnumOperations.MINOR, b);:}
+| expr:a MAJOREQUALS expr:b {:RESULT = new Operation(a, EnumOperations.MAJOREQUALS, b);:}
+| expr:a MINOREQUALS expr:b {:RESULT = new Operation(a, EnumOperations.MINOREQUALS, b);:}
+| expr:a EQUALS expr:b {:RESULT = new Operation(a, EnumOperations.EQUALS, b);:}
+| expr:a NOTEQUALS expr:b {:RESULT = new Operation(a, EnumOperations.NOTEQUALS, b);:}
+| expr:a AND expr:b {:RESULT = new Operation(a, EnumOperations.AND, b);:}
+| expr:a OR expr:b {:RESULT = new Operation(a, EnumOperations.OR, b);:}
+| PARSTART expr:e PAREND {:RESULT = e;:};
