@@ -10,12 +10,12 @@ import java.util.LinkedList;
  *
  * @author Xhunik
  */
-public class Assignment implements Statement {
-    LinkedList<String> name_list;
+public class Elif implements Statement {
     Operation expr;
+    LinkedList<Statement> statements;
     
-    public Assignment(LinkedList<String> name_list, Operation expr){
-        this.name_list = name_list;
+    public Elif(Operation expr, LinkedList<Statement> statements){
         this.expr = expr;
+        this.statements = statements;
     }
 }

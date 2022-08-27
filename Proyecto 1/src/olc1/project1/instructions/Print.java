@@ -4,18 +4,14 @@
  */
 package olc1.project1.instructions;
 
-import java.util.LinkedList;
-
 /**
  *
  * @author Xhunik
  */
-public class Assignment implements Statement {
-    LinkedList<String> name_list;
+public class Print implements Statement {
     Operation expr;
     
-    public Assignment(LinkedList<String> name_list, Operation expr){
-        this.name_list = name_list;
+    public Print(Operation expr){
         this.expr = expr;
     }
 }

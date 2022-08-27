@@ -32,19 +32,18 @@ OPENQUESTION = [\¿]
 
 %%
 
-">"                 {return new Symbol(sym.MAJOR, yyline,(int) yychar, yytext());}
-"<"                 {return new Symbol(sym.MINOR, yyline,(int) yychar, yytext());}
-">="                {return new Symbol(sym.MAJOREQUALS, yyline,(int) yychar, yytext());}
-"<="                {return new Symbol(sym.MINOREQUALS, yyline,(int) yychar, yytext());}
-"=="                 {return new Symbol(sym.EQUALS, yyline,(int) yychar, yytext());}
-"!="                 {return new Symbol(sym.NOTEQUALS, yyline,(int) yychar, yytext());}
-"!"                 {return new Symbol(sym.NOT, yyline,(int) yychar, yytext());}
+"mayor"                 {return new Symbol(sym.MAJOR, yyline,(int) yychar, yytext());}
+"menor"                 {return new Symbol(sym.MINOR, yyline,(int) yychar, yytext());}
+"mayor_o_igual"                {return new Symbol(sym.MAJOREQUALS, yyline,(int) yychar, yytext());}
+"menor_o_igual"                {return new Symbol(sym.MINOREQUALS, yyline,(int) yychar, yytext());}
+"es_igual"                 {return new Symbol(sym.EQUALS, yyline,(int) yychar, yytext());}
+"diferente"                 {return new Symbol(sym.NOTEQUALS, yyline,(int) yychar, yytext());}
+"not"                 {return new Symbol(sym.NOT, yyline,(int) yychar, yytext());}
 "or"                 {return new Symbol(sym.OR, yyline,(int) yychar, yytext());}
 "and"                 {return new Symbol(sym.AND, yyline,(int) yychar, yytext());}
 
 ","                 {return new Symbol(sym.COMMA, yyline,(int) yychar, yytext());}
 ";"                 {return new Symbol(sym.DOTCOMMA, yyline,(int) yychar, yytext());}
-// "¿"                 {return new Symbol(sym.OPENQUESTION, yyline,(int) yychar, yytext());}
 "?"                 {return new Symbol(sym.CLOSEQUESTION, yyline,(int) yychar, yytext());}
 
 "+"                 {return new Symbol(sym.ADD, yyline,(int) yychar, yytext());}
@@ -111,7 +110,7 @@ OPENQUESTION = [\¿]
 {CHAR}                  {return new Symbol(sym.CHAR, yyline, (int) yychar, (yytext()).substring(1,yytext().length()-1));}
 
 {TYPEDEF}               {return new Symbol(sym.TYPEDEF, yyline, (int) yychar, yytext());}
-{ID}                    {return new Symbol(sym.ID, yyline, (int) yychar, yytext());}
+{ID}                    {return new Symbol(sym.ID, yyline, (int) yychar, (yytext()).substring(1,yytext().length()-1));}
 {FUNCID}                {return new Symbol(sym.FUNCID, yyline, (int) yychar, yytext());}
 
 {OPENQUESTION}                {return new Symbol(sym.OPENQUESTION, yyline, (int) yychar, yytext());}

@@ -10,12 +10,16 @@ import java.util.LinkedList;
  *
  * @author Xhunik
  */
-public class Assignment implements Statement {
-    LinkedList<String> name_list;
+public class While implements Statement {
     Operation expr;
+    LinkedList<Statement> statements;
     
-    public Assignment(LinkedList<String> name_list, Operation expr){
-        this.name_list = name_list;
+    public While(Operation expr, LinkedList<Statement> statements){
+        this.expr = expr;
+        this.statements = statements;
+    }
+    
+    public While(Operation expr){
         this.expr = expr;
     }
 }

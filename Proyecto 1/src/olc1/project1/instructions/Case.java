@@ -5,17 +5,19 @@
 package olc1.project1.instructions;
 
 import java.util.LinkedList;
+import olc1.project1.instructions.Operation;
+import olc1.project1.instructions.Statement;
 
 /**
  *
  * @author Xhunik
  */
-public class Assignment implements Statement {
-    LinkedList<String> name_list;
+public class Case implements Statement {
     Operation expr;
+    LinkedList<Statement> statements;
     
-    public Assignment(LinkedList<String> name_list, Operation expr){
-        this.name_list = name_list;
+    public Case(Operation expr, LinkedList<Statement> statements){
         this.expr = expr;
+        this.statements = statements;
     }
 }

@@ -2,11 +2,26 @@ package olc1.project1.analizadores;
 
 import java_cup.runtime.Symbol;
 import java.util.LinkedList;
+
 import olc1.project1.instructions.Statement;
 import olc1.project1.instructions.Operation;
 import olc1.project1.instructions.Param;
 
+import olc1.project1.instructions.Declaration;
 import olc1.project1.instructions.Assignment;
+import olc1.project1.instructions.While;
+import olc1.project1.instructions.For;
+import olc1.project1.instructions.Repeat;
+import olc1.project1.instructions.Print;
+import olc1.project1.instructions.Println;
+import olc1.project1.instructions.Return;
+import olc1.project1.instructions.Procedure;
+import olc1.project1.instructions.Function;
+import olc1.project1.instructions.Case;
+import olc1.project1.instructions.Elif;
+import olc1.project1.instructions.If;
+import olc1.project1.instructions.Switch;
+import olc1.project1.instructions.Execute;
 
 import olc1.project1.instructions.EnumOperations;
 import olc1.project1.instructions.EnumTerminals;
@@ -53,9 +68,9 @@ non terminal Operation expr;
 non terminal LinkedList<String> name_list;
 non terminal LinkedList<Param> params_list;
 non terminal LinkedList<Operation> args_list;
-non terminal func;
-non terminal elifs;
-non terminal cases;
+non terminal Execute func;
+non terminal LinkedList<Elif> elifs;
+non terminal LinkedList<Case> cases;
 
 precedence left MAJOR, MINOR, MAJOREQUALS, MINOREQUALS, EQUALS, NOTEQUALS;
 precedence left AND, OR; 
@@ -65,36 +80,36 @@ precedence left POW, MODULE;
 
 start with ini;
 
-ini ::= START statements:s END {:parser.AST=s;:}
-| START END;
+ini ::= START statements:s END {:parser.AST=s;:};
 
 statements ::= statements:s statement:t {:RESULT=s; RESULT.add(t);:}
 | statement:s {:RESULT = new LinkedList<Statement>(); RESULT.add(s);:};
 
-statement ::= ENTER name_list:n AS TYPEDEF:t WITH_VALUE expr:e DOTCOMMA {:RESULT = new Assignment(n, t, e);:}
-| name_list ARROW expr DOTCOMMA
-| IF expr THEN statements ENDIF
-| IF expr THEN statements ELSE statements ENDIF
-| IF expr THEN statements elifs ENDIF
-| IF expr THEN statements elifs ELSE statements ENDIF
-| FOR ID ARROW expr TO expr DO statements ENDFOR
-| FOR ID ARROW expr TO expr WITHINCREMENTAL expr DO statements ENDFOR
-| FOR ID ARROW expr TO expr DO ENDFOR
-| FOR ID ARROW expr TO expr WITHINCREMENTAL expr DO ENDFOR
-| WHILE expr DO statements ENDWHILE
-| REPEAT statements ENDREPEAT expr
-| WHILE expr DO ENDWHILE
-| REPEAT ENDREPEAT expr
-| RETURN expr DOTCOMMA
-| DEFPROCEDURE FUNCID statements ENDPROCEDURE
-| DEFPROCEDURE FUNCID PARAMS PARSTART params_list PAREND statements ENDPROCEDURE
-| FUNCTION FUNCID TYPEDEF statements ENDFUNCTION
-| FUNCTION FUNCID TYPEDEF PARAMS PARSTART params_list PAREND statements ENDFUNCTION
-| EXEC func DOTCOMMA
-| PRINT expr DOTCOMMA
-| PRINTLN expr DOTCOMMA
-| SWITCH expr DO cases ENDSWITCH
-| SWITCH expr DO cases ELSE statements ENDSWITCH;
+statement ::= ENTER name_list:n AS TYPEDEF:t WITH_VALUE expr:e DOTCOMMA {:RESULT = new Declaration(n, t, e);:}
+| name_list:n ARROW expr:e DOTCOMMA {:RESULT = new Assignment(n, e);:}
+| IF expr:e THEN statements:s ENDIF {:RESULT = new If(e, s);:}
+| IF expr:e THEN statements:p ELSE statements:s ENDIF {:RESULT = new If(e, p, s);:}
+| IF expr:e THEN statements:s elifs:f ENDIF {:RESULT = new If(e, s, f, null);:}
+| IF expr:e THEN statements:s elifs:f ELSE statements:p ENDIF {:RESULT = new If(e, s, f, p);:}
+| FOR ID ARROW expr:e TO expr:f DO statements:s ENDFOR {:RESULT = new For(e, f, s);:}
+| FOR ID ARROW expr:e TO expr:f WITHINCREMENTAL NUM:n DO statements:s ENDFOR {:RESULT = new For(e, f, n, s);:}
+| FOR ID ARROW expr:e TO expr:f DO ENDFOR {:RESULT = new For(e, f);:}
+| FOR ID ARROW expr:e TO expr:f WITHINCREMENTAL NUM:n DO ENDFOR {:RESULT = new For(e, f, n);:}
+| WHILE expr:e DO statements:s ENDWHILE {:RESULT = new While(e, s);:}
+| WHILE expr:e DO ENDWHILE {:RESULT = new While(e);:}
+| REPEAT statements:s ENDREPEAT expr:e {:RESULT = new Repeat(s, e);:}
+| REPEAT ENDREPEAT expr:e {:RESULT = new Repeat(e);:}
+| RETURN expr:e DOTCOMMA {:RESULT = new Return(e);:}
+| DEFPROCEDURE FUNCID:f statements:s ENDPROCEDURE {:RESULT = new Procedure(f, s);:}
+| DEFPROCEDURE FUNCID:f PARAMS PARSTART params_list:p PAREND statements:s ENDPROCEDURE {:RESULT = new Procedure(f, p, s);:}
+| FUNCTION FUNCID:f TYPEDEF:t statements:s ENDFUNCTION {:RESULT = new Function(f, t, s);:}
+| FUNCTION FUNCID:f TYPEDEF:t PARAMS PARSTART params_list:p PAREND statements:s ENDFUNCTION {:RESULT = new Function(f, t, p, s);:}
+| EXEC func:f DOTCOMMA {:RESULT = f;:}
+| PRINT expr:e DOTCOMMA {:RESULT = new Print(e);:}
+| PRINTLN expr:e DOTCOMMA {:RESULT = new Println(e);:}
+| SWITCH expr:e DO cases:c ENDSWITCH {:RESULT = new Switch(e, c);:}
+| SWITCH expr:e DO cases:c ELSE statements:s ENDSWITCH {:RESULT = new Switch(e, c, s);:}
+| error;
 
 params_list ::= params_list:p COMMA ID:i TYPEDEF:t {:RESULT = p; RESULT.add(new Param(i, t));:}
 | ID:i TYPEDEF:t {:RESULT = new LinkedList<Param>(); RESULT.add(new Param(i, t));:};
@@ -105,14 +120,14 @@ args_list ::= args_list:a COMMA expr:e {:RESULT = a; RESULT.add(e);:}
 name_list ::= name_list:n COMMA ID:i {:RESULT = n; RESULT.add(i);:}
 | ID:i {:RESULT = new LinkedList<String>(); RESULT.add(i);:};
 
-func ::= FUNCID PARSTART PAREND
-| FUNCID PARSTART args_list PAREND;
+func ::= FUNCID:f PARSTART PAREND {:RESULT = new Execute(f);:}
+| FUNCID:f PARSTART args_list:a PAREND {:RESULT = new Execute(f, a);:};
 
-elifs ::= elifs ELIF expr THEN statements
-| ELIF expr THEN statements;
+elifs ::= elifs:f ELIF expr:e THEN statements:s {:RESULT = f; RESULT.add(new Elif(e, s));:}
+| ELIF expr:e THEN statements:s {:RESULT = new LinkedList<Elif>(); RESULT.add(new Elif(e, s));:};
 
-cases ::= cases OPENQUESTION expr CLOSEQUESTION THEN statements
-| OPENQUESTION expr CLOSEQUESTION THEN statements;
+cases ::= cases:c OPENQUESTION expr:e CLOSEQUESTION THEN statements:s {:RESULT = c; RESULT.add(new Case(e, s));:}
+| OPENQUESTION expr:e CLOSEQUESTION THEN statements:s {:RESULT = new LinkedList<Case>(); RESULT.add(new Case(e, s));:};
 
 expr ::= ID:i {:RESULT = new Operation(i, EnumTerminals.ID);:}
 | NUM:n {:RESULT = new Operation(n, EnumTerminals.NUM);:}

@@ -10,12 +10,16 @@ import java.util.LinkedList;
  *
  * @author Xhunik
  */
-public class Assignment implements Statement {
-    LinkedList<String> name_list;
+public class Repeat implements Statement {
+    LinkedList<Statement> statements;
     Operation expr;
     
-    public Assignment(LinkedList<String> name_list, Operation expr){
-        this.name_list = name_list;
+    public Repeat(LinkedList<Statement> statements, Operation expr){
+        this.statements = statements;
+        this.expr = expr;
+    }
+    
+    public Repeat(Operation expr){
         this.expr = expr;
     }
 }

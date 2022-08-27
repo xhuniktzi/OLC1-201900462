@@ -32,22 +32,8 @@ public class Proyecto1 {
         parser.parse();
         
         LinkedList<Statement> ast = parser.AST;
-       
-//        Symbol s = scanner.next_token();
-//
-//        while (s.value != null){
-//            
-//            System.out.println("Simbolo: " + s.value + " Token: " + sym.terminalNames[s.sym]);
-//           
-//            s = scanner.next_token();
-//        }
-                  
-                
-           
-       
-        
-        // Sintactico parser = new Sintactico(scanner);
     }
+    
     public static EnumTypes checkTypes(String type){
          switch (type) {
             case "numero" -> {

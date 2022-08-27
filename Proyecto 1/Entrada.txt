@@ -20,7 +20,7 @@ metodo judas con_parametros (_a_ numero, _b_ boolean, _c_ cadena)
 	imprimir_nl "ingresar a" + _a_;
 	imprimir 4;
 fin_metodo
-si _chunki_ == _puto_ entonces
+si _chunki_ es_igual _puto_ entonces
 	imprimir "Estas en lo correcto";
 o_si Falso entonces
 	imprimir "A";
@@ -28,27 +28,48 @@ o_si Falso entonces
 	imprimir "A";
 o_si Falso entonces
 	imprimir "A";
+o_si Falso entonces
+	imprimir "A";
+o_si Falso entonces
+	imprimir "A";
+o_si Falso entonces
+	imprimir "A";
 de_lo_contrario
-	si _ella_ == _noteama_ entonces
-		imprimir_nl "busquese a otra" + 5 + Falso;
+	si _ella_ es_igual _noteama_ entonces
+		imprimir_nl "sdasd";
 	fin_si
 fin_si
+
+para _y_ -> 0 hasta 50 con incremental 1 hacer
+		para _z_ -> 0 hasta 50 con incremental 2 hacer
+			si _judas_ es_igual _traidor_ entonces
+				imprimir_nl "Yisus murio";
+			de_lo_contrario
+				imprimir_nl "Yisus vive :v";
+			fin_si
+		fin_para
+		mientras _j_ mayor_o_igual _a_ hacer
+			repetir
+				retornar _chunki_;
+			hasta_que _z_ menor_o_igual _j_
+		fin_mientras
+	fin_para
 
 segun _id_ hacer
 	¿ 2 ? entonces
 		para _x_ -> 0 hasta 50 hacer
 	para _y_ -> 0 hasta 50 con incremental 1 hacer
 		para _z_ -> 0 hasta 50 con incremental 2 hacer
-			si _judas_ == _traidor_ entonces
+			si _judas_ es_igual _traidor_ entonces
 				imprimir_nl "Yisus murio";
 			de_lo_contrario
 				imprimir_nl "Yisus vive :v";
 			fin_si
 		fin_para
-		mientras _j_ >= _a_ hacer
+		mientras _j_ mayor_o_igual _a_ hacer
 			repetir
 				retornar _chunki_;
-			hasta_que _z_ <= _j_
+			hasta_que _z_ menor_o_igual _j_
 		fin_mientras
 	fin_para
 fin_para
@@ -63,7 +84,7 @@ fin_para
 		imprimir_nl "ayno";
 fin_segun
 
-si _chunki_ == _puto_ entonces
+si _chunki_ es_igual _puto_ entonces
 	imprimir "Estas en lo correcto";
 o_si Falso entonces
 	imprimir "A";
@@ -75,23 +96,23 @@ fin_si
 
 
 metodo casaca
-	mientras _yisus_ == _vivo_ hacer
+	mientras _yisus_ es_igual _vivo_ hacer
 		ejecutar funcion1();
 		imprimir "alabare alabare, alabare a mi señor";
 	fin_mientras
 fin_metodo
 funcion funcion1 numero 
-	si _ella_ == _noteama_ entonces
+	si _ella_ es_igual _noteama_ entonces
 		ejecutar a1(_a_, _c_, _h_);
 		imprimir_nl "busquese a otra";
 	fin_si
 fin_funcion
 funcion a1 cadena con_parametros (_b_ cadena, _v_ cadena, _t_ cadena)
 	para _b_ -> 5 hasta 80 hacer 
-		mientras !!!!!!!!!!!!!!!!!!!!!!(_c_ == "" or 4) hacer
+		mientras not not not not (_c_ es_igual "" or 4) hacer
 			repetir
 				retornar _b_;
-			hasta_que _t_ == -1
+			hasta_que _t_ es_igual -1
 		fin_mientras
 	fin_para
 fin_funcion
