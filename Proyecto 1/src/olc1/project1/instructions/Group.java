@@ -4,23 +4,14 @@
  */
 package olc1.project1.instructions;
 
-import java.util.LinkedList;
-import olc1.project1.Proyecto1;
-
 /**
  *
  * @author Xhunik
  */
-public class While implements Statement {
+public class Group implements Statement {
     Operation expr;
-    LinkedList<Statement> statements;
     
-    public While(Operation expr, LinkedList<Statement> statements){
-        this.expr = expr;
-        this.statements = statements;
-    }
-    
-    public While(Operation expr){
+    public Group(Operation expr){
         this.expr = expr;
     }
     
@@ -34,10 +25,7 @@ public class While implements Statement {
     public String translatePython(){
         StringBuilder str = new StringBuilder();
         
-        str.append("while ").append(expr.translatePython()).append(":\n");
-        for (Statement statement : statements) {
-            str.append(Proyecto1.pythonAddTabs(statement.translatePython())).append("\n");
-        }
+        str.append("(").append(expr.translatePython()).append(")");
         
         return str.toString();
     }

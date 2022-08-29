@@ -9,9 +9,14 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.UUID;
 import olc1.project1.analizadores.Lexico;
 import olc1.project1.analizadores.Sintactico;
+import olc1.project1.instructions.EnumOperations;
+import olc1.project1.instructions.EnumTerminals;
 import olc1.project1.instructions.EnumTypes;
+import olc1.project1.instructions.EnumUnitaryOperations;
 import olc1.project1.instructions.Statement;
 
 /**
@@ -32,6 +37,43 @@ public class Proyecto1 {
         parser.parse();
         
         LinkedList<Statement> ast = parser.AST;
+        
+        String pyStr = translatePython(ast);
+        System.out.println(pyStr);
+    }
+    
+    public static String translatePython(LinkedList<Statement> ast){
+        StringBuilder str = new StringBuilder();
+        
+        for (Statement statement : ast) {
+            str.append(statement.translatePython()).append("\n");
+        }
+        
+        return str.toString();
+    }
+    
+    public static String pythonTerminals(String value, EnumTerminals type){
+        switch (type) {
+            case BOOLEAN -> {
+                if ("verdadero".equals(value)) return "True";
+                else if ("falso".equals(value)) return "False";
+            }
+            case CHAR -> {
+                return "'" + value + "'";
+            }
+            case ID -> {
+                return value;
+            }
+            case NUM -> {
+                return value;
+            }
+            case STR -> {
+                return "\"" + value + "\"";
+            }
+            
+            default -> throw new AssertionError();
+        }
+        return null;
     }
     
     public static EnumTypes checkTypes(String type){
@@ -50,5 +92,100 @@ public class Proyecto1 {
             }
             default -> throw new AssertionError();
         }
+    }
+    
+    public static String viewTypes(EnumTypes type){
+        switch (type) {
+            case BOOLEAN -> {
+                return "bool";
+            }
+            case CHAR -> {
+                return "str";
+            }
+            case NUM -> {
+                return "float";
+            }
+            case STR -> {
+                return "str";
+            }
+            default -> throw new AssertionError();
+        }
+    }
+    
+    public static String generateGuid(){
+        return UUID.randomUUID().toString().replaceAll("-", "").replaceFirst("[0-9]+", "");
+    }
+    
+    public static String pythonSymbolBinaryOperators(EnumOperations op){
+        switch (op) {
+            case ADD -> {
+                return "+";
+            }
+            case AND -> {
+                return "and";
+            }
+            case DIVISION -> {
+                return "/";
+            }
+            case EQUALS -> {
+                return "=";
+            }
+            case MAJOR -> {
+                return ">";
+            }
+            case MAJOREQUALS -> {
+                return ">=";
+            }
+            case MINOR -> {
+                return "<";
+            }
+            case MINOREQUALS -> {
+                return "<=";
+            }
+            case MODULE -> {
+                return "%";
+            }
+            case MULTIPLY -> {
+                return "*";
+            }
+            case NOTEQUALS -> {
+                return "!=";
+            }
+            case OR -> {
+                return "or";
+            }
+            case POW -> {
+                return "**";
+            }
+            case SUBSTRACT -> {
+                return "-";
+            }
+            default -> throw new AssertionError();
+        }
+    }
+    
+    public static String pythonSymbolUnitaryOperators(EnumUnitaryOperations op){
+        switch (op){
+            case NEGATIVE -> {
+                return "-";
+            }
+            case NOT -> {
+                return "not";
+            }
+            default -> throw new AssertionError();
+        }
+    }
+    
+    public static String pythonAddTabs(String input){
+        StringBuilder str = new StringBuilder();
+        
+        List<String> lines = input.lines().toList();
+        
+        for (String line : lines) {
+            str.append("\t").append(line).append("\n");
+
+        }
+        
+        return str.toString();
     }
 }

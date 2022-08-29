@@ -16,29 +16,36 @@ _r_ -> 15.0;
 _h_ -> 2.5;
 _al_ -> 2 * _pi_ * _r_ * _h_;
 // _as_ -> _pi_ * _r_ potencia [2];
+
+
 metodo judas con_parametros (_a_ numero, _b_ boolean, _c_ cadena)
 	imprimir_nl "ingresar a" + _a_;
 	imprimir 4;
 fin_metodo
+
+
+
 si _chunki_ es_igual _puto_ entonces
 	imprimir "Estas en lo correcto";
-o_si Falso entonces
+o_si falso entonces
 	imprimir "A";
-o_si Falso entonces
+o_si falso entonces
 	imprimir "A";
-o_si Falso entonces
+o_si falso entonces
 	imprimir "A";
-o_si Falso entonces
+o_si falso entonces
 	imprimir "A";
-o_si Falso entonces
+o_si falso entonces
 	imprimir "A";
-o_si Falso entonces
+o_si falso entonces
 	imprimir "A";
 de_lo_contrario
 	si _ella_ es_igual _noteama_ entonces
 		imprimir_nl "sdasd";
 	fin_si
 fin_si
+
+
 
 para _y_ -> 0 hasta 50 con incremental 1 hacer
 		para _z_ -> 0 hasta 50 con incremental 2 hacer

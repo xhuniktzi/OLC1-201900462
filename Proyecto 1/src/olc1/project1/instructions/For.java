@@ -41,4 +41,15 @@ public class For implements Statement {
         this.expr2 = expr2;
         this.incremental = Integer.parseInt(incremental);
     }
+    
+    @Override
+    public String traverse() {
+        StringBuilder str = new StringBuilder();
+        return str.toString();
+    }
+    
+    @Override
+    public String translatePython(){
+        return null;
+    }
 }

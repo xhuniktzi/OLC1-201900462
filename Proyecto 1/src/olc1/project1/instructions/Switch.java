@@ -25,4 +25,15 @@ public class Switch implements Statement {
         this.cases = cases;
         this.else_statements = else_statements;
     }
+    
+    @Override
+    public String traverse() {
+        StringBuilder str = new StringBuilder();
+        return str.toString();
+    }
+    
+    @Override
+    public String translatePython(){
+        return null;
+    }
 }

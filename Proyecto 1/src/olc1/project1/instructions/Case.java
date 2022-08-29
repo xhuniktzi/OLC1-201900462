@@ -5,8 +5,6 @@
 package olc1.project1.instructions;
 
 import java.util.LinkedList;
-import olc1.project1.instructions.Operation;
-import olc1.project1.instructions.Statement;
 
 /**
  *
@@ -19,5 +17,16 @@ public class Case implements Statement {
     public Case(Operation expr, LinkedList<Statement> statements){
         this.expr = expr;
         this.statements = statements;
+    }
+    
+    @Override
+    public String traverse() {
+        StringBuilder str = new StringBuilder();
+        return str.toString();
+    }
+    
+    @Override
+    public String translatePython(){
+        return null;
     }
 }

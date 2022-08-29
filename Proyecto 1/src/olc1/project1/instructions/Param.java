@@ -17,4 +17,21 @@ public class Param implements Statement {
         this.id = id;
         this.type = Proyecto1.checkTypes(type);
     }
+    
+    @Override
+    public String traverse() {
+        StringBuilder str = new StringBuilder();
+        return str.toString();
+    }
+    
+    @Override
+    public String translatePython(){
+        StringBuilder str = new StringBuilder();
+        
+        str.append(id).append(": ").append(Proyecto1.viewTypes(type));
+        
+        return str.toString();
+    }
 }
+
+

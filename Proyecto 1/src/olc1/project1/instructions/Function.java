@@ -4,6 +4,7 @@
  */
 package olc1.project1.instructions;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import olc1.project1.Proyecto1;
 
@@ -28,5 +29,41 @@ public class Function implements Statement {
         this.type = Proyecto1.checkTypes(type);
         this.params_list = params_list;
         this.statements = statements;
+    }
+    
+    @Override
+    public String traverse() {
+        StringBuilder str = new StringBuilder();
+        return str.toString();
+    }
+    
+    @Override
+    public String translatePython(){
+        StringBuilder str = new StringBuilder();
+        
+        str.append("def ").append(funcId).append("(");
+        
+        if (params_list != null){
+            Iterator<Param> iterator = params_list.iterator();
+
+            while (iterator.hasNext()){
+                String args = iterator.next().translatePython();
+                str.append(args);
+                if (iterator.hasNext()){
+                    str.append(",");
+                }
+            }
+        }
+        
+        str.append("):\n");
+        
+        for (Statement statement : statements) {
+            // @TODO: delete in production
+            if (statement.translatePython() != null){
+                str.append(Proyecto1.pythonAddTabs(statement.translatePython())).append("\n");
+            }
+        }
+        
+        return str.toString();
     }
 }

@@ -4,10 +4,16 @@
  */
 package olc1.project1.instructions;
 
+
 /**
  *
  * @author Xhunik
  */
 public interface Statement {
+  
+    public String traverse();
     
+    public String translatePython();
+//    
+//    public String translateGolang();
 }
