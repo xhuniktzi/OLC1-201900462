@@ -46,6 +46,11 @@ public class Operation implements Statement {
         this.typeOp = TypeOperation.TERMINAL;
     }
     
+    public Operation(Operation value){
+        this.value = value.translatePython();
+        this.typeOp = TypeOperation.GROUP;
+    }
+    
     @Override
     public String traverse() {
         StringBuilder str = new StringBuilder();
@@ -65,6 +70,9 @@ public class Operation implements Statement {
             }
             case TERMINAL -> {
                 str.append(Proyecto1.pythonTerminals(value, typeTerminal));
+            }
+            case GROUP -> {
+                str.append("(").append(value).append(")");
             }
             default -> throw new AssertionError();
         }

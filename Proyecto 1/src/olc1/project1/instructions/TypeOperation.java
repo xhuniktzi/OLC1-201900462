@@ -9,5 +9,5 @@ package olc1.project1.instructions;
  * @author Xhunik
  */
 public enum TypeOperation {
-    BINARY, UNITARY, TERMINAL;
+    BINARY, UNITARY, TERMINAL, GROUP;
 }

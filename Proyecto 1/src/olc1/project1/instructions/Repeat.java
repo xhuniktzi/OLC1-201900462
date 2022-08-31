@@ -34,11 +34,13 @@ public class Repeat implements Statement {
     // @TODO: fix in production to convert do while statement
     public String translatePython(){
         StringBuilder str = new StringBuilder();
-        
-        str.append("while ").append(expr.translatePython()).append(":\n");
+        str.append("flag = True\n");
+        str.append("while ").append("flag").append(":\n");
         for (Statement statement : statements) {
             str.append(Proyecto1.pythonAddTabs(statement.translatePython())).append("\n");
         }
+        str.append("\tif ").append(expr.translatePython()).append(":\n");
+        str.append("\t\ttbreak");
         
         return str.toString();
     }

@@ -22,7 +22,6 @@ import olc1.project1.instructions.Elif;
 import olc1.project1.instructions.If;
 import olc1.project1.instructions.Switch;
 import olc1.project1.instructions.Execute;
-import olc1.project1.instructions.Group;
 
 import olc1.project1.instructions.EnumOperations;
 import olc1.project1.instructions.EnumTerminals;
@@ -109,7 +108,7 @@ statement ::= ENTER name_list:n AS TYPEDEF:t WITH_VALUE expr:e DOTCOMMA {:RESULT
 | PRINT expr:e DOTCOMMA {:RESULT = new Print(e);:}
 | PRINTLN expr:e DOTCOMMA {:RESULT = new Println(e);:}
 | SWITCH expr:e DO cases:c ENDSWITCH {:RESULT = new Switch(e, c);:}
-| SWITCH expr:e DO cases:c ELSE statements:s ENDSWITCH {:RESULT = new Switch(e, c, s);:}
+| SWITCH expr:e DO cases:c ELSE THEN statements:s ENDSWITCH {:RESULT = new Switch(e, c, s);:}
 | error DOTCOMMA;
 
 params_list ::= params_list:p COMMA ID:i TYPEDEF:t {:RESULT = p; RESULT.add(new Param(i, t));:}
@@ -151,4 +150,4 @@ expr ::= ID:i {:RESULT = new Operation(i, EnumTerminals.ID);:}
 | expr:a NOTEQUALS expr:b {:RESULT = new Operation(a, EnumOperations.NOTEQUALS, b);:}
 | expr:a AND expr:b {:RESULT = new Operation(a, EnumOperations.AND, b);:}
 | expr:a OR expr:b {:RESULT = new Operation(a, EnumOperations.OR, b);:}
-| PARSTART expr:e PAREND {:RESULT = new Group(e);:};
+| PARSTART expr:e PAREND {:RESULT = new Operation(e);:};

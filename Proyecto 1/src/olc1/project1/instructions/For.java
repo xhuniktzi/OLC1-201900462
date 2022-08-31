@@ -11,12 +11,13 @@ import java.util.LinkedList;
  * @author Xhunik
  */
 public class For implements Statement {
+    Operation var;
     Operation expr1;
     Operation expr2;
     int incremental;
     LinkedList<Statement> statements;
     
-    public For(Operation  expr1, Operation expr2, LinkedList<Statement> statements){
+    public For(Operation expr1, Operation expr2, LinkedList<Statement> statements){
         this.expr1 = expr1;
         this.expr2 = expr2;
         this.incremental = 1;

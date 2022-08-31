@@ -3,7 +3,7 @@ inicio
 ingresar _pi_ como numero con_valor 3.14156;
 ingresar _radio_ como numero con_valor 0.0;
 ingresar _altura_ como numero con_valor 0.0;
-ingresar _arealateral_ como numero con_valor 0.0;
+ingresar _arealateral_ como numero con_valor ((0.0) + 54 + (32 + (45 + 60))) + 51;
 ingresar _areasuperficial_ como numero con_valor 0.0;
 ingresar _resultado_ como numero con_valor 0.0;
 ingresar _puto_ como boolean con_valor verdadero;
@@ -48,23 +48,51 @@ fin_si
 
 
 para _y_ -> 0 hasta 50 con incremental 1 hacer
-		para _z_ -> 0 hasta 50 con incremental 2 hacer
-			si _judas_ es_igual _traidor_ entonces
-				imprimir_nl "Yisus murio";
-			de_lo_contrario
-				imprimir_nl "Yisus vive :v";
-			fin_si
-		fin_para
-		mientras _j_ mayor_o_igual _a_ hacer
-			repetir
-				retornar _chunki_;
-			hasta_que _z_ menor_o_igual _j_
-		fin_mientras
+	para _z_ -> 0 hasta 50 con incremental 2 hacer
+		si _judas_ es_igual _traidor_ entonces
+			imprimir_nl "Yisus murio";
+		de_lo_contrario
+			imprimir_nl "Yisus vive :v";
+		fin_si
 	fin_para
+	mientras _j_ mayor_o_igual _a_ hacer
+		repetir
+			retornar _chunki_;
+		hasta_que _z_ menor_o_igual _j_
+	fin_mientras
+fin_para
 
-segun _id_ hacer
-	¿ 2 ? entonces
-		para _x_ -> 0 hasta 50 hacer
+
+si _chunki_ es_igual _puto_ entonces
+	imprimir "Estas en lo correcto";
+o_si falso entonces
+	imprimir "A";
+o_si falso entonces
+	imprimir "A";
+o_si verdadero entonces
+	imprimir "A";
+fin_si
+
+segun _var2_ hacer
+¿ 3 + 4 ? entonces
+	mientras _yisus_ es_igual _vivo_ hacer
+		ejecutar funcion1();
+		imprimir "alabare alabare, alabare a mi señor";
+	fin_mientras
+	mientras _yisus_ es_igual _vivo_ hacer
+		ejecutar funcion1();
+		imprimir "alabare alabare, alabare a mi señor";
+	fin_mientras
+¿ "dfd" ? entonces
+	mientras _yisus_ es_igual _vivo_ hacer
+		ejecutar funcion1();
+		imprimir "alabare alabare, alabare a mi señor";
+	fin_mientras
+	mientras _yisus_ es_igual _vivo_ hacer
+		ejecutar funcion1();
+		imprimir "alabare alabare, alabare a mi señor";
+	fin_mientras
+¿ 'c' ? entonces
 	para _y_ -> 0 hasta 50 con incremental 1 hacer
 		para _z_ -> 0 hasta 50 con incremental 2 hacer
 			si _judas_ es_igual _traidor_ entonces
@@ -79,27 +107,22 @@ segun _id_ hacer
 			hasta_que _z_ menor_o_igual _j_
 		fin_mientras
 	fin_para
-fin_para
 
-	¿ 3 ? entonces
-		imprimir 6;
-
-	¿ 4 ? entonces
-		imprimir 7;
-
-	de_lo_contrario
-		imprimir_nl "ayno";
+de_lo_contrario entonces
+	si _chunki_ es_igual _puto_ entonces
+		imprimir "Estas en lo correcto";
+	o_si falso entonces
+		imprimir "A";
+	o_si falso entonces
+		imprimir "A";
+	o_si falso entonces
+		imprimir "A";
+	fin_si
 fin_segun
 
-si _chunki_ es_igual _puto_ entonces
-	imprimir "Estas en lo correcto";
-o_si Falso entonces
-	imprimir "A";
-o_si Falso entonces
-	imprimir "A";
-o_si Falso entonces
-	imprimir "A";
-fin_si
+repetir
+	retornar _chunki_;
+hasta_que _z_ menor_o_igual _j_
 
 
 metodo casaca
