@@ -29,8 +29,12 @@ ID = "_"[0-9A-Za-z]+"_"
 FUNCID = [A-Za-z]+["_"0-9A-Za-z]*
 TYPEDEF = Numero|Cadena|Boolean|Caracter
 OPENQUESTION = [\¿]
+SBRACKETOPEN =[\[]
 
 %%
+
+
+"]"                     {return new Symbol(sym.SBRACKETCLOSE, yyline,(int) yychar, yytext());}
 
 "mayor"                 {return new Symbol(sym.MAJOR, yyline,(int) yychar, yytext());}
 "menor"                 {return new Symbol(sym.MINOR, yyline,(int) yychar, yytext());}
@@ -114,6 +118,7 @@ OPENQUESTION = [\¿]
 {FUNCID}                {return new Symbol(sym.FUNCID, yyline, (int) yychar, yytext());}
 
 {OPENQUESTION}                {return new Symbol(sym.OPENQUESTION, yyline, (int) yychar, yytext());}
+{SBRACKETOPEN}                {return new Symbol(sym.SBRACKETOPEN, yyline,(int) yychar, yytext());}
 
 . {
     System.err.println("Error lexico detectado: " + yytext() + ", en la linea: " + yyline + ", en la columna: " + (int) yychar);

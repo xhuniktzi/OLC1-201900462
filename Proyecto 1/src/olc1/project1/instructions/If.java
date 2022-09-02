@@ -53,13 +53,13 @@ public class If implements Statement {
         if (elifs != null){
         
             for (Elif elif : elifs) {
-                str.append(Proyecto1.pythonAddTabs(elif.translatePython())).append("\n");
+                str.append(elif.translatePython()).append("\n");
             }
         
         }
         
         if (else_statements != null){
-        
+            str.append("else:\n");
             for (Statement else_statement : else_statements) {
                 str.append(Proyecto1.pythonAddTabs(else_statement.translatePython())).append("\n");
             }

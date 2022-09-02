@@ -58,10 +58,7 @@ public class Function implements Statement {
         str.append("):\n");
         
         for (Statement statement : statements) {
-            // @TODO: delete in production
-            if (statement.translatePython() != null){
-                str.append(Proyecto1.pythonAddTabs(statement.translatePython())).append("\n");
-            }
+            str.append(Proyecto1.pythonAddTabs(statement.translatePython())).append("\n");
         }
         
         return str.toString();

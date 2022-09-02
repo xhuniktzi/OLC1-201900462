@@ -63,7 +63,9 @@ public class Operation implements Statement {
         
         switch (typeOp) {
             case BINARY -> {
-                str.append(left.translatePython()).append(Proyecto1.pythonSymbolBinaryOperators(type)).append(right.translatePython());
+                str.append(left.translatePython()).append(" ")
+                        .append(Proyecto1.pythonSymbolBinaryOperators(type)).append(" ")
+                        .append(right.translatePython());
             }
             case UNITARY -> {
                 str.append(Proyecto1.pythonSymbolUnitaryOperators(typeUnitary)).append(" ").append(op.translatePython());

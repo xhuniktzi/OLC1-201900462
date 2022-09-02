@@ -25,7 +25,7 @@ public class Print implements Statement {
     public String translatePython() {
         StringBuilder str = new StringBuilder();
         
-        str.append("print(").append(expr.translatePython()).append(", endl=\"\")");
+        str.append("print(").append(expr.translatePython()).append(")");
         
         return str.toString();
     }

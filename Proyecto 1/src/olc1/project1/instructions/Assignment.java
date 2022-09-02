@@ -51,7 +51,10 @@ public class Assignment implements Statement {
                 str.append(",");
             }
         }
-         
+        
+        str.append("\n");
+
+        
         return str.toString();
     }
     

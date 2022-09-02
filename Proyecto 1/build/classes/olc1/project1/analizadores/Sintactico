@@ -26,11 +26,10 @@ import olc1.project1.instructions.Execute;
 import olc1.project1.instructions.EnumOperations;
 import olc1.project1.instructions.EnumTerminals;
 import olc1.project1.instructions.EnumUnitaryOperations;
-import olc1.project1.instructions.EnumTypes;
 
 parser code 
 {:
-     public LinkedList<Statement> AST;
+    public LinkedList<Statement> AST;
 
     public void syntax_error(Symbol s){ 
             System.err.println("Error Sintáctico en la linea: " + (s.left) + " y columna : " + s.right + ". No se esperaba este token: " + s.value + "."); 
@@ -59,6 +58,7 @@ terminal String FUNCTION, ENDFUNCTION, EXEC;
 terminal String PRINT, PRINTLN;
 terminal String NUM, STR, BOOLEAN, CHAR;
 terminal String TYPEDEF, ID, FUNCID;
+terminal String SBRACKETOPEN, SBRACKETCLOSE;
 
 non terminal ini;
 
@@ -91,10 +91,10 @@ statement ::= ENTER name_list:n AS TYPEDEF:t WITH_VALUE expr:e DOTCOMMA {:RESULT
 | IF expr:e THEN statements:p ELSE statements:s ENDIF {:RESULT = new If(e, p, s);:}
 | IF expr:e THEN statements:s elifs:f ENDIF {:RESULT = new If(e, s, f, null);:}
 | IF expr:e THEN statements:s elifs:f ELSE statements:p ENDIF {:RESULT = new If(e, s, f, p);:}
-| FOR ID ARROW expr:e TO expr:f DO statements:s ENDFOR {:RESULT = new For(e, f, s);:}
-| FOR ID ARROW expr:e TO expr:f WITHINCREMENTAL NUM:n DO statements:s ENDFOR {:RESULT = new For(e, f, n, s);:}
-| FOR ID ARROW expr:e TO expr:f DO ENDFOR {:RESULT = new For(e, f);:}
-| FOR ID ARROW expr:e TO expr:f WITHINCREMENTAL NUM:n DO ENDFOR {:RESULT = new For(e, f, n);:}
+| FOR ID:i ARROW expr:e TO expr:f DO statements:s ENDFOR {:RESULT = new For(i, e, f, s);:}
+| FOR ID:i ARROW expr:e TO expr:f WITHINCREMENTAL NUM:n DO statements:s ENDFOR {:RESULT = new For(i, e, f, n, s);:}
+| FOR ID:i ARROW expr:e TO expr:f DO ENDFOR {:RESULT = new For(i, e, f);:}
+| FOR ID:i ARROW expr:e TO expr:f WITHINCREMENTAL NUM:n DO ENDFOR {:RESULT = new For(i, e, f, n);:}
 | WHILE expr:e DO statements:s ENDWHILE {:RESULT = new While(e, s);:}
 | WHILE expr:e DO ENDWHILE {:RESULT = new While(e);:}
 | REPEAT statements:s ENDREPEAT expr:e {:RESULT = new Repeat(s, e);:}
@@ -140,8 +140,8 @@ expr ::= ID:i {:RESULT = new Operation(i, EnumTerminals.ID);:}
 | expr:a SUBSTRACT expr:b {:RESULT = new Operation(a, EnumOperations.SUBSTRACT, b);:}
 | expr:a MULTIPLY expr:b {:RESULT = new Operation(a, EnumOperations.MULTIPLY, b);:}
 | expr:a DIVISION expr:b {:RESULT = new Operation(a, EnumOperations.DIVISION, b);:}
-| expr:a POW expr:b {:RESULT = new Operation(a, EnumOperations.POW, b);:}
-| expr:a MODULE expr:b {:RESULT = new Operation(a, EnumOperations.MODULE, b);:}
+| expr:a POW SBRACKETOPEN expr:b SBRACKETCLOSE {:RESULT = new Operation(a, EnumOperations.POW, b);:}
+| expr:a MODULE SBRACKETOPEN expr:b SBRACKETCLOSE {:RESULT = new Operation(a, EnumOperations.MODULE, b);:}
 | expr:a MAJOR expr:b {:RESULT = new Operation(a, EnumOperations.MAJOR, b);:}
 | expr:a MINOR expr:b {:RESULT = new Operation(a, EnumOperations.MINOR, b);:}
 | expr:a MAJOREQUALS expr:b {:RESULT = new Operation(a, EnumOperations.MAJOREQUALS, b);:}

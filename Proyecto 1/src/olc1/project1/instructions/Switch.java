@@ -38,29 +38,29 @@ public class Switch implements Statement {
         StringBuilder str = new StringBuilder();
         
         int i = 0;
-        // @TODO: fix in production
         for (Case aCase : cases) {
             if (i == 0){
                 str.append("if ").append(expr.translatePython()).append("==").append(aCase.expr.translatePython()).append(":\n");
                 for (Statement statement: aCase.statements) {
-                    if (statement.translatePython() != null)
+
                     str.append(Proyecto1.pythonAddTabs(statement.translatePython())).append("\n");
                 }
 
             } else {
                 str.append("elif ").append(expr.translatePython()).append("==").append(aCase.expr.translatePython()).append(":\n");
                 for (Statement statement: aCase.statements) {
-                    if (statement.translatePython() != null)
+
                     str.append(Proyecto1.pythonAddTabs(statement.translatePython())).append("\n");
                 }
             }
             i++;
         }
-        
-        str.append("else:\n");
-        for (Statement else_statement : else_statements) {
-            if (else_statement.translatePython() != null)
-            str.append(Proyecto1.pythonAddTabs(else_statement.translatePython())).append("\n");
+        if(else_statements != null){
+            str.append("else:\n");
+            for (Statement else_statement : else_statements) {
+
+                str.append(Proyecto1.pythonAddTabs(else_statement.translatePython())).append("\n");
+            }
         }
         
         

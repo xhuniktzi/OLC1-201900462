@@ -31,7 +31,6 @@ public class Repeat implements Statement {
     }
     
     @Override
-    // @TODO: fix in production to convert do while statement
     public String translatePython(){
         StringBuilder str = new StringBuilder();
         str.append("flag = True\n");
@@ -40,7 +39,7 @@ public class Repeat implements Statement {
             str.append(Proyecto1.pythonAddTabs(statement.translatePython())).append("\n");
         }
         str.append("\tif ").append(expr.translatePython()).append(":\n");
-        str.append("\t\ttbreak");
+        str.append("\t\tbreak");
         
         return str.toString();
     }

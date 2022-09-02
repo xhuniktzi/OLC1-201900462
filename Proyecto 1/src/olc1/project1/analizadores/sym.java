@@ -15,6 +15,7 @@ public class sym {
   public static final int CHAR = 57;
   public static final int STR = 55;
   public static final int EQUALS = 6;
+  public static final int SBRACKETOPEN = 61;
   public static final int MAJOREQUALS = 4;
   public static final int REPEAT = 43;
   public static final int PRINTLN = 53;
@@ -61,6 +62,7 @@ public class sym {
   public static final int WITH_VALUE = 28;
   public static final int END = 24;
   public static final int ENDREPEAT = 44;
+  public static final int SBRACKETCLOSE = 62;
   public static final int EXEC = 51;
   public static final int AS = 27;
   public static final int CLOSEQUESTION = 14;
@@ -130,7 +132,9 @@ public class sym {
   "CHAR",
   "TYPEDEF",
   "ID",
-  "FUNCID"
+  "FUNCID",
+  "SBRACKETOPEN",
+  "SBRACKETCLOSE"
   };
 }
 

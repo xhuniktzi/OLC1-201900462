@@ -30,7 +30,7 @@ public class Proyecto1 {
      * @throws java.io.FileNotFoundException
      */
     public static void main(String[] args) throws FileNotFoundException, IOException, Exception {
-        String path = "./Entrada.txt";
+        String path = "./Entradasi.olc";
         // TODO code application logic here
         Lexico scanner = new Lexico(new FileReader(new File(path)));
         Sintactico parser = new Sintactico(scanner);
@@ -128,7 +128,7 @@ public class Proyecto1 {
                 return "/";
             }
             case EQUALS -> {
-                return "=";
+                return "==";
             }
             case MAJOR -> {
                 return ">";

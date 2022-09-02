@@ -28,7 +28,7 @@ public class Param implements Statement {
     public String translatePython(){
         StringBuilder str = new StringBuilder();
         
-        str.append(id).append(": ").append(Proyecto1.viewTypes(type));
+        str.append(id);
         
         return str.toString();
     }
