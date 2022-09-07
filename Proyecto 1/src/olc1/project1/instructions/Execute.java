@@ -48,7 +48,7 @@ public class Execute implements Statement {
             }
         }
         
-        str.append(")\n");
+        str.append(")");
         
         return str.toString();
     }

@@ -11,6 +11,8 @@ import olc1.project1.Proyecto1;
  * @author Xhunik
  */
 public class Operation implements Statement {
+    String guid = Proyecto1.generateGuid();
+    
     // Binary operations
     Operation left;
     Operation right;
@@ -23,6 +25,11 @@ public class Operation implements Statement {
     // Terminal expresions
     String value;
     EnumTerminals typeTerminal;
+    
+    // Function expresion
+    Execute function;
+    
+    // Procedure
     
     // Flag Type
     private final TypeOperation typeOp;
@@ -51,9 +58,99 @@ public class Operation implements Statement {
         this.typeOp = TypeOperation.GROUP;
     }
     
+    public Operation(Execute value){
+        this.function = value;
+        this.typeOp = TypeOperation.FUNCTION;
+    }
+    
     @Override
     public String traverse() {
         StringBuilder str = new StringBuilder();
+        
+        // root of expresion
+        str.append("T_").append(guid).append(";\n");
+        
+        switch (typeOp) {
+            case BINARY -> {
+                // root of this to root of left
+                str.append("T_").append(guid).append("->").append("T_").append(left.guid)
+                         .append(";\n");
+                
+                // left expresion
+                str.append(left.traverse());
+                
+                // operator
+               str.append("Op_").append(guid).append("[label=\"")
+                        .append(Proyecto1.pythonSymbolBinaryOperators(type)).append("\"];\n");
+               
+               // root to operator
+                str.append("T_").append(guid).append("->").append("Op_").append(guid)
+                         .append(";\n");
+                
+                // root of this to root of right
+                str.append("T_").append(guid).append("->").append("T_").append(right.guid)
+                         .append(";\n");
+                
+                // right expresion
+                str.append(right.traverse());
+            }
+            case UNITARY -> {
+                // operator
+                str.append("Op_").append(guid).append("[label=\"")
+                        .append(Proyecto1.pythonSymbolUnitaryOperators(typeUnitary)).append("\"];\n");
+                
+                // root to operator
+                str.append("T_").append(guid).append("->").append("Op_").append(guid)
+                         .append(";\n");
+                
+                // root of this to root of expresion
+                str.append("T_").append(guid).append("->").append("T_").append(op.guid)
+                         .append(";\n");
+                
+                //expresion
+                str.append(op.traverse());
+            }
+            case TERMINAL -> {
+                // value of expresion
+                str.append("Val_").append(guid).append("[label=\"")
+                        .append(value).append("\"];\n");
+                
+                // root of this to value
+                str.append("T_").append(guid).append("->").append("Val_").append(guid)
+                         .append(";\n");
+            }
+            case GROUP -> {
+                // start token
+                str.append("SP_").append(guid).append("[label=\"(\"];\n");
+                
+                // root to start
+                str.append("T_").append(guid).append("->").append("SP_").append(guid)
+                         .append(";\n");
+                
+                // value of expresion
+                str.append("Val_").append(guid).append("[label=\"")
+                        .append(value).append("\"];\n");
+                
+                // root of this to value
+                str.append("T_").append(guid).append("->").append("Val_").append(guid)
+                         .append(";\n");
+                
+                // end token
+                str.append("EP_").append(guid).append("[label=\")\"];\n");
+                
+                // root to end
+                str.append("T_").append(guid).append("->").append("EP_").append(guid)
+                         .append(";\n");
+            }
+            case FUNCTION -> {
+//                str.append(function.translatePython());
+            }
+            default -> throw new AssertionError();
+        }
+        
+
+
+        
         return str.toString();
     }
     
@@ -75,6 +172,9 @@ public class Operation implements Statement {
             }
             case GROUP -> {
                 str.append("(").append(value).append(")");
+            }
+            case FUNCTION -> {
+                str.append(function.translatePython());
             }
             default -> throw new AssertionError();
         }

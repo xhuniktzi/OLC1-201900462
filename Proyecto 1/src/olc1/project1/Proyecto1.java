@@ -30,7 +30,7 @@ public class Proyecto1 {
      * @throws java.io.FileNotFoundException
      */
     public static void main(String[] args) throws FileNotFoundException, IOException, Exception {
-        String path = "./Entradasi.olc";
+        String path = "./Copia de archivoEntrada.olc";
         // TODO code application logic here
         Lexico scanner = new Lexico(new FileReader(new File(path)));
         Sintactico parser = new Sintactico(scanner);
@@ -44,11 +44,13 @@ public class Proyecto1 {
     
     public static String translatePython(LinkedList<Statement> ast){
         StringBuilder str = new StringBuilder();
+        str.append("def main():\n");
         
         for (Statement statement : ast) {
-            str.append(statement.translatePython()).append("\n");
+            str.append(pythonAddTabs(statement.translatePython())).append("\n");
         }
-        
+        str.append("if __name__ == '__main__':\n");
+        str.append("\tmain()");
         return str.toString();
     }
     
@@ -77,6 +79,7 @@ public class Proyecto1 {
     }
     
     public static EnumTypes checkTypes(String type){
+        type = type.toLowerCase();
          switch (type) {
             case "numero" -> {
                 return EnumTypes.NUM;

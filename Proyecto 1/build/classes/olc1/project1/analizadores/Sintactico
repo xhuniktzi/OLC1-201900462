@@ -31,7 +31,7 @@ parser code
 {:
     public LinkedList<Statement> AST;
 
-    public void syntax_error(Symbol s){ 
+    public void syntax_error(Symbol s){
             System.err.println("Error Sintáctico en la linea: " + (s.left) + " y columna : " + s.right + ". No se esperaba este token: " + s.value + "."); 
     } 
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
@@ -57,7 +57,7 @@ terminal String RETURN, DEFPROCEDURE, ENDPROCEDURE, PARAMS;
 terminal String FUNCTION, ENDFUNCTION, EXEC;
 terminal String PRINT, PRINTLN;
 terminal String NUM, STR, BOOLEAN, CHAR;
-terminal String TYPEDEF, ID, FUNCID;
+terminal String TYPEDEF, ID;
 terminal String SBRACKETOPEN, SBRACKETCLOSE;
 
 non terminal ini;
@@ -100,16 +100,16 @@ statement ::= ENTER name_list:n AS TYPEDEF:t WITH_VALUE expr:e DOTCOMMA {:RESULT
 | REPEAT statements:s ENDREPEAT expr:e {:RESULT = new Repeat(s, e);:}
 | REPEAT ENDREPEAT expr:e {:RESULT = new Repeat(e);:}
 | RETURN expr:e DOTCOMMA {:RESULT = new Return(e);:}
-| DEFPROCEDURE FUNCID:f statements:s ENDPROCEDURE {:RESULT = new Procedure(f, s);:}
-| DEFPROCEDURE FUNCID:f PARAMS PARSTART params_list:p PAREND statements:s ENDPROCEDURE {:RESULT = new Procedure(f, p, s);:}
-| FUNCTION FUNCID:f TYPEDEF:t statements:s ENDFUNCTION {:RESULT = new Function(f, t, s);:}
-| FUNCTION FUNCID:f TYPEDEF:t PARAMS PARSTART params_list:p PAREND statements:s ENDFUNCTION {:RESULT = new Function(f, t, p, s);:}
+| DEFPROCEDURE ID:f statements:s ENDPROCEDURE {:RESULT = new Procedure(f, s);:}
+| DEFPROCEDURE ID:f PARAMS PARSTART params_list:p PAREND statements:s ENDPROCEDURE {:RESULT = new Procedure(f, p, s);:}
+| FUNCTION ID:f TYPEDEF:t statements:s ENDFUNCTION {:RESULT = new Function(f, t, s);:}
+| FUNCTION ID:f TYPEDEF:t PARAMS PARSTART params_list:p PAREND statements:s ENDFUNCTION {:RESULT = new Function(f, t, p, s);:}
 | EXEC func:f DOTCOMMA {:RESULT = f;:}
 | PRINT expr:e DOTCOMMA {:RESULT = new Print(e);:}
 | PRINTLN expr:e DOTCOMMA {:RESULT = new Println(e);:}
 | SWITCH expr:e DO cases:c ENDSWITCH {:RESULT = new Switch(e, c);:}
 | SWITCH expr:e DO cases:c ELSE THEN statements:s ENDSWITCH {:RESULT = new Switch(e, c, s);:}
-| error DOTCOMMA;
+| error;
 
 params_list ::= params_list:p COMMA ID:i TYPEDEF:t {:RESULT = p; RESULT.add(new Param(i, t));:}
 | ID:i TYPEDEF:t {:RESULT = new LinkedList<Param>(); RESULT.add(new Param(i, t));:};
@@ -120,8 +120,8 @@ args_list ::= args_list:a COMMA expr:e {:RESULT = a; RESULT.add(e);:}
 name_list ::= name_list:n COMMA ID:i {:RESULT = n; RESULT.add(i);:}
 | ID:i {:RESULT = new LinkedList<String>(); RESULT.add(i);:};
 
-func ::= FUNCID:f PARSTART PAREND {:RESULT = new Execute(f);:}
-| FUNCID:f PARSTART args_list:a PAREND {:RESULT = new Execute(f, a);:};
+func ::= ID:f PARSTART PAREND {:RESULT = new Execute(f);:}
+| ID:f PARSTART args_list:a PAREND {:RESULT = new Execute(f, a);:};
 
 elifs ::= elifs:f ELIF expr:e THEN statements:s {:RESULT = f; RESULT.add(new Elif(e, s));:}
 | ELIF expr:e THEN statements:s {:RESULT = new LinkedList<Elif>(); RESULT.add(new Elif(e, s));:};
@@ -150,4 +150,5 @@ expr ::= ID:i {:RESULT = new Operation(i, EnumTerminals.ID);:}
 | expr:a NOTEQUALS expr:b {:RESULT = new Operation(a, EnumOperations.NOTEQUALS, b);:}
 | expr:a AND expr:b {:RESULT = new Operation(a, EnumOperations.AND, b);:}
 | expr:a OR expr:b {:RESULT = new Operation(a, EnumOperations.OR, b);:}
-| PARSTART expr:e PAREND {:RESULT = new Operation(e);:};
+| PARSTART expr:e PAREND {:RESULT = new Operation(e);:}
+| EXEC func:f {:RESULT = new Operation(f);:};

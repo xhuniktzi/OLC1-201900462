@@ -26,10 +26,12 @@ BOOLEAN = Verdadero|Falso
 CHAR = [\']([^\t\'\"\n]|(\\\")|(\\n)|(\\\')|(\\t))?[\']
 
 ID = "_"[0-9A-Za-z]+"_"
-FUNCID = [A-Za-z]+["_"0-9A-Za-z]*
+//FUNCID = "_"[0-9A-Za-z]+"_"
 TYPEDEF = Numero|Cadena|Boolean|Caracter
 OPENQUESTION = [\¿]
 SBRACKETOPEN =[\[]
+
+
 
 %%
 
@@ -115,7 +117,7 @@ SBRACKETOPEN =[\[]
 
 {TYPEDEF}               {return new Symbol(sym.TYPEDEF, yyline, (int) yychar, yytext());}
 {ID}                    {return new Symbol(sym.ID, yyline, (int) yychar, (yytext()).substring(1,yytext().length()-1));}
-{FUNCID}                {return new Symbol(sym.FUNCID, yyline, (int) yychar, yytext());}
+//{FUNCID}                {return new Symbol(sym.FUNCID, yyline, (int) yychar, (yytext()).substring(1,yytext().length()-1));}
 
 {OPENQUESTION}                {return new Symbol(sym.OPENQUESTION, yyline, (int) yychar, yytext());}
 {SBRACKETOPEN}                {return new Symbol(sym.SBRACKETOPEN, yyline,(int) yychar, yytext());}
