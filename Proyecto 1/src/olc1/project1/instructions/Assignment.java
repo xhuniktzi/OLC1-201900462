@@ -6,12 +6,18 @@ package olc1.project1.instructions;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import olc1.project1.Proyecto1;
 
 /**
  *
  * @author Xhunik
  */
 public class Assignment implements Statement {
+    private final String guid = Proyecto1.generateGuid();
+    @Override
+    public String getGuid() { return this.guid; }
+    
+    
     LinkedList<String> name_list;
     Operation expr;
     
@@ -20,9 +26,42 @@ public class Assignment implements Statement {
         this.expr = expr;
     }
 
+
+    
     @Override
     public String traverse() {
         StringBuilder str = new StringBuilder();
+        
+        // root of expresion
+        str.append("T_").append(guid).append("[label=\"T_Assignment\"];\n");
+        
+        // name list
+        int i = 0;
+        for (String name : name_list) {
+            // name
+            str.append("Name_").append(guid).append("_").append(i)
+                    .append("[label=\"").append(name).append("\"];\n");
+            
+            // root to name
+            str.append("T_").append(guid).append("->").append("Name_")
+                    .append(guid).append("_").append(i).append(";\n");
+            i++;
+        }
+        
+        // arrow
+        str.append("Arrow_").append(guid).append("[label=\"ARROW\"];\n");
+        
+        // root to arrow
+        str.append("T_").append(guid).append("->").append("Arrow_").append(guid)
+                .append(";\n");
+        
+        // root to expresion
+        str.append("T_").append(guid).append("->").append("T_").append(expr.getGuid())
+                .append(";\n");
+        
+        // expresion
+        str.append(expr.traverse());
+        
         return str.toString();
     }
 

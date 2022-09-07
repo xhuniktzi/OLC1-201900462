@@ -4,11 +4,17 @@
  */
 package olc1.project1.instructions;
 
+import olc1.project1.Proyecto1;
+
 /**
  *
  * @author Xhunik
  */
 public class Println implements Statement {
+    private final String guid = Proyecto1.generateGuid();
+    @Override
+    public String getGuid() { return this.guid; }
+    
     Operation expr;
     
     public Println(Operation expr){

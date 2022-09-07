@@ -12,6 +12,10 @@ import olc1.project1.Proyecto1;
  * @author Xhunik
  */
 public class For implements Statement {
+    private final String guid = Proyecto1.generateGuid();
+    @Override
+    public String getGuid() { return this.guid; }
+    
     String varId;
     Operation expr1;
     Operation expr2;

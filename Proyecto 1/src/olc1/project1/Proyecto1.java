@@ -38,8 +38,11 @@ public class Proyecto1 {
         
         LinkedList<Statement> ast = parser.AST;
         
-        String pyStr = translatePython(ast);
-        System.out.println(pyStr);
+//        String pyStr = translatePython(ast);
+//        System.out.println(pyStr);
+        
+        String graph = graph(ast);
+        System.out.println(graph);
     }
     
     public static String translatePython(LinkedList<Statement> ast){
@@ -51,6 +54,28 @@ public class Proyecto1 {
         }
         str.append("if __name__ == '__main__':\n");
         str.append("\tmain()");
+        return str.toString();
+    }
+    
+    public static String graph(LinkedList<Statement> ast){
+        StringBuilder str = new StringBuilder();
+        
+        str.append("digraph G {\n");
+        
+        str.append("rootNode [label=\"Raiz\"];\n");
+        
+        for (Statement statement : ast) {
+            // @TODO: delete in production
+            String className = statement.getClass().getSimpleName();
+            if (className.equals("Assignment") || className.equals("Execute")|| className.equals("Declaration")){
+                str.append("rootNode ->").append("T_").append(statement.getGuid()).append(";\n");
+                str.append(statement.traverse());
+            }
+             
+        }
+        
+        str.append("}");
+        
         return str.toString();
     }
     

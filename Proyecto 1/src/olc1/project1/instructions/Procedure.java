@@ -13,6 +13,10 @@ import olc1.project1.Proyecto1;
  * @author Xhunik
  */
 public class Procedure implements Statement {
+    private final String guid = Proyecto1.generateGuid();
+    @Override
+    public String getGuid() { return this.guid; }
+    
     String funcId;
     LinkedList<Param> params_list;
     LinkedList<Statement> statements;

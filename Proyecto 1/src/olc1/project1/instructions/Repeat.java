@@ -12,6 +12,10 @@ import olc1.project1.Proyecto1;
  * @author Xhunik
  */
 public class Repeat implements Statement {
+    private final String guid = Proyecto1.generateGuid();
+    @Override
+    public String getGuid() { return this.guid; }
+    
     LinkedList<Statement> statements;
     Operation expr;
     

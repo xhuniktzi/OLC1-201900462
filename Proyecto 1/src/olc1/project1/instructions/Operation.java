@@ -11,7 +11,9 @@ import olc1.project1.Proyecto1;
  * @author Xhunik
  */
 public class Operation implements Statement {
-    String guid = Proyecto1.generateGuid();
+    private final String guid = Proyecto1.generateGuid();
+    @Override
+    public String getGuid() { return this.guid; }
     
     // Binary operations
     Operation left;
@@ -68,7 +70,7 @@ public class Operation implements Statement {
         StringBuilder str = new StringBuilder();
         
         // root of expresion
-        str.append("T_").append(guid).append(";\n");
+        str.append("T_").append(guid).append("[label=\"T_Operation\"];\n");
         
         switch (typeOp) {
             case BINARY -> {
@@ -143,13 +145,15 @@ public class Operation implements Statement {
                          .append(";\n");
             }
             case FUNCTION -> {
-//                str.append(function.translatePython());
+                // root of this to function
+                str.append("T_").append(guid).append("->").append("T_").append(function.getGuid())
+                         .append(";\n");
+                
+                // function
+                str.append(function.traverse());
             }
             default -> throw new AssertionError();
         }
-        
-
-
         
         return str.toString();
     }

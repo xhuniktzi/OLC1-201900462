@@ -6,12 +6,17 @@ package olc1.project1.instructions;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import olc1.project1.Proyecto1;
 
 /**
  *
  * @author Xhunik
  */
 public class Execute implements Statement {
+    private final String guid = Proyecto1.generateGuid();
+    @Override
+    public String getGuid() { return this.guid; }
+    
     String funcId;
     LinkedList<Operation> args_list;
     
@@ -27,6 +32,51 @@ public class Execute implements Statement {
     @Override
     public String traverse() {
         StringBuilder str = new StringBuilder();
+        
+        // root of expresion
+        str.append("T_").append(guid).append("[label=\"T_Execute\"];\n");
+        
+        // reserved word execute
+        str.append("R_exec_").append(guid).append("[label=\"EXEC\"];\n");
+        
+        // root to reserved
+        str.append("T_").append(guid).append("->").append("R_exec_")
+                        .append(guid).append(";\n");
+        
+        // function id
+        str.append("ID_func_").append(guid).append("[label=\"")
+                        .append(funcId).append("\"];\n");
+        
+        // root to reserved
+        str.append("T_").append(guid).append("->").append("ID_func_")
+                        .append(guid).append(";\n");
+        
+        // start token
+        str.append("SP_").append(guid).append("[label=\"(\"];\n");
+        
+        // root to start
+        str.append("T_").append(guid).append("->").append("SP_")
+                        .append(guid).append(";\n");
+        
+        // args list
+        if (args_list != null){
+            for (Operation operation : args_list) {
+                // root of expr to root of argument
+                str.append("T_").append(guid).append("->").append("T_")
+                        .append(operation.getGuid()).append(";\n");
+                
+                // argument
+                str.append(operation.traverse());
+            }
+        }
+        
+        // end token
+        str.append("EP_").append(guid).append("[label=\")\"];\n");
+        
+        // root to start
+        str.append("T_").append(guid).append("->").append("EP_")
+                        .append(guid).append(";\n");
+        
         return str.toString();
     }
     

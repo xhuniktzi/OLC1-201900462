@@ -13,6 +13,10 @@ import olc1.project1.Proyecto1;
  * @author Xhunik
  */
 public class Declaration implements Statement {
+    private final String guid = Proyecto1.generateGuid();
+    @Override
+    public String getGuid() { return this.guid; }
+    
     LinkedList<String> name_list;
     EnumTypes type;
     Operation expr;
@@ -26,6 +30,62 @@ public class Declaration implements Statement {
     @Override
     public String traverse() {
         StringBuilder str = new StringBuilder();
+        
+        // root of expresion
+        str.append("T_").append(guid).append("[label=\"T_Declaration\"];\n");
+        
+        // reserved word enter
+        str.append("R_enter_").append(guid).append("[label=\"ENTER\"];\n");
+        
+        // root to reserved enter
+        str.append("T_").append(guid).append("->").append("R_enter_")
+                        .append(guid).append(";\n");
+        
+        // name list
+        int i = 0;
+        for (String name : name_list) {
+            // name
+            str.append("Name_").append(guid).append("_").append(i)
+                    .append("[label=\"").append(name).append("\"];\n");
+            
+            // root to name
+            str.append("T_").append(guid).append("->").append("Name_")
+                    .append(guid).append("_").append(i).append(";\n");
+            i++;
+        }
+        
+        // as
+        str.append("As_").append(guid).append("[label=\"AS\"];\n");
+        
+        // root to as
+        str.append("T_").append(guid).append("->").append("As_").append(guid)
+                .append(";\n");
+        
+        // datatype
+        str.append("Datatype_").append(guid).append("[label=\"")
+                .append(Proyecto1.viewTypes(type)).append("\"];\n");
+        
+        // root to datatype
+        str.append("T_").append(guid).append("->").append("Datatype_")
+                .append(guid).append(";\n");
+        
+        // with
+        str.append("With_").append(guid).append("[label=\"WITH VALUE\"];\n");
+        
+        // root to with
+        str.append("T_").append(guid).append("->").append("With_").append(guid)
+                .append(";\n");
+        
+ 
+        
+        
+        // root to expresion
+        str.append("T_").append(guid).append("->").append("T_").append(expr.getGuid())
+                .append(";\n");
+        
+        // expresion
+        str.append(expr.traverse());
+        
         return str.toString();
     }
     
