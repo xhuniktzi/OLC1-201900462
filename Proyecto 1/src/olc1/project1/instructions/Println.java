@@ -24,6 +24,24 @@ public class Println implements Statement {
     @Override
     public String traverse() {
         StringBuilder str = new StringBuilder();
+        
+        // root
+        str.append("T_").append(guid).append("[label=\"T_Println\"];\n");
+        
+        // reserved word print
+        str.append("R_println_").append(guid).append("[label=\"PRINTLN\"];\n");
+        
+        // root to print
+        str.append("T_").append(guid).append("->").append("R_println_").append(guid)
+                .append(";\n");
+        
+        // root to expr
+        str.append("T_").append(guid).append("->").append("T_")
+                .append(expr.getGuid()).append(";\n");
+        
+        // expr
+        str.append(expr.traverse());
+        
         return str.toString();
     }
     

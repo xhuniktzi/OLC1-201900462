@@ -7,6 +7,7 @@ package olc1.project1.instructions;
 import java.util.Iterator;
 import java.util.LinkedList;
 import olc1.project1.Proyecto1;
+import static olc1.project1.Proyecto1.checkIfClassIsModeled;
 
 /**
  *
@@ -35,6 +36,67 @@ public class Procedure implements Statement {
     @Override
     public String traverse() {
         StringBuilder str = new StringBuilder();
+        
+        // root of expresion
+        str.append("T_").append(guid).append("[label=\"T_Procedure\"];\n");
+        
+        // reserved word procedure
+        str.append("R_procedure_").append(guid).append("[label=\"PROCEDURE\"];\n");
+        
+        // root to reserved procedure
+        str.append("T_").append(guid).append("->").append("R_procedure_")
+                .append(guid).append(";\n");
+        
+        // id
+        str.append("P_id_").append(guid).append("[label=\"")
+                .append(funcId).append("\"];\n");
+        
+        // root to id
+        str.append("T_").append(guid).append("->").append("P_id_").append(guid).append(";\n");
+        
+        
+         // start token
+        str.append("SP_").append(guid).append("[label=\"(\"];\n");
+                
+        // root to start
+        str.append("T_").append(guid).append("->").append("SP_").append(guid)
+                .append(";\n");
+        
+        if (params_list != null){
+            for (Param param : params_list) {
+                str.append("T_").append(guid).append("->")
+                        .append("T_").append(param.getGuid()).append(";\n");
+                
+                str.append(param.traverse());
+            }
+        }
+        
+        // end token
+        str.append("EP_").append(guid).append("[label=\")\"];\n");
+        
+        // root to end
+        str.append("T_").append(guid).append("->").append("EP_").append(guid)
+                .append(";\n");
+        
+        for (Statement statement : statements) {
+            // @TODO: delete in production
+            String className = statement.getClass().getSimpleName();
+            if (checkIfClassIsModeled(className)){
+                
+                str.append("T_").append(guid).append("->")
+                        .append("T_").append(statement.getGuid()).append(";\n");
+                str.append(statement.traverse());
+            }             
+        }
+        
+        // reserved word end procedure
+        str.append("R_end_procedure_").append(guid)
+                .append("[label=\"END PROCEDURE\"];\n");
+        
+        // root to reserved end procedure
+        str.append("T_").append(guid).append("->").append("R_end_procedure_")
+                .append(guid).append(";\n");
+        
         return str.toString();
     }
     

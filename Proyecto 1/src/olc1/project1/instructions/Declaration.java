@@ -75,10 +75,7 @@ public class Declaration implements Statement {
         // root to with
         str.append("T_").append(guid).append("->").append("With_").append(guid)
                 .append(";\n");
-        
- 
-        
-        
+
         // root to expresion
         str.append("T_").append(guid).append("->").append("T_").append(expr.getGuid())
                 .append(";\n");

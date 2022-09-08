@@ -25,6 +25,22 @@ public class Param implements Statement {
     @Override
     public String traverse() {
         StringBuilder str = new StringBuilder();
+        
+        // root of expresion
+        str.append("T_").append(guid).append("[label=\"T_Param\"];\n");
+        
+        // id
+        str.append("Id_").append(guid).append("[label=\"").append(id).append("\"];\n");
+        
+        // root to id
+        str.append("T_").append(guid).append("->").append("Id_").append(guid).append(";\n");
+
+        // datatype
+        str.append("Datatype_").append(guid).append("[label=\"").append(Proyecto1.viewTypes(type)).append("\"];\n");
+        
+        // root to datatype
+        str.append("T_").append(guid).append("->").append("Datatype_").append(guid).append(";\n");
+        
         return str.toString();
     }
     

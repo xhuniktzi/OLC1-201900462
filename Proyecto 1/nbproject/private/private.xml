@@ -3,12 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Xhunik/Projects/OLC1-201900462/Proyecto%201/src/olc1/project1/instructions/Statement.java</file>
-            <file>file:/C:/Users/Xhunik/Projects/OLC1-201900462/Proyecto%201/src/olc1/project1/analizadores/Sintactico</file>
+            <file>file:/C:/Users/Xhunik/Projects/OLC1-201900462/Proyecto%201/src/olc1/project1/instructions/Declaration.java</file>
+            <file>file:/C:/Users/Xhunik/Projects/OLC1-201900462/Proyecto%201/src/olc1/project1/instructions/Return.java</file>
+            <file>file:/C:/Users/Xhunik/Projects/OLC1-201900462/Proyecto%201/src/olc1/project1/instructions/Function.java</file>
             <file>file:/C:/Users/Xhunik/Projects/OLC1-201900462/Proyecto%201/src/olc1/project1/Proyecto1.java</file>
-            <file>file:/C:/Users/Xhunik/Projects/OLC1-201900462/Proyecto%201/src/olc1/project1/instructions/Assignment.java</file>
-            <file>file:/C:/Users/Xhunik/Projects/OLC1-201900462/Proyecto%201/src/olc1/project1/instructions/Operation.java</file>
-            <file>file:/C:/Users/Xhunik/Projects/OLC1-201900462/Proyecto%201/src/olc1/project1/instructions/Execute.java</file>
+            <file>file:/C:/Users/Xhunik/Projects/OLC1-201900462/Proyecto%201/src/olc1/project1/instructions/Procedure.java</file>
+            <file>file:/C:/Users/Xhunik/Projects/OLC1-201900462/Proyecto%201/src/olc1/project1/instructions/While.java</file>
+            <file>file:/C:/Users/Xhunik/Projects/OLC1-201900462/Proyecto%201/src/olc1/project1/instructions/Repeat.java</file>
+            <file>file:/C:/Users/Xhunik/Projects/OLC1-201900462/Proyecto%201/src/olc1/project1/instructions/Param.java</file>
         </group>
     </open-files>
 </project-private>

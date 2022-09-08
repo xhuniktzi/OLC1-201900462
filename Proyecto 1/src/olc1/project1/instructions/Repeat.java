@@ -6,6 +6,7 @@ package olc1.project1.instructions;
 
 import java.util.LinkedList;
 import olc1.project1.Proyecto1;
+import static olc1.project1.Proyecto1.checkIfClassIsModeled;
 
 /**
  *
@@ -31,6 +32,42 @@ public class Repeat implements Statement {
     @Override
     public String traverse() {
         StringBuilder str = new StringBuilder();
+        
+        // root of expresion
+        str.append("T_").append(guid).append("[label=\"T_Repeat\"];\n");
+        
+        // reserved word repeat
+        str.append("R_repeat_").append(guid).append("[label=\"REPEAT\"];\n");
+        
+        // root to reserved repeat
+        str.append("T_").append(guid).append("->").append("R_repeat_")
+                        .append(guid).append(";\n");
+        
+        // statements
+        for (Statement statement : statements) {
+            // @TODO: delete in production
+            String className = statement.getClass().getSimpleName();
+            if (checkIfClassIsModeled(className)){
+                
+                str.append("T_").append(guid).append("->").append("T_").append(statement.getGuid()).append(";\n");
+                str.append(statement.traverse());
+            }             
+        }
+        
+        // reserved word end_repeat
+        str.append("R_end_repeat_").append(guid).append("[label=\"END REPEAT\"];\n");
+        
+        // root to reserved end_repeat
+        str.append("T_").append(guid).append("->").append("R_end_repeat_")
+                        .append(guid).append(";\n");
+        
+        // root to expresion
+        str.append("T_").append(guid).append("->").append("T_").append(expr.getGuid())
+                .append(";\n");
+        
+        // expresion
+        str.append(expr.traverse());
+        
         return str.toString();
     }
     
@@ -38,7 +75,7 @@ public class Repeat implements Statement {
     public String translatePython(){
         StringBuilder str = new StringBuilder();
         str.append("flag = True\n");
-        str.append("while ").append("flag").append(":\n");
+        str.append("repeat ").append("flag").append(":\n");
         for (Statement statement : statements) {
             str.append(Proyecto1.pythonAddTabs(statement.translatePython())).append("\n");
         }

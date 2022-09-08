@@ -31,7 +31,8 @@ public class Operation implements Statement {
     // Function expresion
     Execute function;
     
-    // Procedure
+    // Group
+    Operation opGroup;
     
     // Flag Type
     private final TypeOperation typeOp;
@@ -56,7 +57,7 @@ public class Operation implements Statement {
     }
     
     public Operation(Operation value){
-        this.value = value.translatePython();
+        this.opGroup = value;
         this.typeOp = TypeOperation.GROUP;
     }
     
@@ -129,14 +130,13 @@ public class Operation implements Statement {
                 str.append("T_").append(guid).append("->").append("SP_").append(guid)
                          .append(";\n");
                 
-                // value of expresion
-                str.append("Val_").append(guid).append("[label=\"")
-                        .append(value).append("\"];\n");
+                // root to group
+                str.append("T_").append(guid).append("->").append("T_")
+                        .append(opGroup.guid).append(";\n");
                 
-                // root of this to value
-                str.append("T_").append(guid).append("->").append("Val_").append(guid)
-                         .append(";\n");
-                
+                // group
+                str.append(opGroup.traverse());
+
                 // end token
                 str.append("EP_").append(guid).append("[label=\")\"];\n");
                 
@@ -175,7 +175,7 @@ public class Operation implements Statement {
                 str.append(Proyecto1.pythonTerminals(value, typeTerminal));
             }
             case GROUP -> {
-                str.append("(").append(value).append(")");
+                str.append("(").append(opGroup.translatePython()).append(")");
             }
             case FUNCTION -> {
                 str.append(function.translatePython());

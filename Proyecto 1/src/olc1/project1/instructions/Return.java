@@ -24,6 +24,23 @@ public class Return implements Statement {
     @Override
     public String traverse() {
         StringBuilder str = new StringBuilder();
+        // root of expresion
+        str.append("T_").append(guid).append("[label=\"T_Return\"];\n");
+        
+        // reserved return
+        str.append("R_return_").append(guid).append("[label=\"RETURN\"];\n");
+        
+        // root to return
+        str.append("T_").append(guid).append("->").append("R_return_")
+                .append(guid).append(";\n");
+        
+        // root to expr
+        str.append("T_").append(guid).append("->").append("T_")
+                .append(expr.getGuid()).append(";\n");
+        
+        // expr
+        str.append(expr.traverse());
+        
         return str.toString();
     }
     

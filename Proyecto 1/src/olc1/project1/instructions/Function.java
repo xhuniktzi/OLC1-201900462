@@ -7,6 +7,7 @@ package olc1.project1.instructions;
 import java.util.Iterator;
 import java.util.LinkedList;
 import olc1.project1.Proyecto1;
+import static olc1.project1.Proyecto1.checkIfClassIsModeled;
 
 /**
  *
@@ -38,6 +39,72 @@ public class Function implements Statement {
     @Override
     public String traverse() {
         StringBuilder str = new StringBuilder();
+        
+        // root of expresion
+        str.append("T_").append(guid).append("[label=\"T_Function\"];\n");
+        
+        // reserved word function
+        str.append("R_function_").append(guid).append("[label=\"FUNCTION\"];\n");
+        
+        // root to reserved function
+        str.append("T_").append(guid).append("->").append("R_function_")
+                .append(guid).append(";\n");
+        
+        // id
+        str.append("P_id_").append(guid).append("[label=\"")
+                .append(funcId).append("\"];\n");
+        
+        // root to id
+        str.append("T_").append(guid).append("->").append("P_id_").append(guid).append(";\n");
+        
+        // datatype
+        str.append("Datatype_").append(guid).append("[label=\"").append(Proyecto1.viewTypes(type)).append("\"];\n");
+        
+        // root to datatype
+        str.append("T_").append(guid).append("->").append("Datatype_").append(guid).append(";\n");
+        
+         // start token
+        str.append("SP_").append(guid).append("[label=\"(\"];\n");
+                
+        // root to start
+        str.append("T_").append(guid).append("->").append("SP_").append(guid)
+                .append(";\n");
+        
+        if (params_list != null){
+            for (Param param : params_list) {
+                str.append("T_").append(guid).append("->")
+                        .append("T_").append(param.getGuid()).append(";\n");
+                
+                str.append(param.traverse());
+            }
+        }
+        
+        // end token
+        str.append("EP_").append(guid).append("[label=\")\"];\n");
+        
+        // root to end
+        str.append("T_").append(guid).append("->").append("EP_").append(guid)
+                .append(";\n");
+        
+        for (Statement statement : statements) {
+            // @TODO: delete in production
+            String className = statement.getClass().getSimpleName();
+            if (checkIfClassIsModeled(className)){
+                
+                str.append("T_").append(guid).append("->")
+                        .append("T_").append(statement.getGuid()).append(";\n");
+                str.append(statement.traverse());
+            }             
+        }
+        
+        // reserved word end function
+        str.append("R_end_function_").append(guid)
+                .append("[label=\"END FUNCTION\"];\n");
+        
+        // root to reserved end function
+        str.append("T_").append(guid).append("->").append("R_end_function_")
+                .append(guid).append(";\n");
+        
         return str.toString();
     }
     
