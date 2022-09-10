@@ -84,7 +84,9 @@ public class Proyecto1 {
         return className.equals("Assignment") || className.equals("Execute")|| className.equals("Declaration")
                     || className.equals("Print") || className.equals("Println") || className.equals("While")
                 || className.equals("Procedure") || className.equals("Param") || className.equals("Function")
-                || className.equals("Return") || className.equals("Repeat");
+                || className.equals("Return") || className.equals("Repeat") || className.equals("Switch")
+                || className.equals("Case") || className.equals("Elif") || className.equals("For")
+                || className.equals("If");
     }
     
     public static String pythonTerminals(String value, EnumTerminals type){

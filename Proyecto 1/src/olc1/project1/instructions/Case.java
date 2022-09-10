@@ -6,6 +6,7 @@ package olc1.project1.instructions;
 
 import java.util.LinkedList;
 import olc1.project1.Proyecto1;
+import static olc1.project1.Proyecto1.checkIfClassIsModeled;
 
 /**
  *
@@ -27,6 +28,44 @@ public class Case implements Statement {
     @Override
     public String traverse() {
         StringBuilder str = new StringBuilder();
+        
+        // root of expr
+        str.append("T_").append(guid).append("[label=\"T_Case\"];\n");
+        
+        // root to open question
+        str.append("OQ_").append(guid).append("[label=\"¿\"];\n");
+        
+        // root to expresion
+        str.append("T_").append(guid).append("->").append("T_").append(expr.getGuid())
+                .append(";\n");
+        
+        // expresion
+        str.append(expr.traverse());
+        
+        // root to close question
+        str.append("CQ_").append(guid).append("[label=\"?\"];\n");
+        
+        // reserved then
+        str.append("R_then_").append(guid).append("[label=\"THEN\"];\n");
+        
+        // root to reserved
+        str.append("T_").append(guid).append("->").append("R_then_")
+                .append(guid).append(";\n");
+        
+        // statements
+        for (Statement statement : statements) {
+            // @TODO: delete in production
+            String className = statement.getClass().getSimpleName();
+            if (checkIfClassIsModeled(className)){
+                // root to statement
+                str.append("T_").append(guid).append("->")
+                        .append("T_").append(statement.getGuid()).append(";\n");
+
+                // statement
+                str.append(statement.traverse());
+            }
+        }
+
         return str.toString();
     }
     

@@ -6,6 +6,7 @@ package olc1.project1.instructions;
 
 import java.util.LinkedList;
 import olc1.project1.Proyecto1;
+import static olc1.project1.Proyecto1.checkIfClassIsModeled;
 
 /**
  *
@@ -34,6 +35,57 @@ public class Switch implements Statement {
     @Override
     public String traverse() {
         StringBuilder str = new StringBuilder();
+        
+        // root of expr
+        str.append("T_").append(guid).append("[label=\"T_Switch\"];\n");
+        
+        // reserved switch
+        str.append("R_switch_").append(guid).append("[label=\"SWITCH\"];\n");
+        
+        // root to reserved
+        str.append("T_").append(guid).append("->").append("R_switch_")
+                .append(guid).append(";\n");
+        
+        // root to expresion
+        str.append("T_").append(guid).append("->").append("T_").append(expr.getGuid())
+                .append(";\n");
+        
+        // expresion
+        str.append(expr.traverse());
+        
+        for (Case aCase : cases) {
+            // root to case
+            str.append("T_").append(guid).append("->").append("T_")
+                    .append(aCase.getGuid()).append(";\n");
+            
+            // case
+            str.append(aCase.traverse());
+        }
+        
+        
+        // else statement
+        if (else_statements != null){
+            for (Statement else_statement : else_statements) {
+                // @TODO: delete in production
+                String className = else_statement.getClass().getSimpleName();
+                if (checkIfClassIsModeled(className)){
+                    // root to statement
+                    str.append("T_").append(guid).append("->")
+                            .append("T_").append(else_statement.getGuid()).append(";\n");
+
+                    // statement
+                    str.append(else_statement.traverse());
+                }
+            }
+        }
+        
+        // reserved switch
+        str.append("R_end_switch_").append(guid).append("[label=\"END SWITCH\"];\n");
+        
+        // root to reserved
+        str.append("T_").append(guid).append("->").append("R_end_switch_")
+                .append(guid).append(";\n");
+        
         return str.toString();
     }
     

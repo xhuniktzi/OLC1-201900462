@@ -6,6 +6,7 @@ package olc1.project1.instructions;
 
 import java.util.LinkedList;
 import olc1.project1.Proyecto1;
+import static olc1.project1.Proyecto1.checkIfClassIsModeled;
 
 /**
  *
@@ -42,6 +43,86 @@ public class If implements Statement {
     @Override
     public String traverse() {
         StringBuilder str = new StringBuilder();
+        
+        // root to expr
+        str.append("T_").append(guid).append("[label=\"T_If\"];\n");
+        
+        
+        // reserved if
+        str.append("R_if_").append(guid).append("[label=\"IF\"];\n");
+        
+        // root to reserved
+        str.append("T_").append(guid).append("->").append("R_if_")
+                .append(guid).append(";\n");
+        
+        // root to expr
+        str.append("T_").append(guid).append("->")
+                        .append("T_").append(expr.getGuid()).append(";\n");
+        
+        // expr
+        str.append(expr.traverse());
+        
+        // reserved then
+        str.append("R_then_").append(guid).append("[label=\"THEN\"];\n");
+        
+        // root to reserved
+        str.append("T_").append(guid).append("->").append("R_then_")
+                .append(guid).append(";\n");
+        
+        // statements
+        for (Statement statement : statements) {
+            // @TODO: delete in production
+            String className = statement.getClass().getSimpleName();
+            if (checkIfClassIsModeled(className)){
+                // root to statement
+                str.append("T_").append(guid).append("->")
+                        .append("T_").append(statement.getGuid()).append(";\n");
+
+                // statement
+                str.append(statement.traverse());
+            }
+        }
+
+        if (elifs != null){
+            for (Elif elif : elifs) {
+                // root to elif
+                str.append("T_").append(guid).append("->")
+                        .append("T_").append(elif.getGuid()).append(";\n");
+                
+                // elif
+                str.append(elif.traverse());
+            }
+        }
+        
+        if (else_statements != null){
+            // reserved else
+            str.append("R_else_").append(guid).append("[label=\"ELSE\"];\n");
+        
+            // root to reserved
+            str.append("T_").append(guid).append("->").append("R_else_")
+                .append(guid).append(";\n");
+            
+            for (Statement else_statement : else_statements) {
+            // @TODO: delete in production
+            String className = else_statement.getClass().getSimpleName();
+            if (checkIfClassIsModeled(className)){
+                // root to statement
+                str.append("T_").append(guid).append("->")
+                        .append("T_").append(else_statement.getGuid()).append(";\n");
+
+                // statement
+                str.append(else_statement.traverse());
+            }
+        }
+        }
+        
+        // reserved end if
+        str.append("R_end_if_").append(guid).append("[label=\"END IF\"];\n");
+        
+        // root to reserved
+        str.append("T_").append(guid).append("->").append("R_end_if_")
+                .append(guid).append(";\n");
+        
         return str.toString();
     }
     
