@@ -6,7 +6,7 @@ package olc1.project1.instructions;
 
 import java.util.LinkedList;
 import olc1.project1.Proyecto1;
-import static olc1.project1.Proyecto1.checkIfClassIsModeled;
+import olc1.project1.PythonUtils;
 
 /**
  *
@@ -56,16 +56,14 @@ public class Elif implements Statement {
         
         // statements
         for (Statement statement : statements) {
-            // @TODO: delete in production
-            String className = statement.getClass().getSimpleName();
-            if (checkIfClassIsModeled(className)){
-                // root to statement
-                str.append("T_").append(guid).append("->")
-                        .append("T_").append(statement.getGuid()).append(";\n");
 
-                // statement
-                str.append(statement.traverse());
-            }
+            // root to statement
+            str.append("T_").append(guid).append("->")
+                    .append("T_").append(statement.getGuid()).append(";\n");
+
+            // statement
+            str.append(statement.traverse());
+
         }
 
         return str.toString();
@@ -77,7 +75,7 @@ public class Elif implements Statement {
         
         str.append("elif ").append(expr.translatePython()).append(":\n");
         for (Statement statement : statements) {
-            str.append(Proyecto1.pythonAddTabs(statement.translatePython())).append("\n");
+            str.append(PythonUtils.pythonAddTabs(statement.translatePython())).append("\n");
         }
         
         return str.toString();

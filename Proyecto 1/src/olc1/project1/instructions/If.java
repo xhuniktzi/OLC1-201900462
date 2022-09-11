@@ -6,7 +6,7 @@ package olc1.project1.instructions;
 
 import java.util.LinkedList;
 import olc1.project1.Proyecto1;
-import static olc1.project1.Proyecto1.checkIfClassIsModeled;
+import olc1.project1.PythonUtils;
 
 /**
  *
@@ -71,16 +71,14 @@ public class If implements Statement {
         
         // statements
         for (Statement statement : statements) {
-            // @TODO: delete in production
-            String className = statement.getClass().getSimpleName();
-            if (checkIfClassIsModeled(className)){
-                // root to statement
-                str.append("T_").append(guid).append("->")
-                        .append("T_").append(statement.getGuid()).append(";\n");
 
-                // statement
-                str.append(statement.traverse());
-            }
+            // root to statement
+            str.append("T_").append(guid).append("->")
+                    .append("T_").append(statement.getGuid()).append(";\n");
+
+            // statement
+            str.append(statement.traverse());
+
         }
 
         if (elifs != null){
@@ -103,9 +101,6 @@ public class If implements Statement {
                 .append(guid).append(";\n");
             
             for (Statement else_statement : else_statements) {
-            // @TODO: delete in production
-            String className = else_statement.getClass().getSimpleName();
-            if (checkIfClassIsModeled(className)){
                 // root to statement
                 str.append("T_").append(guid).append("->")
                         .append("T_").append(else_statement.getGuid()).append(";\n");
@@ -113,7 +108,7 @@ public class If implements Statement {
                 // statement
                 str.append(else_statement.traverse());
             }
-        }
+        
         }
         
         // reserved end if
@@ -132,7 +127,7 @@ public class If implements Statement {
         
         str.append("if ").append(expr.translatePython()).append(":\n");
         for (Statement statement : statements) {
-            str.append(Proyecto1.pythonAddTabs(statement.translatePython())).append("\n");
+            str.append(PythonUtils.pythonAddTabs(statement.translatePython())).append("\n");
         }
         
         if (elifs != null){
@@ -146,7 +141,7 @@ public class If implements Statement {
         if (else_statements != null){
             str.append("else:\n");
             for (Statement else_statement : else_statements) {
-                str.append(Proyecto1.pythonAddTabs(else_statement.translatePython())).append("\n");
+                str.append(PythonUtils.pythonAddTabs(else_statement.translatePython())).append("\n");
             }
             
         }

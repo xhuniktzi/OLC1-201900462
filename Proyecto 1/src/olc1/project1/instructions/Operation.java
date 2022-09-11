@@ -5,6 +5,7 @@
 package olc1.project1.instructions;
 
 import olc1.project1.Proyecto1;
+import olc1.project1.PythonUtils;
 
 /**
  *
@@ -84,7 +85,7 @@ public class Operation implements Statement {
                 
                 // operator
                str.append("Op_").append(guid).append("[label=\"")
-                        .append(Proyecto1.pythonSymbolBinaryOperators(type)).append("\"];\n");
+                        .append(PythonUtils.pythonSymbolBinaryOperators(type)).append("\"];\n");
                
                // root to operator
                 str.append("T_").append(guid).append("->").append("Op_").append(guid)
@@ -100,7 +101,7 @@ public class Operation implements Statement {
             case UNITARY -> {
                 // operator
                 str.append("Op_").append(guid).append("[label=\"")
-                        .append(Proyecto1.pythonSymbolUnitaryOperators(typeUnitary)).append("\"];\n");
+                        .append(PythonUtils.pythonSymbolUnitaryOperators(typeUnitary)).append("\"];\n");
                 
                 // root to operator
                 str.append("T_").append(guid).append("->").append("Op_").append(guid)
@@ -165,14 +166,14 @@ public class Operation implements Statement {
         switch (typeOp) {
             case BINARY -> {
                 str.append(left.translatePython()).append(" ")
-                        .append(Proyecto1.pythonSymbolBinaryOperators(type)).append(" ")
+                        .append(PythonUtils.pythonSymbolBinaryOperators(type)).append(" ")
                         .append(right.translatePython());
             }
             case UNITARY -> {
-                str.append(Proyecto1.pythonSymbolUnitaryOperators(typeUnitary)).append(" ").append(op.translatePython());
+                str.append(PythonUtils.pythonSymbolUnitaryOperators(typeUnitary)).append(" ").append(op.translatePython());
             }
             case TERMINAL -> {
-                str.append(Proyecto1.pythonTerminals(value, typeTerminal));
+                str.append(PythonUtils.pythonTerminals(value, typeTerminal));
             }
             case GROUP -> {
                 str.append("(").append(opGroup.translatePython()).append(")");

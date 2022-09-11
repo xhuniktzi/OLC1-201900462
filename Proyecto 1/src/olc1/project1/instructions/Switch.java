@@ -6,7 +6,7 @@ package olc1.project1.instructions;
 
 import java.util.LinkedList;
 import olc1.project1.Proyecto1;
-import static olc1.project1.Proyecto1.checkIfClassIsModeled;
+import olc1.project1.PythonUtils;
 
 /**
  *
@@ -66,16 +66,14 @@ public class Switch implements Statement {
         // else statement
         if (else_statements != null){
             for (Statement else_statement : else_statements) {
-                // @TODO: delete in production
-                String className = else_statement.getClass().getSimpleName();
-                if (checkIfClassIsModeled(className)){
-                    // root to statement
-                    str.append("T_").append(guid).append("->")
-                            .append("T_").append(else_statement.getGuid()).append(";\n");
 
-                    // statement
-                    str.append(else_statement.traverse());
-                }
+                // root to statement
+                str.append("T_").append(guid).append("->")
+                        .append("T_").append(else_statement.getGuid()).append(";\n");
+
+                // statement
+                str.append(else_statement.traverse());
+                
             }
         }
         
@@ -99,14 +97,14 @@ public class Switch implements Statement {
                 str.append("if ").append(expr.translatePython()).append("==").append(aCase.expr.translatePython()).append(":\n");
                 for (Statement statement: aCase.statements) {
 
-                    str.append(Proyecto1.pythonAddTabs(statement.translatePython())).append("\n");
+                    str.append(PythonUtils.pythonAddTabs(statement.translatePython())).append("\n");
                 }
 
             } else {
                 str.append("elif ").append(expr.translatePython()).append("==").append(aCase.expr.translatePython()).append(":\n");
                 for (Statement statement: aCase.statements) {
 
-                    str.append(Proyecto1.pythonAddTabs(statement.translatePython())).append("\n");
+                    str.append(PythonUtils.pythonAddTabs(statement.translatePython())).append("\n");
                 }
             }
             i++;
@@ -115,7 +113,7 @@ public class Switch implements Statement {
             str.append("else:\n");
             for (Statement else_statement : else_statements) {
 
-                str.append(Proyecto1.pythonAddTabs(else_statement.translatePython())).append("\n");
+                str.append(PythonUtils.pythonAddTabs(else_statement.translatePython())).append("\n");
             }
         }
         
