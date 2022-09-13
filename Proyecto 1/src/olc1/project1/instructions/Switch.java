@@ -120,4 +120,23 @@ public class Switch implements Statement {
         
         return str.toString();
     }
+
+    @Override
+    public String translateGolang() {
+        StringBuilder str = new StringBuilder();
+        str.append("switch ").append("key := ").append(expr.translateGolang()).append("; key {");
+        for (Case aCase : cases) {
+            str.append(aCase.translateGolang()).append("\n");
+        }
+        
+        if (else_statements != null){
+            str.append("default:\n");
+            for (Statement else_statement : else_statements) {
+                str.append(else_statement.translateGolang());
+            }
+        }
+        str.append("}");
+        
+        return str.toString();
+    }
 }

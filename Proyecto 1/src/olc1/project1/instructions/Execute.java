@@ -102,4 +102,27 @@ public class Execute implements Statement {
         
         return str.toString();
     }
+
+    @Override
+    public String translateGolang() {
+        StringBuilder str = new StringBuilder();
+        
+        str.append(funcId);
+        str.append("(");
+        if (args_list != null){
+            Iterator<Operation> iterator = args_list.iterator();
+
+            while (iterator.hasNext()){
+                String args = iterator.next().translateGolang();
+                str.append(args);
+                if (iterator.hasNext()){
+                    str.append(",");
+                }
+            }
+        }
+        
+        str.append(")");
+        
+        return str.toString();
+    }
 }

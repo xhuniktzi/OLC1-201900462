@@ -34,18 +34,74 @@ public class Proyecto1 {
         
         LinkedList<Statement> ast = parser.AST;
         
-//        String pyStr = translatePython(ast);
-//        System.out.println(pyStr);
-//        
+        System.out.println("---------------- Python -----------------------------");
+        
+        String pyStr = translatePython(ast);
+        System.out.println(pyStr);
+        
+        System.out.println("----------------- AST -------------------------------");
         String graph = graph(ast);
         System.out.println(graph);
+        
+        System.out.println("------------------ Golang ---------------------------");
+        String goStr = translateGolang(ast);
+        System.out.println(goStr);
     }
     
-    public static String translatePython(LinkedList<Statement> ast){
+    public static String translateGolang(LinkedList<Statement> ast){
         StringBuilder str = new StringBuilder();
-        str.append("def main():\n");
+        
+        str.append("package main\n");
+        str.append("import \"fmt\"\n");
+        str.append("import \"math\"\n");
+        
+        LinkedList<Statement> methods = new LinkedList<>();
+        LinkedList<Statement> mainStatements = new LinkedList<>();
         
         for (Statement statement : ast) {
+            String className = statement.getClass().getSimpleName();
+            if ( "Procedure".equals(className) || "Function".equals(className)){
+                methods.add(statement);
+            } else {
+                mainStatements.add(statement);
+            }
+        }
+        
+        for (Statement method : methods) {
+            str.append(method.translateGolang()).append("\n");
+        }
+        
+        str.append("func main(){\n");
+        for (Statement mainStatement : mainStatements) {
+            str.append(mainStatement.translateGolang()).append("\n");
+        }
+        str.append("}\n");
+        
+        return str.toString();
+    }
+            
+    public static String translatePython(LinkedList<Statement> ast){
+        StringBuilder str = new StringBuilder();
+        
+        LinkedList<Statement> methods = new LinkedList<>();
+        LinkedList<Statement> mainStatements = new LinkedList<>();
+        
+        for (Statement statement : ast) {
+            String className = statement.getClass().getSimpleName();
+            if ( "Procedure".equals(className) || "Function".equals(className)){
+                methods.add(statement);
+            } else {
+                mainStatements.add(statement);
+            }
+        }
+        
+        for (Statement method : methods) {
+            str.append(method.translatePython()).append("\n");
+        }
+        
+        
+        str.append("def main():\n");        
+        for (Statement statement : mainStatements) {
             str.append(PythonUtils.pythonAddTabs(statement.translatePython())).append("\n");
         }
         str.append("if __name__ == '__main__':\n");

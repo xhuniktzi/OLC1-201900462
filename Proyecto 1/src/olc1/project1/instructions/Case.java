@@ -74,4 +74,17 @@ public class Case implements Statement {
     public String translatePython(){
         return null;
     }
+
+    @Override
+    public String translateGolang() {
+        StringBuilder str = new StringBuilder();
+        str.append("case ").append(expr.translateGolang()).append(":\n");
+        
+        for (Statement statement : statements) {
+            str.append(statement.translateGolang()).append("\n");
+        }
+        
+        
+        return str.toString();
+    }
 }

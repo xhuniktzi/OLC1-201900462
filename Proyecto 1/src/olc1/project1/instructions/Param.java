@@ -4,6 +4,7 @@
  */
 package olc1.project1.instructions;
 
+import olc1.project1.GolangUtils;
 import olc1.project1.Proyecto1;
 
 /**
@@ -49,6 +50,15 @@ public class Param implements Statement {
         StringBuilder str = new StringBuilder();
         
         str.append(id);
+        
+        return str.toString();
+    }
+
+    @Override
+    public String translateGolang() {
+        StringBuilder str = new StringBuilder();
+        
+        str.append(id).append(" ").append(GolangUtils.golangViewTypes(type));
         
         return str.toString();
     }

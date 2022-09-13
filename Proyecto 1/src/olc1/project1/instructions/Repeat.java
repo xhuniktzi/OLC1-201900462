@@ -71,14 +71,27 @@ public class Repeat implements Statement {
     @Override
     public String translatePython(){
         StringBuilder str = new StringBuilder();
-        str.append("flag = True\n");
-        str.append("repeat ").append("flag").append(":\n");
+        str.append("while ").append("True:\n");
         for (Statement statement : statements) {
             str.append(PythonUtils.pythonAddTabs(statement.translatePython())).append("\n");
         }
         str.append("\tif ").append(expr.translatePython()).append(":\n");
         str.append("\t\tbreak");
         
+        return str.toString();
+    }
+
+    @Override
+    public String translateGolang() {
+        StringBuilder str = new StringBuilder();
+        str.append("for ").append("{\n");
+        for (Statement statement : statements) {
+            str.append(statement.translateGolang()).append("\n");
+        }
+        str.append("\tif ").append(expr.translateGolang()).append("{\n");
+        str.append("\t\tbreak\n");
+        str.append("}\n");
+        str.append("}\n");
         return str.toString();
     }
 }

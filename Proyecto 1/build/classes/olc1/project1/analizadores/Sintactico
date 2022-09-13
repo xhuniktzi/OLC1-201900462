@@ -72,6 +72,15 @@ non terminal Execute func;
 non terminal LinkedList<Elif> elifs;
 non terminal LinkedList<Case> cases;
 
+non terminal Operation aritmetic;
+non terminal Operation logical;
+non terminal Operation symbols;
+non terminal Operation unitary;
+
+non terminal If if;
+non terminal For for;
+
+
 precedence left MAJOR, MINOR, MAJOREQUALS, MINOREQUALS, EQUALS, NOTEQUALS;
 precedence left AND, OR;
 precedence left ADD, SUBSTRACT;
@@ -87,14 +96,8 @@ statements ::= statements:s statement:t {:RESULT=s; RESULT.add(t);:}
 
 statement ::= ENTER name_list:n AS TYPEDEF:t WITH_VALUE expr:e DOTCOMMA {:RESULT = new Declaration(n, t, e);:}
 | name_list:n ARROW expr:e DOTCOMMA {:RESULT = new Assignment(n, e);:}
-| IF expr:e THEN statements:s ENDIF {:RESULT = new If(e, s);:}
-| IF expr:e THEN statements:p ELSE statements:s ENDIF {:RESULT = new If(e, p, s);:}
-| IF expr:e THEN statements:s elifs:f ENDIF {:RESULT = new If(e, s, f, null);:}
-| IF expr:e THEN statements:s elifs:f ELSE statements:p ENDIF {:RESULT = new If(e, s, f, p);:}
-| FOR ID:i ARROW expr:e TO expr:f DO statements:s ENDFOR {:RESULT = new For(i, e, f, s);:}
-| FOR ID:i ARROW expr:e TO expr:f WITHINCREMENTAL NUM:n DO statements:s ENDFOR {:RESULT = new For(i, e, f, n, s);:}
-| FOR ID:i ARROW expr:e TO expr:f DO ENDFOR {:RESULT = new For(i, e, f);:}
-| FOR ID:i ARROW expr:e TO expr:f WITHINCREMENTAL NUM:n DO ENDFOR {:RESULT = new For(i, e, f, n);:}
+| if:i {:RESULT=i;:}
+| for:f {:RESULT=f;:}
 | WHILE expr:e DO statements:s ENDWHILE {:RESULT = new While(e, s);:}
 | WHILE expr:e DO ENDWHILE {:RESULT = new While(e);:}
 | REPEAT statements:s ENDREPEAT expr:e {:RESULT = new Repeat(s, e);:}
@@ -109,7 +112,17 @@ statement ::= ENTER name_list:n AS TYPEDEF:t WITH_VALUE expr:e DOTCOMMA {:RESULT
 | PRINTLN expr:e DOTCOMMA {:RESULT = new Println(e);:}
 | SWITCH expr:e DO cases:c ENDSWITCH {:RESULT = new Switch(e, c);:}
 | SWITCH expr:e DO cases:c ELSE THEN statements:s ENDSWITCH {:RESULT = new Switch(e, c, s);:}
-| error;
+| error DOTCOMMA;
+
+if ::= IF expr:e THEN statements:s ENDIF {:RESULT = new If(e, s);:}
+| IF expr:e THEN statements:p ELSE statements:s ENDIF {:RESULT = new If(e, p, s);:}
+| IF expr:e THEN statements:s elifs:f ENDIF {:RESULT = new If(e, s, f, null);:}
+| IF expr:e THEN statements:s elifs:f ELSE statements:p ENDIF {:RESULT = new If(e, s, f, p);:};
+
+for ::= FOR ID:i ARROW expr:e TO expr:f DO statements:s ENDFOR {:RESULT = new For(i, e, f, s);:}
+| FOR ID:i ARROW expr:e TO expr:f WITHINCREMENTAL NUM:n DO statements:s ENDFOR {:RESULT = new For(i, e, f, n, s);:}
+| FOR ID:i ARROW expr:e TO expr:f DO ENDFOR {:RESULT = new For(i, e, f);:}
+| FOR ID:i ARROW expr:e TO expr:f WITHINCREMENTAL NUM:n DO ENDFOR {:RESULT = new For(i, e, f, n);:};
 
 params_list ::= params_list:p COMMA ID:i TYPEDEF:t {:RESULT = p; RESULT.add(new Param(i, t));:}
 | ID:i TYPEDEF:t {:RESULT = new LinkedList<Param>(); RESULT.add(new Param(i, t));:};
@@ -129,20 +142,23 @@ elifs ::= elifs:f ELIF expr:e THEN statements:s {:RESULT = f; RESULT.add(new Eli
 cases ::= cases:c OPENQUESTION expr:e CLOSEQUESTION THEN statements:s {:RESULT = c; RESULT.add(new Case(e, s));:}
 | OPENQUESTION expr:e CLOSEQUESTION THEN statements:s {:RESULT = new LinkedList<Case>(); RESULT.add(new Case(e, s));:};
 
-expr ::= ID:i {:RESULT = new Operation(i, EnumTerminals.ID);:}
-| NUM:n {:RESULT = new Operation(n, EnumTerminals.NUM);:}
-| STR:s {:RESULT = new Operation(s, EnumTerminals.STR);:}
-| BOOLEAN:b {:RESULT = new Operation(b, EnumTerminals.BOOLEAN);:}
-| CHAR:c {:RESULT = new Operation(c, EnumTerminals.CHAR);:}
-| SUBSTRACT expr:e {:RESULT = new Operation(e, EnumUnitaryOperations.NEGATIVE);:}
-| NOT expr:e {:RESULT = new Operation(e, EnumUnitaryOperations.NOT);:}
-| expr:a ADD expr:b {:RESULT = new Operation(a, EnumOperations.ADD, b);:}
+expr ::= symbols:s {:RESULT = s;:}
+| unitary:u {:RESULT = u;:}
+| aritmetic:a {:RESULT = a;:}
+| logical:l {:RESULT = l;:}
+| EXEC func:f {:RESULT = new Operation(f);:}
+| PARSTART expr:e PAREND {:RESULT = new Operation(e);:};
+
+
+aritmetic ::= expr:a ADD expr:b {:RESULT = new Operation(a, EnumOperations.ADD, b);:}
 | expr:a SUBSTRACT expr:b {:RESULT = new Operation(a, EnumOperations.SUBSTRACT, b);:}
 | expr:a MULTIPLY expr:b {:RESULT = new Operation(a, EnumOperations.MULTIPLY, b);:}
 | expr:a DIVISION expr:b {:RESULT = new Operation(a, EnumOperations.DIVISION, b);:}
 | expr:a POW SBRACKETOPEN expr:b SBRACKETCLOSE {:RESULT = new Operation(a, EnumOperations.POW, b);:}
 | expr:a MODULE SBRACKETOPEN expr:b SBRACKETCLOSE {:RESULT = new Operation(a, EnumOperations.MODULE, b);:}
-| expr:a MAJOR expr:b {:RESULT = new Operation(a, EnumOperations.MAJOR, b);:}
+| NUM:n {:RESULT = new Operation(n, EnumTerminals.NUM);:};
+
+logical ::= expr:a MAJOR expr:b {:RESULT = new Operation(a, EnumOperations.MAJOR, b);:}
 | expr:a MINOR expr:b {:RESULT = new Operation(a, EnumOperations.MINOR, b);:}
 | expr:a MAJOREQUALS expr:b {:RESULT = new Operation(a, EnumOperations.MAJOREQUALS, b);:}
 | expr:a MINOREQUALS expr:b {:RESULT = new Operation(a, EnumOperations.MINOREQUALS, b);:}
@@ -150,5 +166,11 @@ expr ::= ID:i {:RESULT = new Operation(i, EnumTerminals.ID);:}
 | expr:a NOTEQUALS expr:b {:RESULT = new Operation(a, EnumOperations.NOTEQUALS, b);:}
 | expr:a AND expr:b {:RESULT = new Operation(a, EnumOperations.AND, b);:}
 | expr:a OR expr:b {:RESULT = new Operation(a, EnumOperations.OR, b);:}
-| PARSTART expr:e PAREND {:RESULT = new Operation(e);:}
-| EXEC func:f {:RESULT = new Operation(f);:};
+| BOOLEAN:b {:RESULT = new Operation(b, EnumTerminals.BOOLEAN);:};
+
+symbols ::= ID:i {:RESULT = new Operation(i, EnumTerminals.ID);:}
+| STR:s {:RESULT = new Operation(s, EnumTerminals.STR);:}
+| CHAR:c {:RESULT = new Operation(c, EnumTerminals.CHAR);:};
+
+unitary ::= SUBSTRACT expr:e {:RESULT = new Operation(e, EnumUnitaryOperations.NEGATIVE);:}
+| NOT expr:e {:RESULT = new Operation(e, EnumUnitaryOperations.NOT);:};

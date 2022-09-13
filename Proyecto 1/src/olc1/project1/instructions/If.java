@@ -148,4 +148,35 @@ public class If implements Statement {
         
         return str.toString();
     }
+
+    @Override
+    public String translateGolang() {
+        StringBuilder str = new StringBuilder();
+        
+        str.append("if ").append(expr.translateGolang()).append(" {\n");
+        for (Statement statement : statements) {
+            str.append(statement.translateGolang()).append("\n");
+        }
+        
+        str.append("}");
+        
+        if (elifs != null){
+        
+            for (Elif elif : elifs) {
+                str.append(elif.translateGolang());
+            }
+        
+        }
+        
+        if (else_statements != null){
+            str.append("else{\n");
+            for (Statement else_statement : else_statements) {
+                str.append(PythonUtils.pythonAddTabs(else_statement.translateGolang())).append("\n");
+            }
+            str.append("}");
+        }
+        
+        
+        return str.toString();
+    }
 }

@@ -53,4 +53,13 @@ public class Print implements Statement {
         
         return str.toString();
     }
+
+    @Override
+    public String translateGolang() {
+        StringBuilder str = new StringBuilder();
+        
+        str.append("fmt.Print(").append(expr.translateGolang()).append(")");
+        
+        return str.toString();
+    }
 }

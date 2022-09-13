@@ -6,6 +6,7 @@ package olc1.project1.instructions;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import olc1.project1.GolangUtils;
 import olc1.project1.Proyecto1;
 import olc1.project1.PythonUtils;
 
@@ -126,6 +127,34 @@ public class Function implements Statement {
         for (Statement statement : statements) {
             str.append(PythonUtils.pythonAddTabs(statement.translatePython())).append("\n");
         }
+        
+        return str.toString();
+    }
+    
+    @Override
+    public String translateGolang() {
+        StringBuilder str = new StringBuilder();
+        
+        str.append("func ").append(funcId).append("(");
+        
+        if (params_list != null){
+            Iterator<Param> iterator = params_list.iterator();
+
+            while (iterator.hasNext()){
+                String args = iterator.next().translateGolang();
+                str.append(args);
+                if (iterator.hasNext()){
+                    str.append(",");
+                }
+            }
+        }
+        
+        str.append(") ").append(GolangUtils.golangViewTypes(type)).append(" {\n");
+        
+        for (Statement statement : statements) {
+            str.append(statement.translateGolang()).append("\n");
+        }
+        str.append("}\n");
         
         return str.toString();
     }

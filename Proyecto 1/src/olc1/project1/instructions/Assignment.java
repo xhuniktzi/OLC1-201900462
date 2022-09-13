@@ -96,6 +96,18 @@ public class Assignment implements Statement {
         
         return str.toString();
     }
-    
+
+    @Override
+    public String translateGolang() {
+        StringBuilder str = new StringBuilder();
+
+        for (String name : name_list) {
+            str.append(name).append(" = ").append(expr.translateGolang()).append("\n");
+        }
+        
+        str.append("\n");
+
+        return str.toString();
+    }
     
 }

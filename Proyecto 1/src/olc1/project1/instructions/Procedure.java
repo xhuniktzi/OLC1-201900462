@@ -122,4 +122,32 @@ public class Procedure implements Statement {
         
         return str.toString();
     }
+
+    @Override
+    public String translateGolang() {
+        StringBuilder str = new StringBuilder();
+        
+        str.append("func ").append(funcId).append("(");
+        
+        if (params_list != null){
+            Iterator<Param> iterator = params_list.iterator();
+
+            while (iterator.hasNext()){
+                String args = iterator.next().translateGolang();
+                str.append(args);
+                if (iterator.hasNext()){
+                    str.append(",");
+                }
+            }
+        }
+        
+        str.append(") ").append("{\n");
+        
+        for (Statement statement : statements) {
+            str.append(statement.translateGolang()).append("\n");
+        }
+        str.append("}\n");
+        
+        return str.toString();
+    }
 }

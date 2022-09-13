@@ -4,6 +4,7 @@
  */
 package olc1.project1.instructions;
 
+import olc1.project1.GolangUtils;
 import olc1.project1.Proyecto1;
 import olc1.project1.PythonUtils;
 
@@ -180,6 +181,42 @@ public class Operation implements Statement {
             }
             case FUNCTION -> {
                 str.append(function.translatePython());
+            }
+            default -> throw new AssertionError();
+        }
+        
+        return str.toString();
+    }
+
+    @Override
+    public String translateGolang() {
+        StringBuilder str = new StringBuilder();
+    
+        switch (typeOp) {
+            case BINARY -> {
+                
+                if (type == EnumOperations.POW){
+                    str.append("math.Pow(float64(").append(left.translateGolang())
+                            .append("), float64(").append(right.translateGolang())
+                            .append("))");
+                } else {
+                    str.append(left.translateGolang()).append(" ");
+                    str.append(GolangUtils.golangSymbolBinaryOperators(type));
+                    str.append(" ").append(right.translateGolang());
+                }
+            }
+            case UNITARY -> {
+                str.append(GolangUtils.golangSymbolUnitaryOperators(typeUnitary))
+                        .append(" ").append(op.translateGolang());
+            }
+            case TERMINAL -> {
+                str.append(GolangUtils.golangTerminals(value, typeTerminal));
+            }
+            case GROUP -> {
+                str.append("(").append(opGroup.translateGolang()).append(")");
+            }
+            case FUNCTION -> {
+                str.append(function.translateGolang());
             }
             default -> throw new AssertionError();
         }

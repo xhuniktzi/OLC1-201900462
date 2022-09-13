@@ -52,4 +52,13 @@ public class Return implements Statement {
         
         return str.toString();
     }
+    
+    @Override
+    public String translateGolang() {
+        StringBuilder str = new StringBuilder();
+        
+        str.append("return ").append(expr.translateGolang());
+        
+        return str.toString();
+    }
 }

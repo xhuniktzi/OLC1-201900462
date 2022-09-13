@@ -87,4 +87,15 @@ public class While implements Statement {
         
         return str.toString();
     }
+
+    @Override
+    public String translateGolang() {
+        StringBuilder str = new StringBuilder();
+        str.append("for ").append(expr.translateGolang()).append(" {\n");
+        for (Statement statement : statements) {
+            str.append(statement.translateGolang()).append("\n");
+        }
+        str.append("}\n");
+        return str.toString();
+    }
 }
