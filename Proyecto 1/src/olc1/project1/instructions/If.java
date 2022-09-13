@@ -171,7 +171,7 @@ public class If implements Statement {
         if (else_statements != null){
             str.append("else{\n");
             for (Statement else_statement : else_statements) {
-                str.append(PythonUtils.pythonAddTabs(else_statement.translateGolang())).append("\n");
+                str.append(else_statement.translateGolang()).append("\n");
             }
             str.append("}");
         }
