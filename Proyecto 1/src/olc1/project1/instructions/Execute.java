@@ -6,14 +6,14 @@ package olc1.project1.instructions;
 
 import java.util.Iterator;
 import java.util.LinkedList;
-import olc1.project1.Proyecto1;
+import olc1.project1.Utils;
 
 /**
  *
  * @author Xhunik
  */
 public class Execute implements Statement {
-    private final String guid = Proyecto1.generateGuid();
+    private final String guid = Utils.generateGuid();
     @Override
     public String getGuid() { return this.guid; }
     

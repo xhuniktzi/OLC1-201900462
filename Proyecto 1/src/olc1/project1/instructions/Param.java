@@ -5,14 +5,14 @@
 package olc1.project1.instructions;
 
 import olc1.project1.GolangUtils;
-import olc1.project1.Proyecto1;
+import olc1.project1.Utils;
 
 /**
  *
  * @author Xhunik
  */
 public class Param implements Statement {
-    private final String guid = Proyecto1.generateGuid();
+    private final String guid = Utils.generateGuid();
     @Override
     public String getGuid() { return this.guid; }
     
@@ -20,7 +20,7 @@ public class Param implements Statement {
     EnumTypes type;
     public Param(String id, String type){
         this.id = id;
-        this.type = Proyecto1.checkTypes(type);
+        this.type = Utils.checkTypes(type);
     }
     
     @Override
@@ -37,7 +37,7 @@ public class Param implements Statement {
         str.append("T_").append(guid).append("->").append("Id_").append(guid).append(";\n");
 
         // datatype
-        str.append("Datatype_").append(guid).append("[label=\"").append(Proyecto1.viewTypes(type)).append("\"];\n");
+        str.append("Datatype_").append(guid).append("[label=\"").append(Utils.viewTypes(type)).append("\"];\n");
         
         // root to datatype
         str.append("T_").append(guid).append("->").append("Datatype_").append(guid).append(";\n");

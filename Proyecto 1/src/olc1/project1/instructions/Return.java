@@ -4,14 +4,14 @@
  */
 package olc1.project1.instructions;
 
-import olc1.project1.Proyecto1;
+import olc1.project1.Utils;
 
 /**
  *
  * @author Xhunik
  */
 public class Return implements Statement {
-    private final String guid = Proyecto1.generateGuid();
+    private final String guid = Utils.generateGuid();
     @Override
     public String getGuid() { return this.guid; }
     

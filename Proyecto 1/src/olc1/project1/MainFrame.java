@@ -4,12 +4,30 @@
  */
 package olc1.project1;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import olc1.project1.errors.LexicalError;
+import olc1.project1.errors.SintaxError;
+import olc1.project1.instructions.Statement;
+
 /**
  *
  * @author Xhunik
  */
 public class MainFrame extends javax.swing.JFrame {
-
+    LinkedList<Statement> ast;
+    LinkedList<LexicalError> lexErrors;
+    LinkedList<SintaxError> sintaxErrors;
     /**
      * Creates new form MainFrame
      */
@@ -27,84 +45,110 @@ public class MainFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        jButtonClean = new javax.swing.JButton();
+        jButtonRun = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        jTextArea = new javax.swing.JTextArea();
+        jButtonPython = new javax.swing.JButton();
+        jButtonGolang = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem6 = new javax.swing.JMenuItem();
-        jMenu3 = new javax.swing.JMenu();
-        jMenuItem4 = new javax.swing.JMenuItem();
-        jMenuItem5 = new javax.swing.JMenuItem();
+        jMenuFile = new javax.swing.JMenu();
+        jMenuOpen = new javax.swing.JMenuItem();
+        jMenuSave = new javax.swing.JMenuItem();
+        jMenuReports = new javax.swing.JMenu();
+        jMenuErrors = new javax.swing.JMenuItem();
+        jMenuViewAST = new javax.swing.JMenuItem();
+        jMenuView = new javax.swing.JMenu();
+        jMenuUserManual = new javax.swing.JMenuItem();
+        jMenuTechnicalManual = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("OLC1_2S_2022 201900462");
 
-        jButton1.setText("Limpiar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonClean.setText("Limpiar");
+        jButtonClean.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButtonCleanActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Ejecutar");
-
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
-
-        jButton3.setText("Python");
-
-        jButton4.setText("Golang");
-
-        jMenu1.setText("Archivo");
-
-        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        jMenuItem2.setText("Abrir...");
-        jMenu1.add(jMenuItem2);
-
-        jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        jMenuItem3.setText("Guardar como...");
-        jMenu1.add(jMenuItem3);
-
-        jMenuBar1.add(jMenu1);
-
-        jMenu2.setText("Reportes");
-
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        jMenuItem1.setText("Errores");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonRun.setText("Ejecutar");
+        jButtonRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                jButtonRunActionPerformed(evt);
             }
         });
-        jMenu2.add(jMenuItem1);
 
-        jMenuItem6.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        jMenuItem6.setText("Ver AST");
-        jMenu2.add(jMenuItem6);
+        jTextArea.setColumns(20);
+        jTextArea.setFont(new java.awt.Font("Lucida Console", 0, 15)); // NOI18N
+        jTextArea.setRows(5);
+        jScrollPane1.setViewportView(jTextArea);
 
-        jMenuBar1.add(jMenu2);
+        jButtonPython.setText("Python");
 
-        jMenu3.setText("Ver");
+        jButtonGolang.setText("Golang");
 
-        jMenuItem4.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        jMenuItem4.setText("Manual de usuario");
-        jMenu3.add(jMenuItem4);
+        jMenuFile.setText("Archivo");
 
-        jMenuItem5.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_T, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        jMenuItem5.setText("Manual tecnico");
-        jMenu3.add(jMenuItem5);
+        jMenuOpen.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        jMenuOpen.setText("Abrir...");
+        jMenuOpen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuOpenActionPerformed(evt);
+            }
+        });
+        jMenuFile.add(jMenuOpen);
 
-        jMenuBar1.add(jMenu3);
+        jMenuSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        jMenuSave.setText("Guardar como...");
+        jMenuSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuSaveActionPerformed(evt);
+            }
+        });
+        jMenuFile.add(jMenuSave);
+
+        jMenuBar1.add(jMenuFile);
+
+        jMenuReports.setText("Reportes");
+
+        jMenuErrors.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        jMenuErrors.setText("Errores");
+        jMenuErrors.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuErrorsActionPerformed(evt);
+            }
+        });
+        jMenuReports.add(jMenuErrors);
+
+        jMenuViewAST.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        jMenuViewAST.setText("Ver AST");
+        jMenuViewAST.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuViewASTActionPerformed(evt);
+            }
+        });
+        jMenuReports.add(jMenuViewAST);
+
+        jMenuBar1.add(jMenuReports);
+
+        jMenuView.setText("Ver");
+
+        jMenuUserManual.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        jMenuUserManual.setText("Manual de usuario");
+        jMenuUserManual.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuUserManualActionPerformed(evt);
+            }
+        });
+        jMenuView.add(jMenuUserManual);
+
+        jMenuTechnicalManual.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_T, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        jMenuTechnicalManual.setText("Manual tecnico");
+        jMenuView.add(jMenuTechnicalManual);
+
+        jMenuBar1.add(jMenuView);
 
         setJMenuBar(jMenuBar1);
 
@@ -124,10 +168,10 @@ public class MainFrame extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING))
-                                .addComponent(jButton3, javax.swing.GroupLayout.Alignment.TRAILING))
-                            .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING))))
+                                    .addComponent(jButtonClean, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jButtonRun, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addComponent(jButtonPython, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(jButtonGolang, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -138,13 +182,13 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
+                        .addComponent(jButtonClean)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton2)
+                        .addComponent(jButtonRun)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 159, Short.MAX_VALUE)
-                        .addComponent(jButton4)
+                        .addComponent(jButtonGolang)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton3))
+                        .addComponent(jButtonPython))
                     .addComponent(jScrollPane1))
                 .addContainerGap())
         );
@@ -152,13 +196,92 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void jMenuErrorsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuErrorsActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+        System.out.println("Errores lexicos");
+        for (LexicalError lexError : lexErrors) {
+            System.out.println("Lexema: " + lexError.lexema + ", no pertenece al lenguaje, encontrado en (fila, columna): "
+                    + lexError.row + ", " + lexError.col);
+        }
+        System.out.println("Errores sintacticos");
+        for (SintaxError sintaxError : sintaxErrors) {
+            System.out.println("Elemento: " + sintaxError.lexema + ", no esperado, encontrado en (fila, columna): " 
+                    + sintaxError.row + ", " + sintaxError.col + " recuperable: " + sintaxError.recuperable);
+        }
+    }//GEN-LAST:event_jMenuErrorsActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButtonCleanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCleanActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+        jTextArea.selectAll();
+        jTextArea.replaceSelection("");
+    }//GEN-LAST:event_jButtonCleanActionPerformed
+
+    private void jMenuOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuOpenActionPerformed
+        // TODO add your handling code here:
+        JFileChooser jfc = new JFileChooser();
+        jfc.setCurrentDirectory(new File(System.getProperty("user.dir")));
+        jfc.setFileFilter(new FileNameExtensionFilter("OLC Files", "olc"));
+        int result = jfc.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION){
+            try {
+                String canonical = jfc.getSelectedFile().getCanonicalPath();
+                String content = Files.readString(Path.of(canonical));
+                jTextArea.insert(content, 0);
+            } catch (IOException ex) {
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_jMenuOpenActionPerformed
+
+    private void jMenuViewASTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuViewASTActionPerformed
+        // TODO add your handling code here:
+        if (ast == null){
+            JOptionPane.showMessageDialog(this, "No se a ejecutado el archivo", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        String graph = Utils.graph(ast);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("./report.dot"))) {
+                writer.write(graph);
+                Runtime.getRuntime().exec("dot -Tpng report.dot -o report.png");
+            } catch (IOException ex) {
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    }//GEN-LAST:event_jMenuViewASTActionPerformed
+
+    private void jMenuUserManualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuUserManualActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuUserManualActionPerformed
+
+    private void jMenuSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuSaveActionPerformed
+        // TODO add your handling code here:
+        JFileChooser jfc = new JFileChooser();
+        jfc.setCurrentDirectory(new File(System.getProperty("user.dir")));
+        jfc.setFileFilter(new FileNameExtensionFilter("OLC Files", "olc"));
+        int result = jfc.showSaveDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION){
+            String content = jTextArea.getText();
+
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(jfc.getSelectedFile() + ".olc"))) {
+                writer.write(content);
+            } catch (IOException ex) {
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+    }//GEN-LAST:event_jMenuSaveActionPerformed
+
+    private void jButtonRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRunActionPerformed
+        // TODO add your handling code here:
+        AnalyzerResult result = Utils.loadFile(jTextArea.getText());
+        this.ast = result.ast;
+        this.lexErrors = result.lexErrors;
+        this.sintaxErrors = result.sintaxErrors;
+        
+        if (!lexErrors.isEmpty() || !sintaxErrors.isEmpty()){
+            JOptionPane.showMessageDialog(this, "Se han encontrado errores en la entrada", "Error", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_jButtonRunActionPerformed
 
     /**
      * @param args the command line arguments
@@ -196,22 +319,22 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButtonClean;
+    private javax.swing.JButton jButtonGolang;
+    private javax.swing.JButton jButtonPython;
+    private javax.swing.JButton jButtonRun;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JMenuItem jMenuItem5;
-    private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuErrors;
+    private javax.swing.JMenu jMenuFile;
+    private javax.swing.JMenuItem jMenuOpen;
+    private javax.swing.JMenu jMenuReports;
+    private javax.swing.JMenuItem jMenuSave;
+    private javax.swing.JMenuItem jMenuTechnicalManual;
+    private javax.swing.JMenuItem jMenuUserManual;
+    private javax.swing.JMenu jMenuView;
+    private javax.swing.JMenuItem jMenuViewAST;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextArea jTextArea;
     // End of variables declaration//GEN-END:variables
 }

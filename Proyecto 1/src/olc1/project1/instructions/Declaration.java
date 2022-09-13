@@ -7,14 +7,14 @@ package olc1.project1.instructions;
 import java.util.Iterator;
 import java.util.LinkedList;
 import olc1.project1.GolangUtils;
-import olc1.project1.Proyecto1;
+import olc1.project1.Utils;
 
 /**
  *
  * @author Xhunik
  */
 public class Declaration implements Statement {
-    private final String guid = Proyecto1.generateGuid();
+    private final String guid = Utils.generateGuid();
     @Override
     public String getGuid() { return this.guid; }
     
@@ -24,7 +24,7 @@ public class Declaration implements Statement {
     
     public Declaration(LinkedList<String> name_list, String type, Operation expr){
         this.name_list = name_list;
-        this.type = Proyecto1.checkTypes(type);
+        this.type = Utils.checkTypes(type);
         this.expr = expr;
     }
     
@@ -64,7 +64,7 @@ public class Declaration implements Statement {
         
         // datatype
         str.append("Datatype_").append(guid).append("[label=\"")
-                .append(Proyecto1.viewTypes(type)).append("\"];\n");
+                .append(Utils.viewTypes(type)).append("\"];\n");
         
         // root to datatype
         str.append("T_").append(guid).append("->").append("Datatype_")

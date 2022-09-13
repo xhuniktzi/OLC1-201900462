@@ -7,7 +7,7 @@ package olc1.project1.instructions;
 import java.util.Iterator;
 import java.util.LinkedList;
 import olc1.project1.GolangUtils;
-import olc1.project1.Proyecto1;
+import olc1.project1.Utils;
 import olc1.project1.PythonUtils;
 
 /**
@@ -15,7 +15,7 @@ import olc1.project1.PythonUtils;
  * @author Xhunik
  */
 public class Function implements Statement {
-    private final String guid = Proyecto1.generateGuid();
+    private final String guid = Utils.generateGuid();
     @Override
     public String getGuid() { return this.guid; }
     
@@ -26,13 +26,13 @@ public class Function implements Statement {
     
     public Function(String funcId, String type, LinkedList<Statement> statements){
         this.funcId = funcId;
-        this.type = Proyecto1.checkTypes(type);
+        this.type = Utils.checkTypes(type);
         this.statements = statements;
     }
     
     public Function(String funcId, String type, LinkedList<Param> params_list, LinkedList<Statement> statements){
         this.funcId = funcId;
-        this.type = Proyecto1.checkTypes(type);
+        this.type = Utils.checkTypes(type);
         this.params_list = params_list;
         this.statements = statements;
     }
@@ -59,7 +59,7 @@ public class Function implements Statement {
         str.append("T_").append(guid).append("->").append("P_id_").append(guid).append(";\n");
         
         // datatype
-        str.append("Datatype_").append(guid).append("[label=\"").append(Proyecto1.viewTypes(type)).append("\"];\n");
+        str.append("Datatype_").append(guid).append("[label=\"").append(Utils.viewTypes(type)).append("\"];\n");
         
         // root to datatype
         str.append("T_").append(guid).append("->").append("Datatype_").append(guid).append(";\n");

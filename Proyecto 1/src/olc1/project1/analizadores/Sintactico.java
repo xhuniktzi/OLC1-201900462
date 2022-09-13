@@ -7,6 +7,7 @@ package olc1.project1.analizadores;
 
 import java_cup.runtime.Symbol;
 import java.util.LinkedList;
+import olc1.project1.errors.SintaxError;
 import olc1.project1.instructions.Statement;
 import olc1.project1.instructions.Operation;
 import olc1.project1.instructions.Param;
@@ -808,12 +809,13 @@ public class Sintactico extends java_cup.runtime.lr_parser {
 
 
     public LinkedList<Statement> AST;
+    public LinkedList<SintaxError> errors = new LinkedList<>();
 
     public void syntax_error(Symbol s){
-            System.err.println("Error Sintáctico en la linea: " + (s.left) + " y columna : " + s.right + ". No se esperaba este token: " + s.value + "."); 
+            errors.add(new SintaxError(s.value.toString(), s.left, s.right, true));
     } 
-    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
-            System.err.println("Error síntactico irrecuperable en la línea " + (s.left) + " y columna " + s.right + ". Componente " + s.value + " no reconocido."); 
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
+            errors.add(new SintaxError(s.value.toString(), s.left, s.right, false));
     }  
   
 

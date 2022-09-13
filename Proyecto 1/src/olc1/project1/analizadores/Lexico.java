@@ -3,7 +3,10 @@
 // source: Lexico
 
 package olc1.project1.analizadores;
+
 import java_cup.runtime.Symbol; 
+import java.util.LinkedList;
+import olc1.project1.errors.LexicalError;
 
 
 // See https://github.com/jflex-de/jflex/issues/222
@@ -429,6 +432,9 @@ public class Lexico implements java_cup.runtime.Scanner {
   /** Whether the user-EOF-code has already been executed. */
   private boolean zzEOFDone;
 
+  /* user code: */
+    public LinkedList<LexicalError> lexicalErrors;
+
 
   /**
    * Creates a new scanner
@@ -436,7 +442,8 @@ public class Lexico implements java_cup.runtime.Scanner {
    * @param   in  the java.io.Reader to read input from.
    */
   public Lexico(java.io.Reader in) {
-      yyline = 1; 
+  lexicalErrors = new LinkedList<>();
+    yyline = 1; 
     yychar = 1; 
     this.zzReader = in;
   }
@@ -836,7 +843,7 @@ public class Lexico implements java_cup.runtime.Scanner {
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1:
-            { System.err.println("Error lexico detectado: " + yytext() + ", en la linea: " + yyline + ", en la columna: " + (int) yychar);
+            { lexicalErrors.add(new LexicalError(yytext(), yyline, (int) yychar));
             }
             // fall through
           case 64: break;

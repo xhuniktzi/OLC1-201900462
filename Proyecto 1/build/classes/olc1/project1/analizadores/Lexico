@@ -1,5 +1,8 @@
 package olc1.project1.analizadores;
+
 import java_cup.runtime.Symbol; 
+import java.util.LinkedList;
+import olc1.project1.errors.LexicalError;
 
 %% 
 %class Lexico
@@ -10,7 +13,12 @@ import java_cup.runtime.Symbol;
 %unicode
 %ignorecase
 
-%init{ 
+%{
+    public LinkedList<LexicalError> lexicalErrors;
+%}
+
+%init{
+lexicalErrors = new LinkedList<>();
     yyline = 1; 
     yychar = 1; 
 %init} 
@@ -123,5 +131,5 @@ SBRACKETOPEN =[\[]
 {SBRACKETOPEN}                {return new Symbol(sym.SBRACKETOPEN, yyline,(int) yychar, yytext());}
 
 . {
-    System.err.println("Error lexico detectado: " + yytext() + ", en la linea: " + yyline + ", en la columna: " + (int) yychar);
+    lexicalErrors.add(new LexicalError(yytext(), yyline, (int) yychar));
 }

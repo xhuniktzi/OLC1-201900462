@@ -5,7 +5,7 @@
 package olc1.project1.instructions;
 
 import olc1.project1.GolangUtils;
-import olc1.project1.Proyecto1;
+import olc1.project1.Utils;
 import olc1.project1.PythonUtils;
 
 /**
@@ -13,7 +13,7 @@ import olc1.project1.PythonUtils;
  * @author Xhunik
  */
 public class Operation implements Statement {
-    private final String guid = Proyecto1.generateGuid();
+    private final String guid = Utils.generateGuid();
     @Override
     public String getGuid() { return this.guid; }
     

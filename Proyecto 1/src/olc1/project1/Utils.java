@@ -4,12 +4,13 @@
  */
 package olc1.project1;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.StringReader;
 import java.util.LinkedList;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java_cup.runtime.Symbol;
+import java_cup.runtime.SymbolFactory;
 import olc1.project1.analizadores.Lexico;
 import olc1.project1.analizadores.Sintactico;
 import olc1.project1.instructions.EnumTypes;
@@ -19,33 +20,17 @@ import olc1.project1.instructions.Statement;
  *
  * @author Xhunik
  */
-public class Proyecto1 {
-
-    /**
-     * @param args the command line arguments
-     * @throws java.io.FileNotFoundException
-     */
-    public static void main(String[] args) throws FileNotFoundException, IOException, Exception {
-        String path = "./Copia de archivoEntrada.olc";
-        // TODO code application logic here
-        Lexico scanner = new Lexico(new FileReader(new File(path)));
+public class Utils {
+    
+    public static AnalyzerResult loadFile(String input){
+        Lexico scanner = new Lexico(new StringReader(input));
         Sintactico parser = new Sintactico(scanner);
-        parser.parse();
-        
-        LinkedList<Statement> ast = parser.AST;
-        
-        System.out.println("---------------- Python -----------------------------");
-        
-        String pyStr = translatePython(ast);
-        System.out.println(pyStr);
-        
-        System.out.println("----------------- AST -------------------------------");
-        String graph = graph(ast);
-        System.out.println(graph);
-        
-        System.out.println("------------------ Golang ---------------------------");
-        String goStr = translateGolang(ast);
-        System.out.println(goStr);
+        try {
+            parser.parse();
+        } catch (Exception ex) {
+            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return new AnalyzerResult(parser.AST, scanner.lexicalErrors, parser.errors);
     }
     
     public static String translateGolang(LinkedList<Statement> ast){
@@ -59,11 +44,13 @@ public class Proyecto1 {
         LinkedList<Statement> mainStatements = new LinkedList<>();
         
         for (Statement statement : ast) {
-            String className = statement.getClass().getSimpleName();
-            if ( "Procedure".equals(className) || "Function".equals(className)){
-                methods.add(statement);
-            } else {
-                mainStatements.add(statement);
+            if (statement != null){
+                String className = statement.getClass().getSimpleName();
+                if ( "Procedure".equals(className) || "Function".equals(className)){
+                    methods.add(statement);
+                } else {
+                    mainStatements.add(statement);
+                }
             }
         }
         
@@ -87,11 +74,13 @@ public class Proyecto1 {
         LinkedList<Statement> mainStatements = new LinkedList<>();
         
         for (Statement statement : ast) {
-            String className = statement.getClass().getSimpleName();
-            if ( "Procedure".equals(className) || "Function".equals(className)){
-                methods.add(statement);
-            } else {
-                mainStatements.add(statement);
+            if (statement != null){
+                String className = statement.getClass().getSimpleName();
+                if ( "Procedure".equals(className) || "Function".equals(className)){
+                    methods.add(statement);
+                } else {
+                    mainStatements.add(statement);
+                }
             }
         }
         
@@ -119,9 +108,10 @@ public class Proyecto1 {
         str.append("concentrate=true;\n");
         
         for (Statement statement : ast) {
-            
+            if (statement != null){
                 str.append("rootNode ->").append("T_").append(statement.getGuid()).append(";\n");
                 str.append(statement.traverse());
+            }
              
         }
         
