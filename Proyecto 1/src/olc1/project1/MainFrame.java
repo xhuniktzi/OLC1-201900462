@@ -198,6 +198,11 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void jMenuErrorsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuErrorsActionPerformed
         // TODO add your handling code here:
+        if (lexErrors == null || sintaxErrors == null){
+            JOptionPane.showMessageDialog(this, "No se a ejecutado el archivo", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+            
         System.out.println("Errores lexicos");
         for (LexicalError lexError : lexErrors) {
             System.out.println("Lexema: " + lexError.lexema + ", no pertenece al lenguaje, encontrado en (fila, columna): "
@@ -262,7 +267,7 @@ public class MainFrame extends javax.swing.JFrame {
         if (result == JFileChooser.APPROVE_OPTION){
             String content = jTextArea.getText();
 
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(jfc.getSelectedFile() + ".olc"))) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(jfc.getSelectedFile()))) {
                 writer.write(content);
             } catch (IOException ex) {
                 Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);

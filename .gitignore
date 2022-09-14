@@ -25,3 +25,5 @@ hs_err_pid*
 # test files
 *.txt
 *.png
+*.py
+*.go

@@ -33,8 +33,7 @@ NUM = [0-9]+("."[  |0-9]+)?
 BOOLEAN = Verdadero|Falso
 CHAR = [\']([^\t\'\"\n]|(\\\")|(\\n)|(\\\')|(\\t))?[\']
 
-ID = "_"[0-9A-Za-z]+"_"
-//FUNCID = "_"[0-9A-Za-z]+"_"
+ID = "_"[0-9A-Za-z_]+"_"
 TYPEDEF = Numero|Cadena|Boolean|Caracter
 OPENQUESTION = [\¿]
 SBRACKETOPEN =[\[]
@@ -51,7 +50,7 @@ SBRACKETOPEN =[\[]
 "mayor_o_igual"                {return new Symbol(sym.MAJOREQUALS, yyline,(int) yychar, yytext());}
 "menor_o_igual"                {return new Symbol(sym.MINOREQUALS, yyline,(int) yychar, yytext());}
 "es_igual"                 {return new Symbol(sym.EQUALS, yyline,(int) yychar, yytext());}
-"diferente"                 {return new Symbol(sym.NOTEQUALS, yyline,(int) yychar, yytext());}
+"es_diferente"                 {return new Symbol(sym.NOTEQUALS, yyline,(int) yychar, yytext());}
 "not"                 {return new Symbol(sym.NOT, yyline,(int) yychar, yytext());}
 "or"                 {return new Symbol(sym.OR, yyline,(int) yychar, yytext());}
 "and"                 {return new Symbol(sym.AND, yyline,(int) yychar, yytext());}
@@ -125,7 +124,7 @@ SBRACKETOPEN =[\[]
 
 {TYPEDEF}               {return new Symbol(sym.TYPEDEF, yyline, (int) yychar, yytext());}
 {ID}                    {return new Symbol(sym.ID, yyline, (int) yychar, (yytext()).substring(1,yytext().length()-1));}
-//{FUNCID}                {return new Symbol(sym.FUNCID, yyline, (int) yychar, (yytext()).substring(1,yytext().length()-1));}
+
 
 {OPENQUESTION}                {return new Symbol(sym.OPENQUESTION, yyline, (int) yychar, yytext());}
 {SBRACKETOPEN}                {return new Symbol(sym.SBRACKETOPEN, yyline,(int) yychar, yytext());}
