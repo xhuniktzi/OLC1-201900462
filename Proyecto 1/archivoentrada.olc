@@ -76,8 +76,8 @@ imprimir_nl ".";
 imprimir_nl (_v3_);
 
 si _v1_ es_igual _v2_ entonces
-	imprimir_nl "Al parecer no funciona la asignacion";
-	mientras not (_variable1_ mayor_o_igual 5*5+8/2) hacer
+	imprimir_nl "Al parecer no funciona la asignacion"; 
+	mientras not (_variable1_ mayor_o_igual 5*5+8/2) hacer 
 		imprimir _variable1_;
 		_variable1_ -> _variable1_ + 1;
 	fin_mientras
@@ -91,9 +91,9 @@ fin_si
 
 si _v1_ es_igual _v2_ entonces
 	imprimir_nl "no tiene que imprimir este mensaje";
-		o_si _v1_ es_igual 13 entonces
+		o_si _v1_ es_igual "13" entonces
 		    imprimir_nl "mensaje de prueba";
-		o_si _v1_ es_igual 14 entonces
+		o_si _v1_ es_igual "14" entonces
 		    imprimir_nl "mensaje de prueba";
 	de_lo_contrario
 	    imprimir_nl "este print es un ejemplo";

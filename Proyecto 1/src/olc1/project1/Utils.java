@@ -9,8 +9,6 @@ import java.util.LinkedList;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java_cup.runtime.Symbol;
-import java_cup.runtime.SymbolFactory;
 import olc1.project1.analizadores.Lexico;
 import olc1.project1.analizadores.Sintactico;
 import olc1.project1.instructions.EnumTypes;

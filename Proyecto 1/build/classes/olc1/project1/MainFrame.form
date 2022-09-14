@@ -207,11 +207,17 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Python"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonPythonActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="jButtonGolang">
       <Properties>
         <Property name="text" type="java.lang.String" value="Golang"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonGolangActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

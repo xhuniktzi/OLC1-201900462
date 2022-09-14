@@ -86,8 +86,18 @@ public class MainFrame extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTextArea);
 
         jButtonPython.setText("Python");
+        jButtonPython.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonPythonActionPerformed(evt);
+            }
+        });
 
         jButtonGolang.setText("Golang");
+        jButtonGolang.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonGolangActionPerformed(evt);
+            }
+        });
 
         jMenuFile.setText("Archivo");
 
@@ -219,6 +229,9 @@ public class MainFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         jTextArea.selectAll();
         jTextArea.replaceSelection("");
+        ast = null;
+        lexErrors = null;
+        sintaxErrors = null;
     }//GEN-LAST:event_jButtonCleanActionPerformed
 
     private void jMenuOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuOpenActionPerformed
@@ -288,6 +301,28 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButtonRunActionPerformed
 
+    private void jButtonPythonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPythonActionPerformed
+        // TODO add your handling code here:
+        if (ast == null){
+            JOptionPane.showMessageDialog(this, "No se ha ejecutado el archivo", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        PythonTranslateFrame frame = new PythonTranslateFrame(ast);
+        frame.setVisible(true);
+    }//GEN-LAST:event_jButtonPythonActionPerformed
+
+    private void jButtonGolangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGolangActionPerformed
+        // TODO add your handling code here:
+        if (ast == null){
+            JOptionPane.showMessageDialog(this, "No se ha ejecutado el archivo", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        GolangTranslateFrame frame = new GolangTranslateFrame(ast);
+        frame.setVisible(true);
+    }//GEN-LAST:event_jButtonGolangActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -316,10 +351,8 @@ public class MainFrame extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MainFrame().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new MainFrame().setVisible(true);
         });
     }
 

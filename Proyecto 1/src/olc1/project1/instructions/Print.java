@@ -49,7 +49,7 @@ public class Print implements Statement {
     public String translatePython() {
         StringBuilder str = new StringBuilder();
         
-        str.append("print(").append(expr.translatePython()).append(")");
+        str.append("print(").append(expr.translatePython()).append(", end='')");
         
         return str.toString();
     }
