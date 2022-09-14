@@ -4,7 +4,6 @@
  */
 package olc1.project1;
 
-import java.util.List;
 import olc1.project1.instructions.EnumOperations;
 import olc1.project1.instructions.EnumTerminals;
 import olc1.project1.instructions.EnumUnitaryOperations;
@@ -15,19 +14,6 @@ import olc1.project1.instructions.EnumUnitaryOperations;
  */
 public class PythonUtils {
 
-    /**
-     *
-     * @param input the value of input
-     * @return 
-     */
-    public static String pythonAddTabs(String input) {
-        StringBuilder str = new StringBuilder();
-        List<String> lines = input.lines().toList();
-        for (String line : lines) {
-            str.append("\t").append(line).append("\n");
-        }
-        return str.toString();
-    }
 
     /**
      *

@@ -79,7 +79,7 @@ public class Assignment implements Statement {
             }
         }
         
-        str.append("=");
+        str.append(" = ");
         
         iterator = name_list.iterator();
         

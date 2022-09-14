@@ -5,6 +5,7 @@
 package olc1.project1.instructions;
 
 import java.util.LinkedList;
+import olc1.project1.PythonUtils;
 import olc1.project1.Utils;
 
 /**
@@ -84,7 +85,7 @@ public class Case implements Statement {
         
         for (Statement statement : statements) {
             if (statement != null)
-                str.append(statement.translateGolang()).append("\n");
+                str.append(Utils.addTabs(statement.translateGolang())).append("\n");
         }
         
         

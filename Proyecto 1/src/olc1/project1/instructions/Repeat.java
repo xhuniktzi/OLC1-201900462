@@ -74,7 +74,7 @@ public class Repeat implements Statement {
         str.append("while ").append("True:\n");
         for (Statement statement : statements) {
             if (statement != null)
-                str.append(PythonUtils.pythonAddTabs(statement.translatePython())).append("\n");
+                str.append(Utils.addTabs(statement.translatePython())).append("\n");
         }
         str.append("\tif ").append(expr.translatePython()).append(":\n");
         str.append("\t\tbreak");
@@ -88,7 +88,7 @@ public class Repeat implements Statement {
         str.append("for ").append("{\n");
         for (Statement statement : statements) {
             if (statement != null)
-                str.append(statement.translateGolang()).append("\n");
+                str.append(Utils.addTabs(statement.translateGolang())).append("\n");
         }
         str.append("\tif ").append(expr.translateGolang()).append("{\n");
         str.append("\t\tbreak\n");

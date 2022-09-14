@@ -119,7 +119,7 @@ public class Procedure implements Statement {
         
         for (Statement statement : statements) {
             if (statement != null)
-                str.append(PythonUtils.pythonAddTabs(statement.translatePython())).append("\n");
+                str.append(Utils.addTabs(statement.translatePython())).append("\n");
         }
         
         return str.toString();
@@ -147,7 +147,7 @@ public class Procedure implements Statement {
         
         for (Statement statement : statements) {
             if (statement != null)
-                str.append(statement.translateGolang()).append("\n");
+                str.append(Utils.addTabs(statement.translateGolang())).append("\n");
         }
         str.append("}\n");
         

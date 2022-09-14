@@ -6,6 +6,7 @@ package olc1.project1;
 
 import java.io.StringReader;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -58,7 +59,7 @@ public class Utils {
         
         str.append("func main(){\n");
         for (Statement mainStatement : mainStatements) {
-            str.append(mainStatement.translateGolang()).append("\n");
+            str.append(addTabs(mainStatement.translateGolang())).append("\n");
         }
         str.append("}\n");
         
@@ -89,7 +90,7 @@ public class Utils {
         
         str.append("def main():\n");        
         for (Statement statement : mainStatements) {
-            str.append(PythonUtils.pythonAddTabs(statement.translatePython())).append("\n");
+            str.append(addTabs(statement.translatePython())).append("\n");
         }
         str.append("if __name__ == '__main__':\n");
         str.append("\tmain()");
@@ -155,6 +156,20 @@ public class Utils {
             }
             default -> throw new AssertionError();
         }
+    }
+
+    /**
+     *
+     * @param input the value of input
+     * @return
+     */
+    public static String addTabs(String input) {
+        StringBuilder str = new StringBuilder();
+        List<String> lines = input.lines().toList();
+        for (String line : lines) {
+            str.append("\t").append(line).append("\n");
+        }
+        return str.toString();
     }
     
     

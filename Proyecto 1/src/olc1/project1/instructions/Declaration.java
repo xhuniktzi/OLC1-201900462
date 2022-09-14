@@ -101,7 +101,7 @@ public class Declaration implements Statement {
             }
         }
         
-        str.append("=");
+        str.append(" = ");
         
         iterator = name_list.iterator();
         
@@ -129,8 +129,8 @@ public class Declaration implements Statement {
                 str.append(",");
             }
         }
-        str.append(" ").append(GolangUtils.golangViewTypes(type)).append(" ");
-        str.append("=");
+        str.append(" ").append(GolangUtils.golangViewTypes(type));
+        str.append(" = ");
         
         iterator = name_list.iterator();
         

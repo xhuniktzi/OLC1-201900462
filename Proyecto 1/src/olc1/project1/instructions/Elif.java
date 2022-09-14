@@ -77,7 +77,7 @@ public class Elif implements Statement {
         str.append("elif ").append(expr.translatePython()).append(":\n");
         for (Statement statement : statements) {
             if (statement != null)
-                str.append(PythonUtils.pythonAddTabs(statement.translatePython())).append("\n");
+                str.append(Utils.addTabs(statement.translatePython())).append("\n");
         }
         
         return str.toString();
@@ -90,7 +90,7 @@ public class Elif implements Statement {
         str.append("else if ").append(expr.translateGolang()).append(" {\n");
         for (Statement statement : statements) {
             if (statement != null)
-                str.append(statement.translateGolang()).append("\n");
+                str.append(Utils.addTabs(statement.translateGolang())).append("\n");
         }
         str.append("}");
         
