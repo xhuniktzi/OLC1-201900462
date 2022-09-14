@@ -78,11 +78,12 @@ public class Procedure implements Statement {
         str.append("T_").append(guid).append("->").append("EP_").append(guid)
                 .append(";\n");
         
-        for (Statement statement : statements) {  
-            str.append("T_").append(guid).append("->")
-                    .append("T_").append(statement.getGuid()).append(";\n");
-            str.append(statement.traverse());
-                        
+        for (Statement statement : statements) {
+            if (statement != null){
+                str.append("T_").append(guid).append("->")
+                        .append("T_").append(statement.getGuid()).append(";\n");
+                str.append(statement.traverse());
+            }        
         }
         
         // reserved word end procedure
@@ -117,7 +118,8 @@ public class Procedure implements Statement {
         str.append("):\n");
         
         for (Statement statement : statements) {
-            str.append(PythonUtils.pythonAddTabs(statement.translatePython())).append("\n");
+            if (statement != null)
+                str.append(PythonUtils.pythonAddTabs(statement.translatePython())).append("\n");
         }
         
         return str.toString();
@@ -144,7 +146,8 @@ public class Procedure implements Statement {
         str.append(") ").append("{\n");
         
         for (Statement statement : statements) {
-            str.append(statement.translateGolang()).append("\n");
+            if (statement != null)
+                str.append(statement.translateGolang()).append("\n");
         }
         str.append("}\n");
         

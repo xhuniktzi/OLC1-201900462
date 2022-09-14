@@ -88,9 +88,11 @@ public class Function implements Statement {
                 .append(";\n");
         
         for (Statement statement : statements) { 
-            str.append("T_").append(guid).append("->")
-                    .append("T_").append(statement.getGuid()).append(";\n");
-            str.append(statement.traverse());           
+            if (statement != null){
+                str.append("T_").append(guid).append("->")
+                        .append("T_").append(statement.getGuid()).append(";\n");
+                str.append(statement.traverse());           
+            }
         }
         
         // reserved word end function
@@ -125,7 +127,8 @@ public class Function implements Statement {
         str.append("):\n");
         
         for (Statement statement : statements) {
-            str.append(PythonUtils.pythonAddTabs(statement.translatePython())).append("\n");
+            if (statement != null)
+                str.append(PythonUtils.pythonAddTabs(statement.translatePython())).append("\n");
         }
         
         return str.toString();
@@ -152,7 +155,8 @@ public class Function implements Statement {
         str.append(") ").append(GolangUtils.golangViewTypes(type)).append(" {\n");
         
         for (Statement statement : statements) {
-            str.append(statement.translateGolang()).append("\n");
+            if (statement != null)
+                str.append(statement.translateGolang()).append("\n");
         }
         str.append("}\n");
         

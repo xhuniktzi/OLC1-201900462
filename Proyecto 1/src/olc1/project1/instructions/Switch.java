@@ -66,14 +66,14 @@ public class Switch implements Statement {
         // else statement
         if (else_statements != null){
             for (Statement else_statement : else_statements) {
+                if (else_statement != null){
+                    // root to statement
+                    str.append("T_").append(guid).append("->")
+                            .append("T_").append(else_statement.getGuid()).append(";\n");
 
-                // root to statement
-                str.append("T_").append(guid).append("->")
-                        .append("T_").append(else_statement.getGuid()).append(";\n");
-
-                // statement
-                str.append(else_statement.traverse());
-                
+                    // statement
+                    str.append(else_statement.traverse());
+                }
             }
         }
         
@@ -96,15 +96,15 @@ public class Switch implements Statement {
             if (i == 0){
                 str.append("if ").append(expr.translatePython()).append("==").append(aCase.expr.translatePython()).append(":\n");
                 for (Statement statement: aCase.statements) {
-
-                    str.append(PythonUtils.pythonAddTabs(statement.translatePython())).append("\n");
+                    if (statement != null)
+                        str.append(PythonUtils.pythonAddTabs(statement.translatePython())).append("\n");
                 }
 
             } else {
                 str.append("elif ").append(expr.translatePython()).append("==").append(aCase.expr.translatePython()).append(":\n");
                 for (Statement statement: aCase.statements) {
-
-                    str.append(PythonUtils.pythonAddTabs(statement.translatePython())).append("\n");
+                    if (statement != null)
+                        str.append(PythonUtils.pythonAddTabs(statement.translatePython())).append("\n");
                 }
             }
             i++;
@@ -112,8 +112,8 @@ public class Switch implements Statement {
         if(else_statements != null){
             str.append("else:\n");
             for (Statement else_statement : else_statements) {
-
-                str.append(PythonUtils.pythonAddTabs(else_statement.translatePython())).append("\n");
+                if (else_statement != null)
+                    str.append(PythonUtils.pythonAddTabs(else_statement.translatePython())).append("\n");
             }
         }
         
@@ -132,7 +132,8 @@ public class Switch implements Statement {
         if (else_statements != null){
             str.append("default:\n");
             for (Statement else_statement : else_statements) {
-                str.append(else_statement.translateGolang());
+                if (else_statement != null)
+                    str.append(else_statement.translateGolang());
             }
         }
         str.append("}");

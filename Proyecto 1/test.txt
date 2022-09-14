@@ -1,8 +1,0 @@
-inicio
-	si 5 > 3 entonces
-		si 4 4 entonces
-			imprimir "ok"
-		fin_si
-	fin_si
-fin
-// arreglar logical para que acepte otros valores aparte de num

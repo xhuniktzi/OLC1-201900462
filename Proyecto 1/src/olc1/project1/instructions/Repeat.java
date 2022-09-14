@@ -45,10 +45,10 @@ public class Repeat implements Statement {
         
         // statements
         for (Statement statement : statements) {
-
-            str.append("T_").append(guid).append("->").append("T_").append(statement.getGuid()).append(";\n");
-            str.append(statement.traverse());
-                       
+            if (statement != null){
+                str.append("T_").append(guid).append("->").append("T_").append(statement.getGuid()).append(";\n");
+                str.append(statement.traverse());
+            }       
         }
         
         // reserved word end_repeat
@@ -73,7 +73,8 @@ public class Repeat implements Statement {
         StringBuilder str = new StringBuilder();
         str.append("while ").append("True:\n");
         for (Statement statement : statements) {
-            str.append(PythonUtils.pythonAddTabs(statement.translatePython())).append("\n");
+            if (statement != null)
+                str.append(PythonUtils.pythonAddTabs(statement.translatePython())).append("\n");
         }
         str.append("\tif ").append(expr.translatePython()).append(":\n");
         str.append("\t\tbreak");
@@ -86,7 +87,8 @@ public class Repeat implements Statement {
         StringBuilder str = new StringBuilder();
         str.append("for ").append("{\n");
         for (Statement statement : statements) {
-            str.append(statement.translateGolang()).append("\n");
+            if (statement != null)
+                str.append(statement.translateGolang()).append("\n");
         }
         str.append("\tif ").append(expr.translateGolang()).append("{\n");
         str.append("\t\tbreak\n");

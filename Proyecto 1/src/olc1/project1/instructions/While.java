@@ -60,9 +60,10 @@ public class While implements Statement {
         
         // statements
         for (Statement statement : statements) {
-
-            str.append("T_").append(guid).append("->").append("T_").append(statement.getGuid()).append(";\n");
-            str.append(statement.traverse());
+            if (statement != null){
+                str.append("T_").append(guid).append("->").append("T_").append(statement.getGuid()).append(";\n");
+                str.append(statement.traverse());
+            }
 
         }
         
@@ -82,7 +83,8 @@ public class While implements Statement {
         
         str.append("while ").append(expr.translatePython()).append(":\n");
         for (Statement statement : statements) {
-            str.append(PythonUtils.pythonAddTabs(statement.translatePython())).append("\n");
+            if (statement != null)
+                str.append(PythonUtils.pythonAddTabs(statement.translatePython())).append("\n");
         }
         
         return str.toString();
@@ -93,7 +95,8 @@ public class While implements Statement {
         StringBuilder str = new StringBuilder();
         str.append("for ").append(expr.translateGolang()).append(" {\n");
         for (Statement statement : statements) {
-            str.append(statement.translateGolang()).append("\n");
+            if (statement != null)
+                str.append(statement.translateGolang()).append("\n");
         }
         str.append("}\n");
         return str.toString();

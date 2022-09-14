@@ -56,13 +56,14 @@ public class Elif implements Statement {
         
         // statements
         for (Statement statement : statements) {
+            if (statement != null){
+                // root to statement
+                str.append("T_").append(guid).append("->")
+                        .append("T_").append(statement.getGuid()).append(";\n");
 
-            // root to statement
-            str.append("T_").append(guid).append("->")
-                    .append("T_").append(statement.getGuid()).append(";\n");
-
-            // statement
-            str.append(statement.traverse());
+                // statement
+                str.append(statement.traverse());
+            }
 
         }
 
@@ -75,7 +76,8 @@ public class Elif implements Statement {
         
         str.append("elif ").append(expr.translatePython()).append(":\n");
         for (Statement statement : statements) {
-            str.append(PythonUtils.pythonAddTabs(statement.translatePython())).append("\n");
+            if (statement != null)
+                str.append(PythonUtils.pythonAddTabs(statement.translatePython())).append("\n");
         }
         
         return str.toString();
@@ -87,7 +89,8 @@ public class Elif implements Statement {
         
         str.append("else if ").append(expr.translateGolang()).append(" {\n");
         for (Statement statement : statements) {
-            str.append(statement.translateGolang()).append("\n");
+            if (statement != null)
+                str.append(statement.translateGolang()).append("\n");
         }
         str.append("}");
         

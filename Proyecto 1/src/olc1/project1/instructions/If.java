@@ -71,14 +71,14 @@ public class If implements Statement {
         
         // statements
         for (Statement statement : statements) {
+            if (statement != null){
+                // root to statement
+                str.append("T_").append(guid).append("->")
+                        .append("T_").append(statement.getGuid()).append(";\n");
 
-            // root to statement
-            str.append("T_").append(guid).append("->")
-                    .append("T_").append(statement.getGuid()).append(";\n");
-
-            // statement
-            str.append(statement.traverse());
-
+                // statement
+                str.append(statement.traverse());
+            }
         }
 
         if (elifs != null){
@@ -101,12 +101,14 @@ public class If implements Statement {
                 .append(guid).append(";\n");
             
             for (Statement else_statement : else_statements) {
-                // root to statement
-                str.append("T_").append(guid).append("->")
-                        .append("T_").append(else_statement.getGuid()).append(";\n");
+                if (else_statement != null){
+                    // root to statement
+                    str.append("T_").append(guid).append("->")
+                            .append("T_").append(else_statement.getGuid()).append(";\n");
 
-                // statement
-                str.append(else_statement.traverse());
+                    // statement
+                    str.append(else_statement.traverse());
+                }
             }
         
         }
@@ -127,7 +129,8 @@ public class If implements Statement {
         
         str.append("if ").append(expr.translatePython()).append(":\n");
         for (Statement statement : statements) {
-            str.append(PythonUtils.pythonAddTabs(statement.translatePython())).append("\n");
+            if (statement != null)
+                str.append(PythonUtils.pythonAddTabs(statement.translatePython())).append("\n");
         }
         
         if (elifs != null){
@@ -141,7 +144,8 @@ public class If implements Statement {
         if (else_statements != null){
             str.append("else:\n");
             for (Statement else_statement : else_statements) {
-                str.append(PythonUtils.pythonAddTabs(else_statement.translatePython())).append("\n");
+                if (else_statement != null)
+                    str.append(PythonUtils.pythonAddTabs(else_statement.translatePython())).append("\n");
             }
             
         }
@@ -155,7 +159,8 @@ public class If implements Statement {
         
         str.append("if ").append(expr.translateGolang()).append(" {\n");
         for (Statement statement : statements) {
-            str.append(statement.translateGolang()).append("\n");
+            if (statement != null)
+                str.append(statement.translateGolang()).append("\n");
         }
         
         str.append("}");
@@ -171,7 +176,8 @@ public class If implements Statement {
         if (else_statements != null){
             str.append("else{\n");
             for (Statement else_statement : else_statements) {
-                str.append(else_statement.translateGolang()).append("\n");
+                if (else_statement != null)
+                    str.append(else_statement.translateGolang()).append("\n");
             }
             str.append("}");
         }

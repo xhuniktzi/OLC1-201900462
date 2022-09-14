@@ -60,11 +60,13 @@ public class Case implements Statement {
         // statements
         for (Statement statement : statements) {
             // root to statement
-            str.append("T_").append(guid).append("->")
-                    .append("T_").append(statement.getGuid()).append(";\n");
+            if (statement != null){
+                str.append("T_").append(guid).append("->")
+                        .append("T_").append(statement.getGuid()).append(";\n");
 
-            // statement
-            str.append(statement.traverse());
+                // statement
+                str.append(statement.traverse());
+            }
         }
 
         return str.toString();
@@ -81,7 +83,8 @@ public class Case implements Statement {
         str.append("case ").append(expr.translateGolang()).append(":\n");
         
         for (Statement statement : statements) {
-            str.append(statement.translateGolang()).append("\n");
+            if (statement != null)
+                str.append(statement.translateGolang()).append("\n");
         }
         
         
