@@ -212,17 +212,19 @@ public class MainFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "No se a ejecutado el archivo", "Error", JOptionPane.WARNING_MESSAGE);
             return;
         }
-            
-        System.out.println("Errores lexicos");
-        for (LexicalError lexError : lexErrors) {
-            System.out.println("Lexema: " + lexError.lexema + ", no pertenece al lenguaje, encontrado en (fila, columna): "
-                    + lexError.row + ", " + lexError.col);
-        }
-        System.out.println("Errores sintacticos");
-        for (SintaxError sintaxError : sintaxErrors) {
-            System.out.println("Elemento: " + sintaxError.lexema + ", no esperado, encontrado en (fila, columna): " 
-                    + sintaxError.row + ", " + sintaxError.col + " recuperable: " + sintaxError.recuperable);
-        }
+        
+        ErrorFrame frame = new ErrorFrame(lexErrors, sintaxErrors);
+        frame.setVisible(true);
+//        System.out.println("Errores lexicos");
+//        for (LexicalError lexError : lexErrors) {
+//            System.out.println("Lexema: " + lexError.lexema + ", no pertenece al lenguaje, encontrado en (fila, columna): "
+//                    + lexError.row + ", " + lexError.col);
+//        }
+//        System.out.println("Errores sintacticos");
+//        for (SintaxError sintaxError : sintaxErrors) {
+//            System.out.println("Elemento: " + sintaxError.lexema + ", no esperado, encontrado en (fila, columna): " 
+//                    + sintaxError.row + ", " + sintaxError.col);
+//        }
     }//GEN-LAST:event_jMenuErrorsActionPerformed
 
     private void jButtonCleanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCleanActionPerformed
@@ -290,14 +292,18 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuSaveActionPerformed
 
     private void jButtonRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRunActionPerformed
-        // TODO add your handling code here:
-        AnalyzerResult result = Utils.loadFile(jTextArea.getText());
-        this.ast = result.ast;
-        this.lexErrors = result.lexErrors;
-        this.sintaxErrors = result.sintaxErrors;
-        
-        if (!lexErrors.isEmpty() || !sintaxErrors.isEmpty()){
-            JOptionPane.showMessageDialog(this, "Se han encontrado errores en la entrada", "Error", JOptionPane.WARNING_MESSAGE);
+        try {
+            // TODO add your handling code here:
+            AnalyzerResult result = Utils.loadFile(jTextArea.getText());
+            this.ast = result.ast;
+            this.lexErrors = result.lexErrors;
+            this.sintaxErrors = result.sintaxErrors;
+            
+            if (!lexErrors.isEmpty() || !sintaxErrors.isEmpty()){
+                JOptionPane.showMessageDialog(this, "Se han encontrado errores en la entrada", "Error", JOptionPane.WARNING_MESSAGE);
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_jButtonRunActionPerformed
 

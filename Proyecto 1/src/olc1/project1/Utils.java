@@ -21,13 +21,13 @@ import olc1.project1.instructions.Statement;
  */
 public class Utils {
     
-    public static AnalyzerResult loadFile(String input){
+    public static AnalyzerResult loadFile(String input) throws Exception{
         Lexico scanner = new Lexico(new StringReader(input));
         Sintactico parser = new Sintactico(scanner);
         try {
             parser.parse();
         } catch (Exception ex) {
-            Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
         }
         return new AnalyzerResult(parser.AST, scanner.lexicalErrors, parser.errors);
     }
@@ -171,6 +171,4 @@ public class Utils {
         }
         return str.toString();
     }
-    
-    
 }

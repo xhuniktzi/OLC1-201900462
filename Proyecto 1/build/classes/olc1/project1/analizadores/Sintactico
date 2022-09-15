@@ -34,10 +34,11 @@ parser code
     public LinkedList<SintaxError> errors = new LinkedList<>();
 
     public void syntax_error(Symbol s){
-            errors.add(new SintaxError(s.value.toString(), s.left, s.right, true));
+            if (s.value != null)
+                errors.add(new SintaxError(s.value.toString(), s.left, s.right));
     } 
-    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
-            errors.add(new SintaxError(s.value.toString(), s.left, s.right, false));
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception {
+            throw new Exception("Error irrecuperable en (linea, columna): " + s.left + ", " + s.right);
     }  
   
 :}
@@ -82,12 +83,15 @@ non terminal Operation unitary;
 non terminal If if;
 non terminal For for;
 
+non terminal Statement funcstatement;
+non terminal LinkedList<Statement> funcstatements;
 
 precedence left MAJOR, MINOR, MAJOREQUALS, MINOREQUALS, EQUALS, NOTEQUALS;
 precedence left AND, OR;
 precedence left ADD, SUBSTRACT;
 precedence left MULTIPLY, DIVISION;
 precedence left POW, MODULE;
+precedence left PARSTART;
 
 start with ini;
 
@@ -104,17 +108,29 @@ statement ::= ENTER name_list:n AS TYPEDEF:t WITH_VALUE expr:e DOTCOMMA {:RESULT
 | WHILE expr:e DO ENDWHILE {:RESULT = new While(e);:}
 | REPEAT statements:s ENDREPEAT expr:e {:RESULT = new Repeat(s, e);:}
 | REPEAT ENDREPEAT expr:e {:RESULT = new Repeat(e);:}
-| RETURN expr:e DOTCOMMA {:RESULT = new Return(e);:}
 | DEFPROCEDURE ID:f statements:s ENDPROCEDURE {:RESULT = new Procedure(f, s);:}
 | DEFPROCEDURE ID:f PARAMS PARSTART params_list:p PAREND statements:s ENDPROCEDURE {:RESULT = new Procedure(f, p, s);:}
-| FUNCTION ID:f TYPEDEF:t statements:s ENDFUNCTION {:RESULT = new Function(f, t, s);:}
-| FUNCTION ID:f TYPEDEF:t PARAMS PARSTART params_list:p PAREND statements:s ENDFUNCTION {:RESULT = new Function(f, t, p, s);:}
+| FUNCTION ID:f TYPEDEF:t funcstatements:s ENDFUNCTION {:RESULT = new Function(f, t, s);:}
+| FUNCTION ID:f TYPEDEF:t PARAMS PARSTART params_list:p PAREND funcstatements:s ENDFUNCTION {:RESULT = new Function(f, t, p, s);:}
 | EXEC func:f DOTCOMMA {:RESULT = f;:}
 | PRINT expr:e DOTCOMMA {:RESULT = new Print(e);:}
 | PRINTLN expr:e DOTCOMMA {:RESULT = new Println(e);:}
 | SWITCH expr:e DO cases:c ENDSWITCH {:RESULT = new Switch(e, c);:}
 | SWITCH expr:e DO cases:c ELSE THEN statements:s ENDSWITCH {:RESULT = new Switch(e, c, s);:}
-| error DOTCOMMA;
+| error DOTCOMMA
+| error ENDIF
+| error ENDFOR
+| error ENDWHILE
+| error ENDPROCEDURE
+| error ENDFUNCTION
+| error ENDSWITCH
+| error ENDREPEAT expr;
+
+funcstatement ::= statement:s {:RESULT = s;:}
+| RETURN expr:e DOTCOMMA {:RESULT = new Return(e);:};
+
+funcstatements ::= funcstatements:s funcstatement:t {:RESULT=s; RESULT.add(t);:}
+| funcstatement:s {:RESULT = new LinkedList<Statement>(); RESULT.add(s);:};
 
 if ::= IF expr:e THEN statements:s ENDIF {:RESULT = new If(e, s);:}
 | IF expr:e THEN statements:p ELSE statements:s ENDIF {:RESULT = new If(e, p, s);:}

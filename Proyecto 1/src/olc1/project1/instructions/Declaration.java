@@ -128,7 +128,7 @@ public class Declaration implements Statement {
             if (iterator.hasNext()){
                 str.append(",");
             }
-        }
+        }    
         str.append(" ").append(GolangUtils.golangViewTypes(type));
         str.append(" = ");
         
