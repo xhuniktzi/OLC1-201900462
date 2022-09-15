@@ -86,6 +86,11 @@ non terminal For for;
 non terminal Statement funcstatement;
 non terminal LinkedList<Statement> funcstatements;
 
+non terminal Statement definitionprocedure;
+
+non terminal Statement mainstatement;
+non terminal LinkedList<Statement> mainstatements;
+
 precedence left MAJOR, MINOR, MAJOREQUALS, MINOREQUALS, EQUALS, NOTEQUALS;
 precedence left AND, OR;
 precedence left ADD, SUBSTRACT;
@@ -95,7 +100,13 @@ precedence left PARSTART;
 
 start with ini;
 
-ini ::= START statements:s END {:parser.AST=s;:};
+ini ::= START mainstatements:s END {:parser.AST=s;:};
+
+mainstatements ::= mainstatements:s mainstatement:t {:RESULT=s; RESULT.add(t);:}
+| mainstatement:s {:RESULT = new LinkedList<Statement>(); RESULT.add(s);:};
+
+mainstatement ::= statement:s {:RESULT = s;:}
+| definitionprocedure:d {:RESULT = d;:};
 
 statements ::= statements:s statement:t {:RESULT=s; RESULT.add(t);:}
 | statement:s {:RESULT = new LinkedList<Statement>(); RESULT.add(s);:};
@@ -108,10 +119,6 @@ statement ::= ENTER name_list:n AS TYPEDEF:t WITH_VALUE expr:e DOTCOMMA {:RESULT
 | WHILE expr:e DO ENDWHILE {:RESULT = new While(e);:}
 | REPEAT statements:s ENDREPEAT expr:e {:RESULT = new Repeat(s, e);:}
 | REPEAT ENDREPEAT expr:e {:RESULT = new Repeat(e);:}
-| DEFPROCEDURE ID:f statements:s ENDPROCEDURE {:RESULT = new Procedure(f, s);:}
-| DEFPROCEDURE ID:f PARAMS PARSTART params_list:p PAREND statements:s ENDPROCEDURE {:RESULT = new Procedure(f, p, s);:}
-| FUNCTION ID:f TYPEDEF:t funcstatements:s ENDFUNCTION {:RESULT = new Function(f, t, s);:}
-| FUNCTION ID:f TYPEDEF:t PARAMS PARSTART params_list:p PAREND funcstatements:s ENDFUNCTION {:RESULT = new Function(f, t, p, s);:}
 | EXEC func:f DOTCOMMA {:RESULT = f;:}
 | PRINT expr:e DOTCOMMA {:RESULT = new Print(e);:}
 | PRINTLN expr:e DOTCOMMA {:RESULT = new Println(e);:}
@@ -125,6 +132,11 @@ statement ::= ENTER name_list:n AS TYPEDEF:t WITH_VALUE expr:e DOTCOMMA {:RESULT
 | error ENDFUNCTION
 | error ENDSWITCH
 | error ENDREPEAT expr;
+
+definitionprocedure ::=  DEFPROCEDURE ID:f statements:s ENDPROCEDURE {:RESULT = new Procedure(f, s);:}
+| DEFPROCEDURE ID:f PARAMS PARSTART params_list:p PAREND statements:s ENDPROCEDURE {:RESULT = new Procedure(f, p, s);:}
+| FUNCTION ID:f TYPEDEF:t funcstatements:s ENDFUNCTION {:RESULT = new Function(f, t, s);:}
+| FUNCTION ID:f TYPEDEF:t PARAMS PARSTART params_list:p PAREND funcstatements:s ENDFUNCTION {:RESULT = new Function(f, t, p, s);:};
 
 funcstatement ::= statement:s {:RESULT = s;:}
 | RETURN expr:e DOTCOMMA {:RESULT = new Return(e);:};
