@@ -30,8 +30,7 @@ public class Operation implements Statement {
     String value;
     EnumTerminals typeTerminal;
     
-    // Function expresion
-    Execute function;
+
     
     // Group
     Operation opGroup;
@@ -63,11 +62,7 @@ public class Operation implements Statement {
         this.typeOp = TypeOperation.GROUP;
     }
     
-    public Operation(Execute value){
-        this.function = value;
-        this.typeOp = TypeOperation.FUNCTION;
-    }
-    
+
     @Override
     public String traverse() {
         StringBuilder str = new StringBuilder();
@@ -146,14 +141,7 @@ public class Operation implements Statement {
                 str.append("T_").append(guid).append("->").append("EP_").append(guid)
                          .append(";\n");
             }
-            case FUNCTION -> {
-                // root of this to function
-                str.append("T_").append(guid).append("->").append("T_").append(function.getGuid())
-                         .append(";\n");
-                
-                // function
-                str.append(function.traverse());
-            }
+
             default -> throw new AssertionError();
         }
         
@@ -179,9 +167,7 @@ public class Operation implements Statement {
             case GROUP -> {
                 str.append("(").append(opGroup.translatePython()).append(")");
             }
-            case FUNCTION -> {
-                str.append(function.translatePython());
-            }
+
             default -> throw new AssertionError();
         }
         
@@ -215,9 +201,7 @@ public class Operation implements Statement {
             case GROUP -> {
                 str.append("(").append(opGroup.translateGolang()).append(")");
             }
-            case FUNCTION -> {
-                str.append(function.translateGolang());
-            }
+
             default -> throw new AssertionError();
         }
         

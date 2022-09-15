@@ -246,7 +246,12 @@ public class MainFrame extends javax.swing.JFrame {
             try {
                 String canonical = jfc.getSelectedFile().getCanonicalPath();
                 String content = Files.readString(Path.of(canonical));
+                jTextArea.selectAll();
+                jTextArea.replaceSelection("");
                 jTextArea.insert(content, 0);
+                this.ast = null;
+                this.lexErrors = null;
+                this.sintaxErrors = null;
             } catch (IOException ex) {
                 Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
             }

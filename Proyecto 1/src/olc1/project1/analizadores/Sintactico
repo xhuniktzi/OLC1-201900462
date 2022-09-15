@@ -176,7 +176,6 @@ expr ::= symbols:s {:RESULT = s;:}
 | unitary:u {:RESULT = u;:}
 | aritmetic:a {:RESULT = a;:}
 | logical:l {:RESULT = l;:}
-| EXEC func:f {:RESULT = new Operation(f);:}
 | PARSTART expr:e PAREND {:RESULT = new Operation(e);:};
 
 
