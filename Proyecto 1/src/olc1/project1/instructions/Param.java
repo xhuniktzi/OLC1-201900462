@@ -4,8 +4,9 @@
  */
 package olc1.project1.instructions;
 
-import olc1.project1.GolangUtils;
-import olc1.project1.Utils;
+import olc1.project1.enums.EnumTypes;
+import olc1.project1.utils.GolangUtils;
+import olc1.project1.utils.Utils;
 
 /**
  *

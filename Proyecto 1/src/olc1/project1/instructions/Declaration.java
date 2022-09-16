@@ -4,10 +4,10 @@
  */
 package olc1.project1.instructions;
 
+import olc1.project1.enums.EnumTypes;
 import java.util.Iterator;
 import java.util.LinkedList;
-import olc1.project1.GolangUtils;
-import olc1.project1.Utils;
+import olc1.project1.utils.Utils;
 
 /**
  *
@@ -128,8 +128,8 @@ public class Declaration implements Statement {
             if (iterator.hasNext()){
                 str.append(",");
             }
-        }    
-        str.append(" ").append(GolangUtils.golangViewTypes(type));
+        }
+        
         str.append(" = ");
         
         iterator = name_list.iterator();

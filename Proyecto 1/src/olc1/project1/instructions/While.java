@@ -5,8 +5,8 @@
 package olc1.project1.instructions;
 
 import java.util.LinkedList;
-import olc1.project1.Utils;
-import olc1.project1.PythonUtils;
+import olc1.project1.utils.Utils;
+import olc1.project1.utils.PythonUtils;
 
 
 /**

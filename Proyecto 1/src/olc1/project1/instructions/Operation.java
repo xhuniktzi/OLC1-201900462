@@ -4,9 +4,13 @@
  */
 package olc1.project1.instructions;
 
-import olc1.project1.GolangUtils;
-import olc1.project1.Utils;
-import olc1.project1.PythonUtils;
+import olc1.project1.enums.TypeOperation;
+import olc1.project1.enums.EnumUnitaryOperations;
+import olc1.project1.enums.EnumOperations;
+import olc1.project1.enums.EnumTerminals;
+import olc1.project1.utils.GolangUtils;
+import olc1.project1.utils.Utils;
+import olc1.project1.utils.PythonUtils;
 
 /**
  *
@@ -30,8 +34,6 @@ public class Operation implements Statement {
     String value;
     EnumTerminals typeTerminal;
     
-
-    
     // Group
     Operation opGroup;
     
@@ -52,9 +54,19 @@ public class Operation implements Statement {
     }
     
     public Operation(String value, EnumTerminals typeTerminal){
-        this.value = value;
         this.typeTerminal = typeTerminal;
         this.typeOp = TypeOperation.TERMINAL;
+        
+        if (typeTerminal == EnumTerminals.CHAR){
+            if (value.length() > 1){
+                this.value = Character.toString((char) Integer.parseInt(value.replace("${", "").replace("}", "")));
+            } else {
+                this.value = value;
+            }
+            return;
+        }
+        this.value = value;
+
     }
     
     public Operation(Operation value){

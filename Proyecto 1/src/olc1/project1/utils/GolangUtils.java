@@ -2,12 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package olc1.project1;
+package olc1.project1.utils;
 
-import olc1.project1.instructions.EnumOperations;
-import olc1.project1.instructions.EnumTerminals;
-import olc1.project1.instructions.EnumTypes;
-import olc1.project1.instructions.EnumUnitaryOperations;
+import olc1.project1.enums.EnumOperations;
+import olc1.project1.enums.EnumTerminals;
+import olc1.project1.enums.EnumTypes;
+import olc1.project1.enums.EnumUnitaryOperations;
 
 /**
  *
@@ -78,7 +78,11 @@ public class GolangUtils {
                 return value;
             }
             case STR -> {
-                return "\"" + value + "\"";
+                boolean contains = value.contains("\n");
+                if (!contains)
+                    return "\"" + value + "\"";
+                else
+                    return "`" + value + "`";
             }
             default -> throw new AssertionError();
         }

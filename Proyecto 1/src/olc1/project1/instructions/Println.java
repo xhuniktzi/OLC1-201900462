@@ -4,7 +4,7 @@
  */
 package olc1.project1.instructions;
 
-import olc1.project1.Utils;
+import olc1.project1.utils.Utils;
 
 /**
  *

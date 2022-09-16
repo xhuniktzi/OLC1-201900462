@@ -4,6 +4,7 @@
  */
 package olc1.project1;
 
+import olc1.project1.utils.Utils;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;

@@ -2,17 +2,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
-package olc1.project1;
+package olc1.project1.utils;
 
 import java.io.StringReader;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import olc1.project1.analizadores.Lexico;
 import olc1.project1.analizadores.Sintactico;
-import olc1.project1.instructions.EnumTypes;
+import olc1.project1.enums.EnumTypes;
 import olc1.project1.instructions.Statement;
 
 /**

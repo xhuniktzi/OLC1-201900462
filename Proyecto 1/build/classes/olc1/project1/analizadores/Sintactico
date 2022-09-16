@@ -178,7 +178,6 @@ expr ::= symbols:s {:RESULT = s;:}
 | logical:l {:RESULT = l;:}
 | PARSTART expr:e PAREND {:RESULT = new Operation(e);:};
 
-
 aritmetic ::= expr:a ADD expr:b {:RESULT = new Operation(a, EnumOperations.ADD, b);:}
 | expr:a SUBSTRACT expr:b {:RESULT = new Operation(a, EnumOperations.SUBSTRACT, b);:}
 | expr:a MULTIPLY expr:b {:RESULT = new Operation(a, EnumOperations.MULTIPLY, b);:}
