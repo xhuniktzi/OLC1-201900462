@@ -158,6 +158,11 @@ public class MainFrame extends javax.swing.JFrame {
 
         jMenuTechnicalManual.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_T, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         jMenuTechnicalManual.setText("Manual tecnico");
+        jMenuTechnicalManual.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuTechnicalManualActionPerformed(evt);
+            }
+        });
         jMenuView.add(jMenuTechnicalManual);
 
         jMenuBar1.add(jMenuView);
@@ -271,13 +276,21 @@ public class MainFrame extends javax.swing.JFrame {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("./report.dot"))) {
                 writer.write(graph);
                 Runtime.getRuntime().exec("dot -Tpng report.dot -o report.png");
-            } catch (IOException ex) {
+                Thread.sleep(1000);
+                Runtime.getRuntime().exec("cmd.exe /c start report.png");
+            } catch (IOException | InterruptedException ex) {
                 Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
+        
     }//GEN-LAST:event_jMenuViewASTActionPerformed
 
     private void jMenuUserManualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuUserManualActionPerformed
-        // TODO add your handling code here:
+        try {
+            // TODO add your handling code here:
+            Runtime.getRuntime().exec("cmd.exe /c start docs/Manual_de_usuario_compi1_p1.pdf");
+        } catch (IOException ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jMenuUserManualActionPerformed
 
     private void jMenuSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuSaveActionPerformed
@@ -335,6 +348,16 @@ public class MainFrame extends javax.swing.JFrame {
         GolangTranslateFrame frame = new GolangTranslateFrame(ast);
         frame.setVisible(true);
     }//GEN-LAST:event_jButtonGolangActionPerformed
+
+    private void jMenuTechnicalManualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuTechnicalManualActionPerformed
+        // TODO add your handling code here:
+         try {
+            // TODO add your handling code here:
+            Runtime.getRuntime().exec("cmd.exe /c start docs/Manual_tecnico_compi1_p1.pdf");
+        } catch (IOException ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jMenuTechnicalManualActionPerformed
 
     /**
      * @param args the command line arguments
