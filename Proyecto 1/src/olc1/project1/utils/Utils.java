@@ -18,7 +18,7 @@ import olc1.project1.instructions.Statement;
  * @author Xhunik
  */
 public class Utils {
-    
+    int id = 0;
     public static AnalyzerResult loadFile(String input) throws Exception{
         Lexico scanner = new Lexico(new StringReader(input));
         Sintactico parser = new Sintactico(scanner);
