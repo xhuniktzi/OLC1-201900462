@@ -8,8 +8,6 @@ const parser = (req: Request, res: Response) => {
   const { text } = req.body;
   try {
     const ast: IStatement[] = parser.parse(text);
-    // console.log("--- AST ---");
-    // console.log(JSON.stringify(ast));
     const table = new SymbolTable(undefined);
     ast.forEach((statement) => {
       if (statement !== undefined) {

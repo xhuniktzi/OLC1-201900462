@@ -131,3 +131,6 @@ dist
 
 # dist
 dist/
+*.js
+*.map.js
+.fake
