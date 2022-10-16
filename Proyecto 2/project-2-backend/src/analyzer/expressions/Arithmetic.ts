@@ -1,0 +1,48 @@
+import { IExpression } from "../abstract/IExpression";
+import { IReturnEval } from "../abstract/IReturnEval";
+import { ArithmeticOp } from "../enums/EnumArithmetic";
+import fnSemanticAdd from "../functions/fnSemanticAdd";
+import fnSemanticDivision from "../functions/fnSemanticDivision";
+import fnSemanticMinus from "../functions/fnSemanticMinus";
+import fnSemanticModule from "../functions/fnSemanticModule";
+import fnSemanticPower from "../functions/fnSemanticPower";
+import fnSemanticProduct from "../functions/fnSemanticProduct";
+import { SymbolTable } from "../sym_table/SymbolTable";
+
+export class Arithmetic implements IExpression {
+  constructor(
+    private left: IExpression,
+    private operator: ArithmeticOp,
+    private right: IExpression
+  ) {}
+
+  evaluate(sym_table: SymbolTable): IReturnEval {
+    const left = this.left.evaluate(sym_table);
+    const right = this.right.evaluate(sym_table);
+
+    switch (this.operator) {
+      case ArithmeticOp.ADD:
+        return fnSemanticAdd(left.type, right.type, left.value, right.value);
+      case ArithmeticOp.MINUS:
+        return fnSemanticMinus(left.type, right.type, left.value, right.value);
+      case ArithmeticOp.PRODUCT:
+        return fnSemanticProduct(
+          left.type,
+          right.type,
+          left.value,
+          right.value
+        );
+      case ArithmeticOp.DIVISION:
+        return fnSemanticDivision(
+          left.type,
+          right.type,
+          left.value,
+          right.value
+        );
+      case ArithmeticOp.POWER:
+        return fnSemanticPower(left.type, right.type, left.value, right.value);
+      case ArithmeticOp.MODULE:
+        return fnSemanticModule(left.type, right.type, left.value, right.value);
+    }
+  }
+}
