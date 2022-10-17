@@ -1,6 +1,8 @@
 import { IExpression } from "../abstract/IExpression";
 import { IReturnEval } from "../abstract/IReturnEval";
 import { RelationalOp } from "../enums/EnumRelational";
+import fnSemanticCompare from "../functions/fnSemanticCompare";
+import fnSemanticRelational from "../functions/fnSemanticRelational";
 import { SymbolTable } from "../sym_table/SymbolTable";
 
 export class Relational implements IExpression {
@@ -11,6 +13,32 @@ export class Relational implements IExpression {
   ) {}
 
   evaluate(sym_table: SymbolTable): IReturnEval {
-    throw new Error("Method not implemented.");
+    const left = this.left.evaluate(sym_table);
+    const right = this.right.evaluate(sym_table);
+
+    switch (this.operator) {
+      case RelationalOp.EQUAL:
+      case RelationalOp.NOT_EQUAL:
+        return fnSemanticCompare(
+          left.type,
+          right.type,
+          left.value,
+          right.value,
+          this.operator
+        );
+      case RelationalOp.GREATER_THAN:
+      case RelationalOp.GREATER_THAN_EQUAL:
+      case RelationalOp.LESS_THAN:
+      case RelationalOp.LESS_THAN_EQUAL:
+        return fnSemanticRelational(
+          left.type,
+          right.type,
+          left.value,
+          right.value,
+          this.operator
+        );
+      default:
+        throw new Error("Relational operator not found");
+    }
   }
 }

@@ -16,7 +16,7 @@ const parser = (req: Request, res: Response) => {
     });
     console.log("--- Sym Table ---");
     console.log(JSON.stringify(table));
-  } catch (error) {
+  } catch (error: unknown) {
     console.error(error);
   }
 

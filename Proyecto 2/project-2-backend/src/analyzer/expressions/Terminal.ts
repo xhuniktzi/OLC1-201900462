@@ -6,8 +6,8 @@ import { SymbolTable } from "../sym_table/SymbolTable";
 
 export class Terminal implements IExpression {
   constructor(
-    private value: string | number | boolean,
-    private type: Terminals
+    private type: Terminals,
+    private value: string | number | boolean
   ) {}
 
   evaluate(sym_table: SymbolTable): IReturnEval {

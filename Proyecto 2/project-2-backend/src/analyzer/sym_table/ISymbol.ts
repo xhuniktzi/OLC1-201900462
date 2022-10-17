@@ -6,5 +6,5 @@ export interface ISymbol {
   datatype: Datatype;
   line: number;
   column: number;
-  value: number | string | boolean | SymbolTable;
+  value: number | string | boolean;
 }

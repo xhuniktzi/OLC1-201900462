@@ -202,15 +202,6 @@ standard_statement: declaration END_SENTENCE { $$ = $1; }
     | error END_SENTENCE { addError({type: EnumError.SYNTAX_ERROR, message: yytext, line: this.$.first_line,
     column: this.$.first_column}); };
 
-
-// list of identifiers
-list_identifiers: list_identifiers COMMA IDENTIFIER { $1.push($3); $$ = $1; }
-    | IDENTIFIER { $$ = [$1]; };
-
-// declaration
-declaration: TYPE list_identifiers { $$ = new Declaration(fnParseDatatype($1), $2); }
-    | TYPE list_identifiers ASSIGNMENT expr { $$ = new Declaration(fnParseDatatype($1), $2, $4); };
-
 // expression
 expr: arithmetic { $$ = $1; }
     | relational { $$ = $1; }
@@ -268,6 +259,14 @@ increment: IDENTIFIER INCREMENT { $$ = new Increment($1); };
 
 // decrement
 decrement: IDENTIFIER DECREMENT { $$ = new Decrement($1); };
+
+// list of identifiers
+list_identifiers: list_identifiers COMMA IDENTIFIER { $1.push($3); $$ = $1; }
+    | IDENTIFIER { $$ = [$1]; };
+
+// declaration
+declaration: TYPE list_identifiers { $$ = new Declaration(fnParseDatatype($1), $2); }
+    | TYPE list_identifiers ASSIGNMENT expr { $$ = new Declaration(fnParseDatatype($1), $2, $4); };
 
 // // loop statements
 // loop_statements: loop_statements loop_statement { $1.push($2); $$ = $1; }

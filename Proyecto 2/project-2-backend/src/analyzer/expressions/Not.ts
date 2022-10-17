@@ -1,10 +1,17 @@
 import { IExpression } from "../abstract/IExpression";
 import { IReturnEval } from "../abstract/IReturnEval";
+import { Datatype } from "../enums/EnumDatatype";
 import { SymbolTable } from "../sym_table/SymbolTable";
 
 export class Not implements IExpression {
   constructor(private expression: IExpression) {}
   evaluate(sym_table: SymbolTable): IReturnEval {
-    throw new Error("Method not implemented.");
+    const expr = this.expression.evaluate(sym_table);
+
+    if (expr.type !== Datatype.BOOLEAN) {
+      throw new Error("Logical operator only works with boolean values");
+    }
+
+    return { type: Datatype.BOOLEAN, value: !expr.value };
   }
 }

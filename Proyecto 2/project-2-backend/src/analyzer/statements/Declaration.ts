@@ -11,14 +11,19 @@ export class Declaration implements IStatement {
   ) {}
 
   execute(sym_table: SymbolTable): void {
-    this.ids.forEach((id) => {
-      sym_table.addSymbol({
-        id,
-        datatype: this.type,
-        line: 0,
-        column: 0,
-        value: this.value!.evaluate(sym_table).value,
+    const eval_value = this.value!.evaluate(sym_table);
+    if (this.type === eval_value.type) {
+      this.ids.forEach((id) => {
+        sym_table.addSymbol({
+          id,
+          datatype: this.type,
+          line: 0,
+          column: 0,
+          value: eval_value.value,
+        });
       });
-    });
+    } else {
+      throw new Error("Type mismatch");
+    }
   }
 }
