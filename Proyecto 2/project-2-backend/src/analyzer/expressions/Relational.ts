@@ -37,8 +37,6 @@ export class Relational implements IExpression {
           right.value,
           this.operator
         );
-      default:
-        throw new Error("Relational operator not found");
     }
   }
 }

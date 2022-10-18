@@ -24,21 +24,15 @@ export class Terminal implements IExpression {
         return { value: Boolean(this.value), type: Datatype.BOOLEAN };
       case Terminals.ID:
         const symbol = sym_table.getSymbol(this.value.toString());
-        if (symbol !== null) {
-          switch (symbol!.datatype) {
-            case Datatype.INT:
-            case Datatype.DOUBLE:
-              return { value: Number(symbol!.value), type: symbol!.datatype };
-            case Datatype.STRING:
-            case Datatype.CHAR:
-              return { value: String(symbol!.value), type: symbol!.datatype };
-            case Datatype.BOOLEAN:
-              return { value: Boolean(symbol!.value), type: symbol!.datatype };
-          }
-        } else {
-          throw new Error(
-            `Semantic Error: Variable ${this.value} is not defined.`
-          );
+        switch (symbol!.datatype) {
+          case Datatype.INT:
+          case Datatype.DOUBLE:
+            return { value: Number(symbol!.value), type: symbol!.datatype };
+          case Datatype.STRING:
+          case Datatype.CHAR:
+            return { value: String(symbol!.value), type: symbol!.datatype };
+          case Datatype.BOOLEAN:
+            return { value: Boolean(symbol!.value), type: symbol!.datatype };
         }
     }
   }

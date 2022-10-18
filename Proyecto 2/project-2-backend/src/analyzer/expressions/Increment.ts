@@ -12,7 +12,7 @@ export class Increment implements IExpression {
       symbol!.datatype === Datatype.INT ||
       symbol!.datatype === Datatype.DOUBLE
     ) {
-      symbol!.value = Number(symbol!.value) + 1;
+      sym_table.updateSymbol(this.identifier, Number(symbol!.value) + 1);
       return {
         value: symbol!.value,
         type: symbol!.datatype,

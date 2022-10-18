@@ -15,7 +15,11 @@ const parser = (req: Request, res: Response) => {
       }
     });
     console.log("--- Sym Table ---");
-    console.log(JSON.stringify(table));
+    console.log(JSON.stringify(table.symbols));
+    console.log("--- Console ---");
+    table.console.forEach((e) => {
+      console.log(e);
+    });
   } catch (error: unknown) {
     console.error(error);
   }

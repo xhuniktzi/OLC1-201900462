@@ -1,12 +1,10 @@
 import { ISymbol } from "./ISymbol";
 
 export class SymbolTable {
-  private symbols: ISymbol[] = [];
-  parent: SymbolTable | undefined;
+  public symbols: ISymbol[] = [];
+  public console: string[] = [];
 
-  public constructor(parent: SymbolTable | undefined) {
-    this.parent = parent;
-  }
+  public constructor(private parent: SymbolTable | undefined) {}
 
   public addSymbol(symbol: ISymbol): void {
     if (this.symbols.find((s) => s.id === symbol.id) !== undefined) {
@@ -20,11 +18,21 @@ export class SymbolTable {
     let result = this.symbols.find((symbol) => symbol.id === id);
 
     if (result === undefined && this.parent !== undefined) {
-      result = this.parent.getSymbol(id);
+      return this.parent.getSymbol(id);
     } else if (result === undefined) {
       throw new Error(`Symbol ${id} not found`);
     } else {
       return result;
+    }
+  }
+
+  public updateSymbol(id: string, value: string | boolean | number): void {
+    const symbol = this.getSymbol(id);
+
+    if (symbol) {
+      symbol.value = value;
+    } else {
+      throw new Error(`Symbol ${id} not found`);
     }
   }
 }

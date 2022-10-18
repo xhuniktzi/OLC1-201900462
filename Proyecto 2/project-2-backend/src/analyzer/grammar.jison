@@ -5,6 +5,11 @@
     import { IStatement } from "./abstract/IStatement";
 
     import { Declaration } from "./statements/Declaration";
+    import { Assign } from "./statements/Assign";
+    import { If } from "./statements/If";
+    import { Elif } from "./statements/Elif";
+    import { Print } from "./statements/Print";
+    import { Println } from "./statements/Println";
 
     import fnParseDatatype from "./functions/fnParseDatatype";
 
@@ -52,6 +57,7 @@ True|False return 'LOGICAL';
 \"((\\\")|[\\n]|[\\\\]|[^\"])*\" {yytext=yytext.substr(1,yyleng-2); return 'STRING';}
 \'((\\\')|[\\n]|[\\\\]|[^\'])?\' {yytext=yytext.substr(1,yyleng-2); return 'CHAR';}
 
+
 // increment and decrement
 '++' return 'INCREMENT';
 '--' return 'DECREMENT';
@@ -65,12 +71,12 @@ True|False return 'LOGICAL';
 '^' return 'POWER';
 
 // relational operators
-'<' return 'LESS';
-'>' return 'GREATER';
-'<=' return 'LESS_EQUAL';
-'>=' return 'GREATER_EQUAL';
 '==' return 'EQUAL';
 '!=' return 'NOT_EQUAL';
+'<=' return 'LESS_EQUAL';
+'>=' return 'GREATER_EQUAL';
+'<' return 'LESS';
+'>' return 'GREATER';
 
 // ternary operators
 '?' return 'TERNARY_IF';
@@ -93,17 +99,14 @@ True|False return 'LOGICAL';
 '[' return 'OPEN_BRACKET';
 ']' return 'CLOSE_BRACKET';
 
-// new
-'new' return 'NEW';
-
 // end sentence operator
 ';' return 'END_SENTENCE';
 
-// assignment
-'=' return 'ASSIGNMENT';
-
 // comma
 ',' return 'COMMA';
+
+// assignment
+'=' return 'ASSIGNMENT';
 
 // type
 "Int" return 'TYPE';
@@ -112,44 +115,27 @@ True|False return 'LOGICAL';
 "Char" return 'TYPE';
 "String" return 'TYPE';
 
-// identifiers
-[0-9a-zA-Z_]+ return 'IDENTIFIER';
-
-// if-elif-else
+// reserved words
+'new' return 'NEW';
 'if' return 'IF';
 'else' return 'ELSE';
 'elif' return 'ELIF';
-
-// switch-case
 'switch' return 'SWITCH';
 'case' return 'CASE';
-
-// break
 'break' return 'BREAK';
-
-// default
 'default' return 'DEFAULT';
-
-// continue
 'continue' return 'CONTINUE';
-
-// while
 'while' return 'WHILE';
-
-// for
 'for' return 'FOR';
-
-// do
 'do' return 'DO';
-
-// until
 'until' return 'UNTIL';
-
-// return
 'return' return 'RETURN';
-
-// void
 'void' return 'VOID';
+'print' return 'PRINT';
+'println' return 'PRINTLN';
+
+// identifiers
+[0-9a-zA-Z_]+ return 'IDENTIFIER';
 
 <<EOF>> return 'EOF'; // end of file
 . { addError({type: EnumError.LEXICAL_ERROR, message: yytext, line: yylloc.first_line,
@@ -189,18 +175,10 @@ standard_statements: standard_statements standard_statement { $1.push($2); $$ = 
 
 // standard statement
 standard_statement: declaration END_SENTENCE { $$ = $1; }
-    // | assign END_SENTENCE { $$ = $1; }
-    // | declaration_array_1 END_SENTENCE { $$ = $1; }
-    // | declaration_array_2 END_SENTENCE { $$ = $1; }
-    // | assign_array_1 END_SENTENCE { $$ = $1; }
-    // | assign_array_2 END_SENTENCE { $$ = $1; }
-    // | call END_SENTENCE { $$ = $1; }
-    // | while { $$ = $1; }
-    // | for { $$ = $1; }
-    // | do_while { $$ = $1; }
-    // | do_until { $$ = $1; }
-    | error END_SENTENCE { addError({type: EnumError.SYNTAX_ERROR, message: yytext, line: this.$.first_line,
-    column: this.$.first_column}); };
+    | assign END_SENTENCE { $$ = $1; }
+    | print_st END_SENTENCE { $$ = $1; }
+    | println_st END_SENTENCE { $$ = $1; }
+    | if { $$ = $1; };
 
 // expression
 expr: arithmetic { $$ = $1; }
@@ -211,9 +189,7 @@ expr: arithmetic { $$ = $1; }
     | value { $$ = $1; }
     | cast { $$ = $1; }
     | increment { $$ = $1; }
-    | decrement { $$ = $1; }
-    | error { addError({type: EnumError.SYNTAX_ERROR, message: yytext, line: this.$.first_line,
-    column: this.$.first_column}); };
+    | decrement { $$ = $1; };
 
 // relational expression
 relational: expr LESS expr { $$ = new Relational($1, RelationalOp.LESS_THAN, $3); }
@@ -268,6 +244,25 @@ list_identifiers: list_identifiers COMMA IDENTIFIER { $1.push($3); $$ = $1; }
 declaration: TYPE list_identifiers { $$ = new Declaration(fnParseDatatype($1), $2); }
     | TYPE list_identifiers ASSIGNMENT expr { $$ = new Declaration(fnParseDatatype($1), $2, $4); };
 
+// assign
+assign: list_identifiers ASSIGNMENT expr { $$ = new Assign($1, $3); };
+
+// print
+print_st: PRINT OPEN_PARENTHESIS expr CLOSE_PARENTHESIS { $$ = new Print($3); };
+
+// println
+println_st: PRINTLN OPEN_PARENTHESIS expr CLOSE_PARENTHESIS { $$ = new Println($3); };
+
+// if-elif-else
+if: IF OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE standard_statements CLOSE_BRACE { $$ = new If($3, $6); }
+    | IF OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE standard_statements CLOSE_BRACE ELSE OPEN_BRACE standard_statements CLOSE_BRACE { $$ = new If($3, $6, undefined, $10); }
+    | IF OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE standard_statements CLOSE_BRACE elifs { $$ = new If($3, $6, $7); }
+    | IF OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE standard_statements CLOSE_BRACE elifs ELSE OPEN_BRACE standard_statements CLOSE_BRACE { $$ = new If($3, $6, $7, $11); };
+
+// elifs
+elifs: elifs ELIF OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE standard_statements CLOSE_BRACE { $1.push(new Elif($3, $6)); $$ = $1; }
+    | ELIF OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE standard_statements CLOSE_BRACE { $$ = new Array<Elif>(); $$[0] = new Elif($3, $6); };
+
 // // loop statements
 // loop_statements: loop_statements loop_statement { $1.push($2); $$ = $1; }
 //     | loop_statement { $$ = new Array<IStatement>(); $$[0] = $1; };
@@ -285,8 +280,7 @@ declaration: TYPE list_identifiers { $$ = new Declaration(fnParseDatatype($1), $
 // function_statement: standard_statement { $$ = $1; }
 //     | return expr END_SENTENCE;
 
-// // assign
-// assign: list_identifiers ASSIGNMENT expr;
+
 
 // // access array 1
 // access_array_1: IDENTIFIER OPEN_BRACKET expr CLOSE_BRACKET;
@@ -316,18 +310,6 @@ declaration: TYPE list_identifiers { $$ = new Declaration(fnParseDatatype($1), $
 // // list of expressions
 // list_expr: list_expr COMMA expr
 //     | expr ;
-
-
-// // if-elif-else
-// if: IF OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE standard_statements CLOSE_BRACE 
-//     | IF OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE standard_statements CLOSE_BRACE ELSE OPEN_BRACE standard_statements CLOSE_BRACE 
-//     | IF OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE standard_statements CLOSE_BRACE elifs 
-//     | IF OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE standard_statements CLOSE_BRACE elifs ELSE OPEN_BRACE standard_statements CLOSE_BRACE ;
-
-// // elifs
-// elifs: elifs ELIF OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE standard_statements CLOSE_BRACE
-//     | ELIF OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE standard_statements CLOSE_BRACE ;
-
 
 // // switch-case
 // switch: SWITCH OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE cases CLOSE_BRACE 

@@ -59,22 +59,22 @@ const fnSemanticRelational = (
     switch (operator) {
       case RelationalOp.GREATER_THAN:
         return {
-          value: left_value > right_value,
+          value: Boolean(left_value > right_value),
           type: Datatype.BOOLEAN,
         };
       case RelationalOp.GREATER_THAN_EQUAL:
         return {
-          value: left_value >= right_value,
+          value: Boolean(left_value >= right_value),
           type: Datatype.BOOLEAN,
         };
       case RelationalOp.LESS_THAN:
         return {
-          value: left_value < right_value,
+          value: Boolean(left_value < right_value),
           type: Datatype.BOOLEAN,
         };
       case RelationalOp.LESS_THAN_EQUAL:
         return {
-          value: left_value <= right_value,
+          value: Boolean(left_value <= right_value),
           type: Datatype.BOOLEAN,
         };
       default:

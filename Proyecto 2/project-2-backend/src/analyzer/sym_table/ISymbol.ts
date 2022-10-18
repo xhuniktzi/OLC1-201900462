@@ -1,5 +1,4 @@
 import { Datatype } from "../enums/EnumDatatype";
-import { SymbolTable } from "./SymbolTable";
 
 export interface ISymbol {
   id: string;

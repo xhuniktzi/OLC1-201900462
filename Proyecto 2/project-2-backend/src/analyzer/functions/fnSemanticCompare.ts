@@ -55,12 +55,12 @@ const fnSemanticCompare = (
     switch (operator) {
       case RelationalOp.EQUAL:
         return {
-          value: left_value === right_value,
+          value: Boolean(left_value === right_value),
           type: Datatype.BOOLEAN,
         };
       case RelationalOp.NOT_EQUAL:
         return {
-          value: left_value !== right_value,
+          value: Boolean(left_value !== right_value),
           type: Datatype.BOOLEAN,
         };
       default:
