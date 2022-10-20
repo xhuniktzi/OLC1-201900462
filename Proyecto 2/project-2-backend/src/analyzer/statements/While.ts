@@ -8,7 +8,7 @@ export class While implements IStatement {
   constructor(private condition: IExpression, private body: IStatement[]) {}
 
   execute(table: SymbolTable): void {
-    while (Boolean(this.condition.evaluate(table))) {
+    while (Boolean(this.condition.evaluate(table).value)) {
       try {
         const while_table: SymbolTable = new SymbolTable(table);
         this.body.forEach((statement) => {

@@ -13,6 +13,6 @@ export class Negative implements IExpression {
       throw new Error("Negative operator only works with number values");
     }
 
-    return { type: result.type, value: -result.value };
+    return { type: result.type, value: -Number(result.value) };
   }
 }

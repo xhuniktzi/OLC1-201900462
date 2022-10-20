@@ -12,6 +12,6 @@ export class Not implements IExpression {
       throw new Error("Logical operator only works with boolean values");
     }
 
-    return { type: Datatype.BOOLEAN, value: !expr.value };
+    return { type: Datatype.BOOLEAN, value: !Boolean(expr.value) };
   }
 }
