@@ -20,9 +20,15 @@ export class Logical implements IExpression {
 
     switch (this.operator) {
       case LogicalOp.AND:
-        return { type: Datatype.BOOLEAN, value: left.value && right.value };
+        return {
+          type: Datatype.BOOLEAN,
+          value: Boolean(left.value) && Boolean(right.value),
+        };
       case LogicalOp.OR:
-        return { type: Datatype.BOOLEAN, value: left.value || right.value };
+        return {
+          type: Datatype.BOOLEAN,
+          value: Boolean(left.value) || Boolean(right.value),
+        };
     }
   }
 }

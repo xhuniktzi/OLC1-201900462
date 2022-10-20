@@ -13,12 +13,12 @@ export class If implements IStatement {
   ) {}
 
   execute(sym_table: SymbolTable): void {
-    let eval_value = this.condition.evaluate(sym_table);
+    const eval_value = this.condition.evaluate(sym_table);
     if (eval_value.type !== Datatype.BOOLEAN) {
       throw new Error("Condition must be boolean");
     }
 
-    if (eval_value.value) {
+    if (Boolean(eval_value.value)) {
       const if_table: SymbolTable = new SymbolTable(sym_table);
       this.if_body.forEach((statement) => {
         statement.execute(if_table);

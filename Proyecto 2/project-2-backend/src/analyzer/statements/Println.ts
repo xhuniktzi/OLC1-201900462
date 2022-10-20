@@ -5,8 +5,6 @@ import { SymbolTable } from "../sym_table/SymbolTable";
 export class Println implements IStatement {
   constructor(private text: IExpression) {}
   execute(sym_table: SymbolTable): void {
-    sym_table.console.push(
-      this.text.evaluate(sym_table).value.toString() + "\n"
-    );
+    sym_table.addConsole(this.text.evaluate(sym_table).value.toString() + "\n");
   }
 }

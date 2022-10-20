@@ -1,5 +1,7 @@
 import { ISemanticResult } from "../abstract/ISemanticResult";
 import { Datatype } from "../enums/EnumDatatype";
+import fnBooleanToInt from "./fnBooleanToInt";
+import fnCharToInt from "./fnCharToInt";
 
 const fnSemanticDivision = (
   left_type: Datatype,
@@ -50,14 +52,57 @@ const fnSemanticDivision = (
     throw new Error("Semantic Error: Cannot divide two booleans or two chars.");
   }
 
-  if (type === Datatype.STRING) {
-    throw new Error("Semantic Error: Cannot divide two strings.");
-  } else {
-    return {
-      value: Number(left_value) / Number(right_value),
-      type,
-    };
+  if (right_value === 0) {
+    throw new Error("Semantic Error: Cannot divide by zero.");
   }
+
+  const semanticResult = {
+    [Datatype.INT]: {
+      [Datatype.INT]: Number(left_value) / Number(right_value),
+      [Datatype.DOUBLE]: Number(left_value) / Number(right_value),
+      [Datatype.BOOLEAN]:
+        Number(left_value) / fnBooleanToInt(Boolean(right_value)),
+      [Datatype.CHAR]: Number(left_value) / fnCharToInt(right_value.toString()),
+      [Datatype.STRING]: null,
+    },
+    [Datatype.DOUBLE]: {
+      [Datatype.INT]: Number(left_value) / Number(right_value),
+      [Datatype.DOUBLE]: Number(left_value) / Number(right_value),
+      [Datatype.BOOLEAN]:
+        Number(left_value) / fnBooleanToInt(Boolean(right_value)),
+      [Datatype.CHAR]: Number(left_value) / fnCharToInt(right_value.toString()),
+      [Datatype.STRING]: null,
+    },
+    [Datatype.BOOLEAN]: {
+      [Datatype.INT]: fnBooleanToInt(Boolean(left_value)) / Number(right_value),
+      [Datatype.DOUBLE]:
+        fnBooleanToInt(Boolean(left_value)) / Number(right_value),
+      [Datatype.BOOLEAN]: null,
+      [Datatype.CHAR]: null,
+      [Datatype.STRING]: null,
+    },
+    [Datatype.CHAR]: {
+      [Datatype.INT]: fnCharToInt(left_value.toString()) / Number(right_value),
+      [Datatype.DOUBLE]:
+        fnCharToInt(left_value.toString()) / Number(right_value),
+      [Datatype.BOOLEAN]: null,
+      [Datatype.CHAR]:
+        fnCharToInt(left_value.toString()) /
+        fnCharToInt(right_value.toString()),
+      [Datatype.STRING]: null,
+    },
+    [Datatype.STRING]: {
+      [Datatype.INT]: null,
+      [Datatype.DOUBLE]: null,
+      [Datatype.BOOLEAN]: null,
+      [Datatype.CHAR]: null,
+      [Datatype.STRING]: null,
+    },
+  };
+
+  const value = semanticResult[left_type][right_type]!;
+
+  return { value, type };
 };
 
 export default fnSemanticDivision;

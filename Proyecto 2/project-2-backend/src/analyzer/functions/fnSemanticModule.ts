@@ -52,10 +52,47 @@ const fnSemanticModule = (
     );
   }
 
-  return {
-    type,
-    value: Number(left_value) % Number(right_value),
+  const semanticResult = {
+    [Datatype.INT]: {
+      [Datatype.INT]: Number(left_value) % Number(right_value),
+      [Datatype.DOUBLE]: Number(left_value) % Number(right_value),
+      [Datatype.BOOLEAN]: null,
+      [Datatype.CHAR]: null,
+      [Datatype.STRING]: null,
+    },
+    [Datatype.DOUBLE]: {
+      [Datatype.INT]: Number(left_value) % Number(right_value),
+      [Datatype.DOUBLE]: Number(left_value) % Number(right_value),
+      [Datatype.BOOLEAN]: null,
+      [Datatype.CHAR]: null,
+      [Datatype.STRING]: null,
+    },
+    [Datatype.BOOLEAN]: {
+      [Datatype.INT]: null,
+      [Datatype.DOUBLE]: null,
+      [Datatype.BOOLEAN]: null,
+      [Datatype.CHAR]: null,
+      [Datatype.STRING]: null,
+    },
+    [Datatype.CHAR]: {
+      [Datatype.INT]: null,
+      [Datatype.DOUBLE]: null,
+      [Datatype.BOOLEAN]: null,
+      [Datatype.CHAR]: null,
+      [Datatype.STRING]: null,
+    },
+    [Datatype.STRING]: {
+      [Datatype.INT]: null,
+      [Datatype.DOUBLE]: null,
+      [Datatype.BOOLEAN]: null,
+      [Datatype.CHAR]: null,
+      [Datatype.STRING]: null,
+    },
   };
+
+  const value = semanticResult[left_type][right_type]!;
+
+  return { value, type };
 };
 
 export default fnSemanticModule;

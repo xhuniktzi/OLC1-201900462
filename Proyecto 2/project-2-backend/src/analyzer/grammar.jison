@@ -1,6 +1,8 @@
 %{
     import { IError } from './exceptions/IError';
     import { EnumError } from './exceptions/EnumError';
+    import { BreakLoopEx } from './exceptions/BreakLoopEx';
+    import { ContinueLoopEx } from './exceptions/ContinueLoopEx';
 
     import { IStatement } from "./abstract/IStatement";
 
@@ -10,8 +12,12 @@
     import { Elif } from "./statements/Elif";
     import { Print } from "./statements/Print";
     import { Println } from "./statements/Println";
+    import { While } from "./statements/While";
+    import { BreakLoop } from "./statements/BreakLoop";
+    import { ContinueLoop } from "./statements/ContinueLoop";
 
     import fnParseDatatype from "./functions/fnParseDatatype";
+    import fnParseBoolean from "./functions/fnParseBoolean";
 
     import { Terminals } from "./enums/EnumTerminals";
     import { RelationalOp } from "./enums/EnumRelational";
@@ -178,7 +184,8 @@ standard_statement: declaration END_SENTENCE { $$ = $1; }
     | assign END_SENTENCE { $$ = $1; }
     | print_st END_SENTENCE { $$ = $1; }
     | println_st END_SENTENCE { $$ = $1; }
-    | if { $$ = $1; };
+    | if { $$ = $1; }
+    | while { $$ = $1; };
 
 // expression
 expr: arithmetic { $$ = $1; }
@@ -214,9 +221,9 @@ logical: expr AND expr { $$ = new Logical($1, LogicalOp.AND, $3); }
     | NOT expr { $$ = new Not($2); };
 
 // values
-value: DECIMAL { $$ = new Terminal(Terminals.DECIMAL, $1); }
-    | INTEGER { $$ = new Terminal(Terminals.INTEGER, $1); }
-    | LOGICAL { $$ = new Terminal(Terminals.LOGICAL, $1); }
+value: DECIMAL { $$ = new Terminal(Terminals.DECIMAL, Number($1)); }
+    | INTEGER { $$ = new Terminal(Terminals.INTEGER, Number($1)); }
+    | LOGICAL { $$ = new Terminal(Terminals.LOGICAL, fnParseBoolean($1)); }
     | STRING { $$ = new Terminal(Terminals.STRING, $1); }
     | CHAR { $$ = new Terminal(Terminals.CHAR, $1); }
     | IDENTIFIER { $$ = new Terminal(Terminals.ID, $1); };
@@ -256,21 +263,30 @@ println_st: PRINTLN OPEN_PARENTHESIS expr CLOSE_PARENTHESIS { $$ = new Println($
 // if-elif-else
 if: IF OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE standard_statements CLOSE_BRACE { $$ = new If($3, $6); }
     | IF OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE standard_statements CLOSE_BRACE ELSE OPEN_BRACE standard_statements CLOSE_BRACE { $$ = new If($3, $6, undefined, $10); }
-    | IF OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE standard_statements CLOSE_BRACE elifs { $$ = new If($3, $6, $7); }
-    | IF OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE standard_statements CLOSE_BRACE elifs ELSE OPEN_BRACE standard_statements CLOSE_BRACE { $$ = new If($3, $6, $7, $11); };
+    | IF OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE standard_statements CLOSE_BRACE elifs { $$ = new If($3, $6, $8); }
+    | IF OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE standard_statements CLOSE_BRACE elifs ELSE OPEN_BRACE standard_statements CLOSE_BRACE { $$ = new If($3, $6, $8, $11); };
 
 // elifs
-elifs: elifs ELIF OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE standard_statements CLOSE_BRACE { $1.push(new Elif($3, $6)); $$ = $1; }
+elifs: elifs ELIF OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE standard_statements CLOSE_BRACE { $1.push(new Elif($4, $7)); $$ = $1; }
     | ELIF OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE standard_statements CLOSE_BRACE { $$ = new Array<Elif>(); $$[0] = new Elif($3, $6); };
 
-// // loop statements
-// loop_statements: loop_statements loop_statement { $1.push($2); $$ = $1; }
-//     | loop_statement { $$ = new Array<IStatement>(); $$[0] = $1; };
+// loop statements
+loop_statements: loop_statements loop_statement { $1.push($2); $$ = $1; }
+    | loop_statement { $$ = new Array<IStatement>(); $$[0] = $1; };
 
-// // loop statement
-// loop_statement: standard_statement { $$ = $1; }
-//     | BREAK END_SENTENCE
-//     | CONTINUE END_SENTENCE;
+// loop statement
+loop_statement: standard_statement { $$ = $1; }
+    | BREAK END_SENTENCE { $$ = new BreakLoop(); }
+    | CONTINUE END_SENTENCE { $$ = new ContinueLoop(); };
+
+// while loop
+while: WHILE OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE loop_statements CLOSE_BRACE { $$ = new While($3, $6); };
+
+// do-while loop
+do_while: DO OPEN_BRACE loop_statements CLOSE_BRACE WHILE OPEN_PARENTHESIS expr CLOSE_PARENTHESIS END_SENTENCE ;
+
+// do-until loop
+do_until: DO OPEN_BRACE loop_statements CLOSE_BRACE UNTIL OPEN_PARENTHESIS expr CLOSE_PARENTHESIS END_SENTENCE ;
 
 // // function statements
 // function_statements: function_statements function_statement { $1.push($2); $$ = $1; }
@@ -322,14 +338,6 @@ elifs: elifs ELIF OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE standard_st
 // switch_statements: standard_statements 
 //     | BREAK END_SENTENCE ;
 
-// // while loop
-// while: WHILE OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE loop_statements CLOSE_BRACE ;
-
-// // do-while loop
-// do_while: DO OPEN_BRACE loop_statements CLOSE_BRACE WHILE OPEN_PARENTHESIS expr CLOSE_PARENTHESIS END_SENTENCE ;
-
-// // do-until loop
-// do_until: DO OPEN_BRACE loop_statements CLOSE_BRACE UNTIL OPEN_PARENTHESIS expr CLOSE_PARENTHESIS END_SENTENCE ;
 
 // // for loop
 // for: FOR OPEN_PARENTHESIS expr END_SENTENCE expr END_SENTENCE expr CLOSE_PARENTHESIS OPEN_BRACE loop_statements CLOSE_BRACE ;

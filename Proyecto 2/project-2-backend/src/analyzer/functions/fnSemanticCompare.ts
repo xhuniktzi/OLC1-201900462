@@ -1,6 +1,7 @@
 import { ISemanticResult } from "../abstract/ISemanticResult";
 import { Datatype } from "../enums/EnumDatatype";
 import { RelationalOp } from "../enums/EnumRelational";
+import fnCharToInt from "./fnCharToInt";
 
 const fnSemanticCompare = (
   left_type: Datatype,
@@ -51,21 +52,98 @@ const fnSemanticCompare = (
 
   if (type === null) {
     throw new Error("Semantic Error: Cannot compare different types.");
-  } else {
-    switch (operator) {
-      case RelationalOp.EQUAL:
-        return {
-          value: Boolean(left_value === right_value),
-          type: Datatype.BOOLEAN,
-        };
-      case RelationalOp.NOT_EQUAL:
-        return {
-          value: Boolean(left_value !== right_value),
-          type: Datatype.BOOLEAN,
-        };
-      default:
-        throw new Error("Semantic Error: Invalid operator.");
-    }
+  }
+
+  switch (operator) {
+    case RelationalOp.EQUAL:
+      const semanticResult1 = {
+        [Datatype.INT]: {
+          [Datatype.INT]: Number(left_value) === Number(right_value),
+          [Datatype.DOUBLE]: Number(left_value) === Number(right_value),
+          [Datatype.BOOLEAN]: null,
+          [Datatype.CHAR]: null,
+          [Datatype.STRING]: null,
+        },
+        [Datatype.DOUBLE]: {
+          [Datatype.INT]: Number(left_value) === Number(right_value),
+          [Datatype.DOUBLE]: Number(left_value) === Number(right_value),
+          [Datatype.BOOLEAN]: null,
+          [Datatype.CHAR]: null,
+          [Datatype.STRING]: null,
+        },
+        [Datatype.BOOLEAN]: {
+          [Datatype.INT]: null,
+          [Datatype.DOUBLE]: null,
+          [Datatype.BOOLEAN]: Boolean(left_value) === Boolean(right_value),
+          [Datatype.CHAR]: null,
+          [Datatype.STRING]: null,
+        },
+        [Datatype.CHAR]: {
+          [Datatype.INT]: null,
+          [Datatype.DOUBLE]: null,
+          [Datatype.BOOLEAN]: null,
+          [Datatype.CHAR]:
+            fnCharToInt(left_value.toString()) ===
+            fnCharToInt(right_value.toString()),
+          [Datatype.STRING]: left_value.toString() === right_value.toString(),
+        },
+        [Datatype.STRING]: {
+          [Datatype.INT]: null,
+          [Datatype.DOUBLE]: null,
+          [Datatype.BOOLEAN]: null,
+          [Datatype.CHAR]: left_value.toString() === right_value.toString(),
+          [Datatype.STRING]: left_value.toString() === right_value.toString(),
+        },
+      };
+      const value1 = semanticResult1[left_type][right_type]!;
+
+      return { value: value1, type };
+    case RelationalOp.NOT_EQUAL:
+      const semanticResult2 = {
+        [Datatype.INT]: {
+          [Datatype.INT]: Number(left_value) !== Number(right_value),
+          [Datatype.DOUBLE]: Number(left_value) !== Number(right_value),
+          [Datatype.BOOLEAN]: null,
+          [Datatype.CHAR]: null,
+          [Datatype.STRING]: null,
+        },
+        [Datatype.DOUBLE]: {
+          [Datatype.INT]: Number(left_value) !== Number(right_value),
+          [Datatype.DOUBLE]: Number(left_value) !== Number(right_value),
+          [Datatype.BOOLEAN]: null,
+          [Datatype.CHAR]: null,
+          [Datatype.STRING]: null,
+        },
+        [Datatype.BOOLEAN]: {
+          [Datatype.INT]: null,
+          [Datatype.DOUBLE]: null,
+          [Datatype.BOOLEAN]: Boolean(left_value) !== Boolean(right_value),
+          [Datatype.CHAR]: null,
+          [Datatype.STRING]: null,
+        },
+        [Datatype.CHAR]: {
+          [Datatype.INT]: null,
+          [Datatype.DOUBLE]: null,
+          [Datatype.BOOLEAN]: null,
+          [Datatype.CHAR]:
+            fnCharToInt(left_value.toString()) !==
+            fnCharToInt(right_value.toString()),
+          [Datatype.STRING]: left_value.toString() !== right_value.toString(),
+        },
+        [Datatype.STRING]: {
+          [Datatype.INT]: null,
+          [Datatype.DOUBLE]: null,
+          [Datatype.BOOLEAN]: null,
+          [Datatype.CHAR]: left_value.toString() !== right_value.toString(),
+          [Datatype.STRING]: left_value.toString() !== right_value.toString(),
+        },
+      };
+      const value2 = semanticResult2[left_type][right_type]!;
+
+      return { value: value2, type };
+
+    default:
+      throw new Error("Semantic Error: Invalid operator.");
   }
 };
 

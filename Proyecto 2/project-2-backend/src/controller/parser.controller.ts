@@ -10,16 +10,10 @@ const parser = (req: Request, res: Response) => {
     const ast: IStatement[] = parser.parse(text);
     const table = new SymbolTable(undefined);
     ast.forEach((statement) => {
-      if (statement !== undefined) {
-        statement.execute(table);
-      }
+      statement.execute(table);
     });
-    console.log("--- Sym Table ---");
-    console.log(JSON.stringify(table.symbols));
-    console.log("--- Console ---");
-    table.console.forEach((e) => {
-      console.log(e);
-    });
+
+    table.printConsole();
   } catch (error: unknown) {
     console.error(error);
   }

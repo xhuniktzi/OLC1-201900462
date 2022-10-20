@@ -1,5 +1,6 @@
 import { ISemanticResult } from "../abstract/ISemanticResult";
 import { Datatype } from "../enums/EnumDatatype";
+import fnBooleanToInt from "./fnBooleanToInt";
 
 const fnSemanticPower = (
   left_type: Datatype,
@@ -52,10 +53,62 @@ const fnSemanticPower = (
     );
   }
 
-  return {
-    type,
-    value: Math.pow(Number(left_value), Number(right_value)),
+  const semanticResult = {
+    [Datatype.INT]: {
+      [Datatype.INT]: Math.pow(Number(left_value), Number(right_value)),
+      [Datatype.DOUBLE]: Math.pow(Number(left_value), Number(right_value)),
+      [Datatype.BOOLEAN]: Math.pow(
+        Number(left_value),
+        fnBooleanToInt(Boolean(right_value))
+      ),
+      [Datatype.CHAR]: null,
+      [Datatype.STRING]: null,
+    },
+    [Datatype.DOUBLE]: {
+      [Datatype.INT]: Math.pow(Number(left_value), Number(right_value)),
+      [Datatype.DOUBLE]: Math.pow(Number(left_value), Number(right_value)),
+      [Datatype.BOOLEAN]: Math.pow(
+        Number(left_value),
+        fnBooleanToInt(Boolean(right_value))
+      ),
+      [Datatype.CHAR]: null,
+      [Datatype.STRING]: null,
+    },
+    [Datatype.BOOLEAN]: {
+      [Datatype.INT]: Math.pow(
+        fnBooleanToInt(Boolean(left_value)),
+        Number(right_value)
+      ),
+      [Datatype.DOUBLE]: Math.pow(
+        fnBooleanToInt(Boolean(left_value)),
+        Number(right_value)
+      ),
+      [Datatype.BOOLEAN]: Math.pow(
+        fnBooleanToInt(Boolean(left_value)),
+        fnBooleanToInt(Boolean(right_value))
+      ),
+      [Datatype.CHAR]: null,
+      [Datatype.STRING]: null,
+    },
+    [Datatype.CHAR]: {
+      [Datatype.INT]: null,
+      [Datatype.DOUBLE]: null,
+      [Datatype.BOOLEAN]: null,
+      [Datatype.CHAR]: null,
+      [Datatype.STRING]: null,
+    },
+    [Datatype.STRING]: {
+      [Datatype.INT]: null,
+      [Datatype.DOUBLE]: null,
+      [Datatype.BOOLEAN]: null,
+      [Datatype.CHAR]: null,
+      [Datatype.STRING]: null,
+    },
   };
+
+  const value = semanticResult[left_type][right_type]!;
+
+  return { value, type };
 };
 
 export default fnSemanticPower;
