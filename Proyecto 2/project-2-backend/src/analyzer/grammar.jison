@@ -1,10 +1,10 @@
 %{
     import { IError } from './exceptions/IError';
     import { EnumError } from './exceptions/EnumError';
-    import { BreakLoopEx } from './exceptions/BreakLoopEx';
-    import { ContinueLoopEx } from './exceptions/ContinueLoopEx';
 
     import { IStatement } from "./abstract/IStatement";
+    import { IExpression } from "./abstract/IExpression";
+    import { IParam } from "./abstract/IParam";
 
     import { Declaration } from "./statements/Declaration";
     import { Assign } from "./statements/Assign";
@@ -15,6 +15,12 @@
     import { While } from "./statements/While";
     import { BreakLoop } from "./statements/BreakLoop";
     import { ContinueLoop } from "./statements/ContinueLoop";
+    import { DoWhile } from "./statements/DoWhile";
+    import { DoUntil } from "./statements/DoUntil";
+    import { Return } from "./statements/Return";
+    import { FunctionDef } from "./statements/FunctionDef";
+    import { Method } from "./statements/Method";
+
 
     import fnParseDatatype from "./functions/fnParseDatatype";
     import fnParseBoolean from "./functions/fnParseBoolean";
@@ -34,6 +40,8 @@
     import { Increment } from "./expressions/Increment";
     import { Decrement } from "./expressions/Decrement";
     import { Cast } from "./expressions/Cast";
+    import { Call } from "./expressions/Call";
+
 
     let errors: IError[] = [];
 
@@ -171,9 +179,8 @@ main_statements: main_statements main_statement { $1.push($2); $$ = $1; }
 
 // main statement
 main_statement: standard_statement { $$ = $1; }
-    // | funcion { $$ = $1; }
-    // | method { $$ = $1; }
-    ;
+    | function { $$ = $1; }
+    | method { $$ = $1; };
 
 // standard statements
 standard_statements: standard_statements standard_statement { $1.push($2); $$ = $1; }
@@ -185,7 +192,12 @@ standard_statement: declaration END_SENTENCE { $$ = $1; }
     | print_st END_SENTENCE { $$ = $1; }
     | println_st END_SENTENCE { $$ = $1; }
     | if { $$ = $1; }
-    | while { $$ = $1; };
+    | while { $$ = $1; }
+    | do_while { $$ = $1; }
+    | do_until { $$ = $1; }
+    | BREAK END_SENTENCE { $$ = new BreakLoop(); }
+    | CONTINUE END_SENTENCE { $$ = new ContinueLoop(); }
+    | RETURN expr END_SENTENCE { $$ = new Return($2); };
 
 // expression
 expr: arithmetic { $$ = $1; }
@@ -196,7 +208,8 @@ expr: arithmetic { $$ = $1; }
     | value { $$ = $1; }
     | cast { $$ = $1; }
     | increment { $$ = $1; }
-    | decrement { $$ = $1; };
+    | decrement { $$ = $1; }
+    | call { $$ = $1; };
 
 // relational expression
 relational: expr LESS expr { $$ = new Relational($1, RelationalOp.LESS_THAN, $3); }
@@ -270,33 +283,37 @@ if: IF OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE standard_statements CL
 elifs: elifs ELIF OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE standard_statements CLOSE_BRACE { $1.push(new Elif($4, $7)); $$ = $1; }
     | ELIF OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE standard_statements CLOSE_BRACE { $$ = new Array<Elif>(); $$[0] = new Elif($3, $6); };
 
-// loop statements
-loop_statements: loop_statements loop_statement { $1.push($2); $$ = $1; }
-    | loop_statement { $$ = new Array<IStatement>(); $$[0] = $1; };
-
-// loop statement
-loop_statement: standard_statement { $$ = $1; }
-    | BREAK END_SENTENCE { $$ = new BreakLoop(); }
-    | CONTINUE END_SENTENCE { $$ = new ContinueLoop(); };
-
 // while loop
-while: WHILE OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE loop_statements CLOSE_BRACE { $$ = new While($3, $6); };
+while: WHILE OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE standard_statements CLOSE_BRACE { $$ = new While($3, $6); };
 
 // do-while loop
-do_while: DO OPEN_BRACE loop_statements CLOSE_BRACE WHILE OPEN_PARENTHESIS expr CLOSE_PARENTHESIS END_SENTENCE ;
+do_while: DO OPEN_BRACE standard_statements CLOSE_BRACE WHILE OPEN_PARENTHESIS expr CLOSE_PARENTHESIS END_SENTENCE { $$ = new DoWhile($7, $3); };
 
 // do-until loop
-do_until: DO OPEN_BRACE loop_statements CLOSE_BRACE UNTIL OPEN_PARENTHESIS expr CLOSE_PARENTHESIS END_SENTENCE ;
+do_until: DO OPEN_BRACE standard_statements CLOSE_BRACE UNTIL OPEN_PARENTHESIS expr CLOSE_PARENTHESIS END_SENTENCE { $$ = new DoUntil($7, $3); };
 
-// // function statements
-// function_statements: function_statements function_statement { $1.push($2); $$ = $1; }
-//     | function_statement { $$ = new Array<IStatement>(); $$[0] = $1; };
+// parameters
+parameters: parameters COMMA TYPE IDENTIFIER { $1.push({datatype: fnParseDatatype($3), id: $4}); $$ = $1; }
+    | TYPE IDENTIFIER { $$ = new Array<IParam>(); $$[0] = {datatype: fnParseDatatype($1), id: $2}; };
 
-// // function statement
-// function_statement: standard_statement { $$ = $1; }
-//     | return expr END_SENTENCE;
+// function
+function: IDENTIFIER OPEN_PARENTHESIS parameters CLOSE_PARENTHESIS TERNARY_ELSE TYPE OPEN_BRACE standard_statements CLOSE_BRACE { $$ = new FunctionDef($1, $3, fnParseDatatype($6), $8); }
+    | IDENTIFIER OPEN_PARENTHESIS CLOSE_PARENTHESIS  TERNARY_ELSE TYPE OPEN_BRACE standard_statements CLOSE_BRACE { $$ = new FunctionDef($1, undefined, fnParseDatatype($5), $7); };
 
+// method
+method: IDENTIFIER OPEN_PARENTHESIS parameters CLOSE_PARENTHESIS TERNARY_ELSE VOID OPEN_BRACE standard_statements CLOSE_BRACE { $$ = new Method($1, $3, $8); }
+    | IDENTIFIER OPEN_PARENTHESIS parameters CLOSE_PARENTHESIS OPEN_BRACE standard_statements CLOSE_BRACE { $$ = new Method($1, $3, $6); }
+    | IDENTIFIER OPEN_PARENTHESIS CLOSE_PARENTHESIS TERNARY_ELSE VOID OPEN_BRACE standard_statements CLOSE_BRACE { $$ = new Method($1, undefined, $7); }
+    | IDENTIFIER OPEN_PARENTHESIS CLOSE_PARENTHESIS OPEN_BRACE standard_statements CLOSE_BRACE { $$ = new Method($1, undefined, $5); };
 
+    
+// arguments
+arguments: arguments COMMA expr { $1.push($3); $$ = $1; }
+    | expr { $$ = new Array<IExpression>(); $$[0] = $1; };
+
+// call
+call: IDENTIFIER OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS { $$ = new Call($1, $3); }
+    | IDENTIFIER OPEN_PARENTHESIS CLOSE_PARENTHESIS { $$ = new Call($1, undefined); };
 
 // // access array 1
 // access_array_1: IDENTIFIER OPEN_BRACKET expr CLOSE_BRACKET;
@@ -340,23 +357,5 @@ do_until: DO OPEN_BRACE loop_statements CLOSE_BRACE UNTIL OPEN_PARENTHESIS expr 
 
 
 // // for loop
-// for: FOR OPEN_PARENTHESIS expr END_SENTENCE expr END_SENTENCE expr CLOSE_PARENTHESIS OPEN_BRACE loop_statements CLOSE_BRACE ;
+// for: FOR OPEN_PARENTHESIS expr END_SENTENCE expr END_SENTENCE expr CLOSE_PARENTHESIS OPEN_BRACE standard_statements CLOSE_BRACE ;
 
-// // parameters
-// parameters: parameters COMMA IDENTIFIER
-//     | IDENTIFIER ;
-
-// // function
-// funcion: TYPE IDENTIFIER OPEN_PARENTHESIS parameters CLOSE_PARENTHESIS TERNARY_ELSE TYPE OPEN_BRACE function_statements CLOSE_BRACE ;
-
-// // method
-// method: TYPE IDENTIFIER OPEN_PARENTHESIS parameters CLOSE_PARENTHESIS TERNARY_ELSE VOID OPEN_BRACE standard_statements CLOSE_BRACE 
-//     | TYPE IDENTIFIER OPEN_PARENTHESIS parameters CLOSE_PARENTHESIS OPEN_BRACE standard_statements CLOSE_BRACE ;
-
-// // arguments
-// arguments: arguments COMMA expr
-//     | expr ;
-
-// // call
-// call: IDENTIFIER OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS 
-//     | IDENTIFIER OPEN_PARENTHESIS CLOSE_PARENTHESIS ;

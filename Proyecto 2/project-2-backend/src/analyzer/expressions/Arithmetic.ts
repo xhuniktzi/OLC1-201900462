@@ -22,27 +22,47 @@ export class Arithmetic implements IExpression {
 
     switch (this.operator) {
       case ArithmeticOp.ADD:
-        return fnSemanticAdd(left.type, right.type, left.value, right.value);
+        return fnSemanticAdd(
+          left!.type,
+          right!.type,
+          left!.value,
+          right!.value
+        );
       case ArithmeticOp.MINUS:
-        return fnSemanticMinus(left.type, right.type, left.value, right.value);
+        return fnSemanticMinus(
+          left!.type,
+          right!.type,
+          left!.value,
+          right!.value
+        );
       case ArithmeticOp.PRODUCT:
         return fnSemanticProduct(
-          left.type,
-          right.type,
-          left.value,
-          right.value
+          left!.type,
+          right!.type,
+          left!.value,
+          right!.value
         );
       case ArithmeticOp.DIVISION:
         return fnSemanticDivision(
-          left.type,
-          right.type,
-          left.value,
-          right.value
+          left!.type,
+          right!.type,
+          left!.value,
+          right!.value
         );
       case ArithmeticOp.POWER:
-        return fnSemanticPower(left.type, right.type, left.value, right.value);
+        return fnSemanticPower(
+          left!.type,
+          right!.type,
+          left!.value,
+          right!.value
+        );
       case ArithmeticOp.MODULE:
-        return fnSemanticModule(left.type, right.type, left.value, right.value);
+        return fnSemanticModule(
+          left!.type,
+          right!.type,
+          left!.value,
+          right!.value
+        );
     }
   }
 }

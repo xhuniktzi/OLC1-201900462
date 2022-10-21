@@ -7,11 +7,12 @@ export class Elif implements IStatement {
   constructor(private condition: IExpression, private body: IStatement[]) {}
 
   execute(sym_table: SymbolTable): void {
-    if (this.condition.evaluate(sym_table).type !== Datatype.BOOLEAN) {
+    const eval_value = this.condition.evaluate(sym_table);
+    if (eval_value!.type !== Datatype.BOOLEAN) {
       throw new Error("Condition must be boolean");
     }
 
-    if (this.condition.evaluate(sym_table).value) {
+    if (eval_value!.value) {
       this.body.forEach((statement) => {
         statement.execute(sym_table);
       });

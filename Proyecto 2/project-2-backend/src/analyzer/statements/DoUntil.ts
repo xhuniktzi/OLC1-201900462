@@ -4,12 +4,11 @@ import { BreakLoopEx } from "../exceptions/BreakLoopEx";
 import { ContinueLoopEx } from "../exceptions/ContinueLoopEx";
 import { SymbolTable } from "../sym_table/SymbolTable";
 
-export class While implements IStatement {
+export class DoUntil {
   constructor(private condition: IExpression, private body: IStatement[]) {}
 
   execute(sym_table: SymbolTable): void {
-    const eval_value = this.condition.evaluate(sym_table);
-    while (Boolean(eval_value!.value)) {
+    do {
       try {
         const while_table: SymbolTable = new SymbolTable(sym_table);
         this.body.forEach((statement) => {
@@ -24,6 +23,6 @@ export class While implements IStatement {
           throw error;
         }
       }
-    }
+    } while (!Boolean(this.condition.evaluate(sym_table)!.value));
   }
 }

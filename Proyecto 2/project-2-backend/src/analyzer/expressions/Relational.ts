@@ -20,10 +20,10 @@ export class Relational implements IExpression {
       case RelationalOp.EQUAL:
       case RelationalOp.NOT_EQUAL:
         return fnSemanticCompare(
-          left.type,
-          right.type,
-          left.value,
-          right.value,
+          left!.type,
+          right!.type,
+          left!.value,
+          right!.value,
           this.operator
         );
       case RelationalOp.GREATER_THAN:
@@ -31,10 +31,10 @@ export class Relational implements IExpression {
       case RelationalOp.LESS_THAN:
       case RelationalOp.LESS_THAN_EQUAL:
         return fnSemanticRelational(
-          left.type,
-          right.type,
-          left.value,
-          right.value,
+          left!.type,
+          right!.type,
+          left!.value,
+          right!.value,
           this.operator
         );
     }

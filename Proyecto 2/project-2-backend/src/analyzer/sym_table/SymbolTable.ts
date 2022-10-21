@@ -1,8 +1,11 @@
+import { ICallable } from "../abstract/ICallable";
+
 import { ISymbol } from "./ISymbol";
 
 export class SymbolTable {
   private symbols: ISymbol[] = [];
   private console: string[] = [];
+  private functions: ICallable[] = [];
 
   public constructor(private parent: SymbolTable | undefined) {}
 
@@ -61,5 +64,17 @@ export class SymbolTable {
 
   public printConsole(): void {
     this.console.forEach((text) => console.log("[CONSOLE]\t", text));
+  }
+
+  public addFunction(func: ICallable): void {
+    this.functions.push(func);
+  }
+
+  public getFunction(id: string): ICallable | undefined {
+    if (this.parent === undefined) {
+      return this.functions.find((func) => func.id === id);
+    } else {
+      return this.parent.getFunction(id);
+    }
   }
 }

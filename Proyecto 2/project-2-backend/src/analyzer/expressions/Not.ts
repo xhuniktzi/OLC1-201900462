@@ -8,10 +8,10 @@ export class Not implements IExpression {
   evaluate(sym_table: SymbolTable): IReturnEval {
     const expr = this.expression.evaluate(sym_table);
 
-    if (expr.type !== Datatype.BOOLEAN) {
+    if (expr!.type !== Datatype.BOOLEAN) {
       throw new Error("Logical operator only works with boolean values");
     }
 
-    return { type: Datatype.BOOLEAN, value: !Boolean(expr.value) };
+    return { type: Datatype.BOOLEAN, value: !Boolean(expr!.value) };
   }
 }

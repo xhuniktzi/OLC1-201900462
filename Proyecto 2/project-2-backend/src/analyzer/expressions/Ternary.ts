@@ -12,14 +12,14 @@ export class Ternary implements IExpression {
 
   evaluate(sym_table: SymbolTable): IReturnEval {
     const condition = this.condition.evaluate(sym_table);
-    if (condition.type !== Datatype.BOOLEAN) {
-      throw new Error("Ternary condition must be boolean");
+    if (condition!.type !== Datatype.BOOLEAN) {
+      throw new Error("Ternary condition! must be boolean");
     }
 
-    if (condition.value) {
-      return this.trueExpression.evaluate(sym_table);
+    if (condition!.value) {
+      return this.trueExpression.evaluate(sym_table)!;
     } else {
-      return this.falseExpression.evaluate(sym_table);
+      return this.falseExpression.evaluate(sym_table)!;
     }
   }
 }

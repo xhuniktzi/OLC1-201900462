@@ -14,7 +14,7 @@ export class Logical implements IExpression {
     const left = this.left.evaluate(sym_table);
     const right = this.right.evaluate(sym_table);
 
-    if (left.type !== Datatype.BOOLEAN || right.type !== Datatype.BOOLEAN) {
+    if (left!.type !== Datatype.BOOLEAN || right!.type !== Datatype.BOOLEAN) {
       throw new Error("Logical operator only works with boolean values");
     }
 
@@ -22,12 +22,12 @@ export class Logical implements IExpression {
       case LogicalOp.AND:
         return {
           type: Datatype.BOOLEAN,
-          value: Boolean(left.value) && Boolean(right.value),
+          value: Boolean(left!.value) && Boolean(right!.value),
         };
       case LogicalOp.OR:
         return {
           type: Datatype.BOOLEAN,
-          value: Boolean(left.value) || Boolean(right.value),
+          value: Boolean(left!.value) || Boolean(right!.value),
         };
     }
   }

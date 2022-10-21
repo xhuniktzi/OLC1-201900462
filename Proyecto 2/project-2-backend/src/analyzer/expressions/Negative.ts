@@ -9,10 +9,10 @@ export class Negative implements IExpression {
   evaluate(sym_table: SymbolTable): IReturnEval {
     const result = this.expression.evaluate(sym_table);
 
-    if (result.type !== Datatype.DOUBLE && result.type !== Datatype.INT) {
+    if (result!.type !== Datatype.DOUBLE && result!.type !== Datatype.INT) {
       throw new Error("Negative operator only works with number values");
     }
 
-    return { type: result.type, value: -Number(result.value) };
+    return { type: result!.type, value: -Number(result!.value) };
   }
 }
