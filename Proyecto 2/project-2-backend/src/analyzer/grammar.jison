@@ -20,6 +20,7 @@
     import { Return } from "./statements/Return";
     import { FunctionDef } from "./statements/FunctionDef";
     import { Method } from "./statements/Method";
+    import { For } from "./statements/For";
 
 
     import fnParseDatatype from "./functions/fnParseDatatype";
@@ -195,6 +196,7 @@ standard_statement: declaration END_SENTENCE { $$ = $1; }
     | while { $$ = $1; }
     | do_while { $$ = $1; }
     | do_until { $$ = $1; }
+    | for { $$ = $1; }
     | BREAK END_SENTENCE { $$ = new BreakLoop(); }
     | CONTINUE END_SENTENCE { $$ = new ContinueLoop(); }
     | RETURN expr END_SENTENCE { $$ = new Return($2); };
@@ -315,6 +317,17 @@ arguments: arguments COMMA expr { $1.push($3); $$ = $1; }
 call: IDENTIFIER OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS { $$ = new Call($1, $3); }
     | IDENTIFIER OPEN_PARENTHESIS CLOSE_PARENTHESIS { $$ = new Call($1, undefined); };
 
+// for loop
+for: FOR OPEN_PARENTHESIS for_init END_SENTENCE expr END_SENTENCE for_update CLOSE_PARENTHESIS OPEN_BRACE standard_statements CLOSE_BRACE { $$ = new For($3, $5, $7, $10); };
+
+for_init: assign { $$ = $1; }
+    | declaration { $$ = $1; };
+
+for_update: assign { $$ = $1; }
+    | increment { $$ = $1; }
+    | decrement { $$ = $1; };
+
+
 // // access array 1
 // access_array_1: IDENTIFIER OPEN_BRACKET expr CLOSE_BRACKET;
 
@@ -349,13 +362,8 @@ call: IDENTIFIER OPEN_PARENTHESIS arguments CLOSE_PARENTHESIS { $$ = new Call($1
 //     | SWITCH OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE cases DEFAULT TERNARY_IF cases CLOSE_BRACE 
 //     | SWITCH OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE DEFAULT TERNARY_IF cases CLOSE_BRACE ;
 
-// cases: cases CASE expr TERNARY_IF switch_statements 
-//     | CASE expr TERNARY_IF switch_statements ;
-
-// switch_statements: standard_statements 
-//     | BREAK END_SENTENCE ;
+// cases: cases CASE expr TERNARY_IF standard_statements 
+//     | CASE expr TERNARY_IF standard_statements ;
 
 
-// // for loop
-// for: FOR OPEN_PARENTHESIS expr END_SENTENCE expr END_SENTENCE expr CLOSE_PARENTHESIS OPEN_BRACE standard_statements CLOSE_BRACE ;
 

@@ -4,7 +4,7 @@ import { Datatype } from "../enums/EnumDatatype";
 import { SymbolTable } from "../sym_table/SymbolTable";
 
 export class Increment implements IExpression {
-  constructor(private identifier: string) {}
+  constructor(public identifier: string) {}
 
   evaluate(sym_table: SymbolTable): IReturnEval {
     const symbol = sym_table.getSymbol(this.identifier);

@@ -23,16 +23,31 @@ export class If implements IStatement {
       this.if_body.forEach((statement) => {
         statement.execute(if_table);
       });
-    } else if (this.elifs !== undefined) {
+      return;
+    }
+    if (this.elifs !== undefined) {
       this.elifs.forEach((elif) => {
-        const elif_table: SymbolTable = new SymbolTable(sym_table);
-        elif.execute(elif_table);
+        const conditional = elif.condition.evaluate(sym_table);
+        if (conditional!.type !== Datatype.BOOLEAN) {
+          throw new Error("Condition must be boolean");
+        }
+
+        if (Boolean(conditional!.value)) {
+          const elif_table: SymbolTable = new SymbolTable(sym_table);
+          elif.execute(elif_table);
+          return;
+        }
       });
-    } else if (this.else_body !== undefined) {
-      const else_table: SymbolTable = new SymbolTable(sym_table);
-      this.else_body.forEach((statement) => {
-        statement.execute(else_table);
-      });
+    }
+
+    if (!Boolean(eval_value!.value)) {
+      if (this.else_body !== undefined) {
+        const else_table: SymbolTable = new SymbolTable(sym_table);
+        this.else_body.forEach((statement) => {
+          statement.execute(else_table);
+        });
+        return;
+      }
     }
   }
 }
