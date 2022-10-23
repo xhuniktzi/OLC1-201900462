@@ -36,6 +36,8 @@ export class Call implements IExpression {
       if (error instanceof ReturnEx) {
         const eval_value = error.value;
         return eval_value;
+      } else {
+        throw error;
       }
     }
   }

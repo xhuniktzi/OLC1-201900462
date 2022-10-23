@@ -21,6 +21,8 @@
     import { FunctionDef } from "./statements/FunctionDef";
     import { Method } from "./statements/Method";
     import { For } from "./statements/For";
+    import { Case } from "./statements/Case";
+    import { Switch } from "./statements/Switch";
 
 
     import fnParseDatatype from "./functions/fnParseDatatype";
@@ -197,6 +199,7 @@ standard_statement: declaration END_SENTENCE { $$ = $1; }
     | do_while { $$ = $1; }
     | do_until { $$ = $1; }
     | for { $$ = $1; }
+    | switch { $$ = $1; }
     | BREAK END_SENTENCE { $$ = new BreakLoop(); }
     | CONTINUE END_SENTENCE { $$ = new ContinueLoop(); }
     | RETURN expr END_SENTENCE { $$ = new Return($2); };
@@ -327,6 +330,14 @@ for_update: assign { $$ = $1; }
     | increment { $$ = $1; }
     | decrement { $$ = $1; };
 
+// switch-case
+switch: SWITCH OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE cases CLOSE_BRACE { $$ = new Switch($3, $6, undefined); }
+    | SWITCH OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE cases DEFAULT TERNARY_ELSE standard_statements CLOSE_BRACE { $$ = new Switch($3, $6, $9); }
+    | SWITCH OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE DEFAULT TERNARY_ELSE standard_statements CLOSE_BRACE { $$ = new Switch($3, undefined, $7); };
+
+cases: cases CASE expr TERNARY_ELSE standard_statements { $1.push(new Case($3, $5)); $$ = $1; }
+    | CASE expr TERNARY_ELSE standard_statements { $$ = new Array<Case>(); $$[0] = new Case($2, $4); };
+
 
 // // access array 1
 // access_array_1: IDENTIFIER OPEN_BRACKET expr CLOSE_BRACKET;
@@ -356,14 +367,6 @@ for_update: assign { $$ = $1; }
 // // list of expressions
 // list_expr: list_expr COMMA expr
 //     | expr ;
-
-// // switch-case
-// switch: SWITCH OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE cases CLOSE_BRACE 
-//     | SWITCH OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE cases DEFAULT TERNARY_IF cases CLOSE_BRACE 
-//     | SWITCH OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE DEFAULT TERNARY_IF cases CLOSE_BRACE ;
-
-// cases: cases CASE expr TERNARY_IF standard_statements 
-//     | CASE expr TERNARY_IF standard_statements ;
 
 
 
