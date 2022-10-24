@@ -1,0 +1,27 @@
+<h2>Entrada</h2>
+<form>
+  <div class="row">
+    <div class="col-md-6">
+      <textarea
+        name="input-compiler"
+        id="input-compiler"
+        cols="120"
+        rows="30"
+        [(ngModel)]="input_compiler"
+      ></textarea>
+    </div>
+    <div class="col-md-6">
+      <textarea
+        name="output-compiler"
+        id="output-compiler"
+        cols="120"
+        rows="30"
+        readonly
+        [(ngModel)]="output_compiler"
+      ></textarea>
+    </div>
+    <div class="row">
+      <button type="button" (click)="onClickParser()">Parser</button>
+    </div>
+  </div>
+</form>
