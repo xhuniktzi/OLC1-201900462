@@ -10,7 +10,7 @@ const parser = (req: Request, res: Response) => {
   const { text } = req.body;
   try {
     const ast: IStatement[] = parser.parse(text);
-    const table = new SymbolTable(undefined);
+    const table = new SymbolTable(undefined, "global");
 
     ast.forEach((statement) => {
       if (statement instanceof Method) statement.execute(table);
@@ -21,12 +21,14 @@ const parser = (req: Request, res: Response) => {
       statement.execute(table);
     });
 
-    table.printConsole();
+    const cout = table.printConsole();
+    res.send({
+      cout,
+    });
   } catch (error: unknown) {
     console.error(error);
+    res.send(500);
   }
-
-  res.status(204).send();
 };
 
 export default parser;

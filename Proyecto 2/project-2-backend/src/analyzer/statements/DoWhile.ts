@@ -10,7 +10,7 @@ export class DoWhile implements IStatement {
   execute(sym_table: SymbolTable): void {
     do {
       try {
-        const while_table: SymbolTable = new SymbolTable(sym_table);
+        const while_table: SymbolTable = new SymbolTable(sym_table, "do-while");
         this.body.forEach((statement) => {
           statement.execute(while_table);
         });

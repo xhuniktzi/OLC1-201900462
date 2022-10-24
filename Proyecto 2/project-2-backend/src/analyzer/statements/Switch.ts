@@ -1,9 +1,9 @@
 import { IExpression } from "../abstract/IExpression";
 import { IStatement } from "../abstract/IStatement";
 import { RelationalOp } from "../enums/EnumRelational";
+import { BreakLoopEx } from "../exceptions/BreakLoopEx";
 import { Relational } from "../expressions/Relational";
 import { SymbolTable } from "../sym_table/SymbolTable";
-import { BreakLoop } from "./BreakLoop";
 import { Case } from "./Case";
 
 export class Switch implements IStatement {
@@ -14,7 +14,7 @@ export class Switch implements IStatement {
   ) {}
 
   execute(sym_table: SymbolTable): void {
-    const switch_table = new SymbolTable(sym_table);
+    const switch_table = new SymbolTable(sym_table, "switch");
     try {
       if (this.cases !== undefined) {
         let i = 0;
@@ -37,7 +37,8 @@ export class Switch implements IStatement {
         });
       }
     } catch (error) {
-      if (error instanceof BreakLoop) return;
+      if (error instanceof BreakLoopEx) return;
+      else throw error;
     }
 
     if (this.defaultCase !== undefined) {

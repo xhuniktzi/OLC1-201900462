@@ -23,7 +23,8 @@
     import { For } from "./statements/For";
     import { Case } from "./statements/Case";
     import { Switch } from "./statements/Switch";
-
+    import { DeclareArrayOne } from "./statements/DeclareArrayOne";
+    import { DeclareArrayTwo } from "./statements/DeclareArrayTwo";
 
     import fnParseDatatype from "./functions/fnParseDatatype";
     import fnParseBoolean from "./functions/fnParseBoolean";
@@ -190,7 +191,9 @@ standard_statements: standard_statements standard_statement { $1.push($2); $$ = 
     | standard_statement { $$ = new Array<IStatement>(); $$[0] = $1; };
 
 // standard statement
-standard_statement: declaration END_SENTENCE { $$ = $1; }
+standard_statement: declare_array_1 END_SENTENCE { $$ = $1; }
+    | declare_array_2 END_SENTENCE { $$ = $1; }
+    | declaration END_SENTENCE { $$ = $1; }
     | assign END_SENTENCE { $$ = $1; }
     | print_st END_SENTENCE { $$ = $1; }
     | println_st END_SENTENCE { $$ = $1; }
@@ -200,6 +203,7 @@ standard_statement: declaration END_SENTENCE { $$ = $1; }
     | do_until { $$ = $1; }
     | for { $$ = $1; }
     | switch { $$ = $1; }
+
     | BREAK END_SENTENCE { $$ = new BreakLoop(); }
     | CONTINUE END_SENTENCE { $$ = new ContinueLoop(); }
     | RETURN expr END_SENTENCE { $$ = new Return($2); };
@@ -272,11 +276,6 @@ declaration: TYPE list_identifiers { $$ = new Declaration(fnParseDatatype($1), $
 // assign
 assign: list_identifiers ASSIGNMENT expr { $$ = new Assign($1, $3); };
 
-// print
-print_st: PRINT OPEN_PARENTHESIS expr CLOSE_PARENTHESIS { $$ = new Print($3); };
-
-// println
-println_st: PRINTLN OPEN_PARENTHESIS expr CLOSE_PARENTHESIS { $$ = new Println($3); };
 
 // if-elif-else
 if: IF OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE standard_statements CLOSE_BRACE { $$ = new If($3, $6); }
@@ -338,35 +337,54 @@ switch: SWITCH OPEN_PARENTHESIS expr CLOSE_PARENTHESIS OPEN_BRACE cases CLOSE_BR
 cases: cases CASE expr TERNARY_ELSE standard_statements { $1.push(new Case($3, $5)); $$ = $1; }
     | CASE expr TERNARY_ELSE standard_statements { $$ = new Array<Case>(); $$[0] = new Case($2, $4); };
 
+// declare array one dimension
+declare_array_1: TYPE OPEN_BRACKET CLOSE_BRACKET IDENTIFIER ASSIGNMENT NEW TYPE OPEN_BRACKET expr CLOSE_BRACKET { $$ = new DeclareArrayOne(fnParseDatatype($1), $4, $9, undefined); }
+    | TYPE OPEN_BRACKET CLOSE_BRACKET IDENTIFIER ASSIGNMENT OPEN_BRACE list_expr CLOSE_BRACE { $$ = new DeclareArrayOne(fnParseDatatype($1), $4, undefined, $7); };
+
+list_expr: list_expr COMMA expr  { $1.push($3); $$ = $1; }
+    | expr { $$ = new Array<IExpression>(); $$[0] = $1; };
+
+list_list_expr: list_list_expr COMMA OPEN_BRACE list_expr CLOSE_BRACE { $1.push($3); $$ = $1; }
+    | OPEN_BRACE list_expr CLOSE_BRACE { $$ = new Array<Array<IExpression>>(); $$[0] = $1; };
+
+// declare array two dimension
+declare_array_2: TYPE OPEN_BRACKET CLOSE_BRACKET OPEN_BRACKET CLOSE_BRACKET IDENTIFIER ASSIGNMENT NEW TYPE OPEN_BRACKET expr CLOSE_BRACKET OPEN_BRACKET expr CLOSE_BRACKET { $$ = new DeclareArrayTwo(fnParseDatatype($1), $6, undefined, $11, $13); }
+    | TYPE OPEN_BRACKET CLOSE_BRACKET OPEN_BRACKET CLOSE_BRACKET IDENTIFIER ASSIGNMENT OPEN_BRACE list_list_expr CLOSE_BRACE { $$ = new DeclareArrayTwo(fnParseDatatype($1), $6, $9, undefined, undefined); };
+
+// print
+print_st: PRINT OPEN_PARENTHESIS expr CLOSE_PARENTHESIS { $$ = new Print($3); };
+
+// println
+println_st: PRINTLN OPEN_PARENTHESIS expr CLOSE_PARENTHESIS { $$ = new Println($3); };
+
 
 // // access array 1
 // access_array_1: IDENTIFIER OPEN_BRACKET expr CLOSE_BRACKET;
 
-// // access array 2
-// access_array_2: IDENTIFIER OPEN_BRACKET expr CLOSE_BRACKET OPEN_BRACKET expr CLOSE_BRACKET ;
 
-// // declaration array one dimension
-// declaration_array_1: TYPE OPEN_BRACKET CLOSE_BRACKET IDENTIFIER ASSIGNMENT NEW TYPE OPEN_BRACKET expr CLOSE_BRACKET ;
+// // // access array 2
+// // access_array_2: IDENTIFIER OPEN_BRACKET expr CLOSE_BRACKET OPEN_BRACKET expr CLOSE_BRACKET ;
 
-// // declaration array two dimension
-// declaration_array_2: TYPE OPEN_BRACKET CLOSE_BRACKET OPEN_BRACKET CLOSE_BRACKET IDENTIFIER ASSIGNMENT NEW TYPE OPEN_BRACKET expr CLOSE_BRACKET OPEN_BRACKET expr CLOSE_BRACKET ;
+// // // declaration array one dimension
+// // declaration_array_1: TYPE OPEN_BRACKET CLOSE_BRACKET IDENTIFIER ASSIGNMENT NEW TYPE OPEN_BRACKET expr CLOSE_BRACKET ;
 
-// // assign array one dimension
-// assign_array_1: TYPE OPEN_BRACKET CLOSE_BRACKET IDENTIFIER ASSIGNMENT group_expr ;
+// // // declaration array two dimension
+// // declaration_array_2: TYPE OPEN_BRACKET CLOSE_BRACKET OPEN_BRACKET CLOSE_BRACKET IDENTIFIER ASSIGNMENT NEW TYPE OPEN_BRACKET expr CLOSE_BRACKET OPEN_BRACKET expr CLOSE_BRACKET ;
 
-// // assign array two dimension
-// assign_array_2: TYPE OPEN_BRACKET CLOSE_BRACKET OPEN_BRACKET CLOSE_BRACKET IDENTIFIER ASSIGNMENT OPEN_BRACE list_group CLOSE_BRACE ;
 
-// // group of expressions
-// group_expr: OPEN_BRACE list_expr CLOSE_BRACE ;
+// // // assign array two dimension
+// // assign_array_2: TYPE OPEN_BRACKET CLOSE_BRACKET OPEN_BRACKET CLOSE_BRACKET IDENTIFIER ASSIGNMENT OPEN_BRACE list_group CLOSE_BRACE ;
 
-// // list of group of expressions
-// list_group: list_group COMMA group_expr
-//     | group_expr ;
+// // // group of expressions
+// // group_expr: OPEN_BRACE list_expr CLOSE_BRACE ;
 
-// // list of expressions
-// list_expr: list_expr COMMA expr
-//     | expr ;
+// // // list of group of expressions
+// // list_group: list_group COMMA group_expr
+// //     | group_expr ;
+
+// // // list of expressions
+// // list_expr: list_expr COMMA expr
+// //     | expr ;
 
 
 

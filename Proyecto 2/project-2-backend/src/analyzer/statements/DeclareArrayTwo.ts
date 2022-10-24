@@ -1,0 +1,32 @@
+import { IExpression } from "../abstract/IExpression";
+import { IStatement } from "../abstract/IStatement";
+import { Datatype } from "../enums/EnumDatatype";
+import { SymbolTable } from "../sym_table/SymbolTable";
+
+export class DeclareArrayTwo implements IStatement {
+  constructor(
+    private datatype: Datatype,
+    private id: string,
+    private list_expr: Array<Array<IExpression>> | undefined,
+    private row: IExpression | undefined,
+    private column: IExpression | undefined
+  ) {}
+
+  execute(sym_table: SymbolTable): void {
+    if (this.list_expr !== undefined) {
+      const row = this.list_expr.length;
+      const column = this.list_expr[0].length;
+      sym_table.createMatrix(this.id, row, column, this.datatype);
+      this.list_expr.forEach((list, index) => {
+        list.forEach((expr, index2) => {
+          const val = expr.evaluate(sym_table)!.value;
+          sym_table.updateMatrixSymbol(this.id, index, index2, val);
+        });
+      });
+    } else if (this.row !== undefined && this.column !== undefined) {
+      const row = Number(this.row.evaluate(sym_table)!.value);
+      const column = Number(this.column.evaluate(sym_table)!.value);
+      sym_table.createMatrix(this.id, row, column, this.datatype);
+    }
+  }
+}

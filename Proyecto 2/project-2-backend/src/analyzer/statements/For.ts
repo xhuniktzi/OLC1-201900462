@@ -1,5 +1,7 @@
 import { IExpression } from "../abstract/IExpression";
 import { IStatement } from "../abstract/IStatement";
+import { BreakLoopEx } from "../exceptions/BreakLoopEx";
+import { ContinueLoopEx } from "../exceptions/ContinueLoopEx";
 import { Decrement } from "../expressions/Decrement";
 import { Increment } from "../expressions/Increment";
 import { SymbolTable } from "../sym_table/SymbolTable";
@@ -15,20 +17,30 @@ export class For implements IStatement {
   ) {}
 
   execute(sym_table: SymbolTable): void {
-    const for_table = new SymbolTable(sym_table);
+    const for_table = new SymbolTable(sym_table, "for");
     this.init.execute(for_table);
     while (Boolean(this.condition.evaluate(for_table)!.value)) {
-      const internal_table = new SymbolTable(for_table);
-      this.body.forEach((statement) => statement.execute(internal_table));
+      try {
+        const internal_table = new SymbolTable(for_table, "internal for");
+        this.body.forEach((statement) => statement.execute(internal_table));
 
-      if (
-        this.increment instanceof Increment ||
-        this.increment instanceof Decrement
-      ) {
-        const eval_value = this.increment.evaluate(for_table);
-        for_table.updateSymbol(this.increment.identifier, eval_value.value);
-      } else {
-        this.increment.execute(for_table);
+        if (
+          this.increment instanceof Increment ||
+          this.increment instanceof Decrement
+        ) {
+          const eval_value = this.increment.evaluate(for_table);
+          for_table.updateSymbol(this.increment.identifier, eval_value.value);
+        } else {
+          this.increment.execute(for_table);
+        }
+      } catch (error: unknown) {
+        if (error instanceof ContinueLoopEx) {
+          continue;
+        } else if (error instanceof BreakLoopEx) {
+          break;
+        } else {
+          throw error;
+        }
       }
     }
   }

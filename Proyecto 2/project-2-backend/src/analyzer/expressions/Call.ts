@@ -8,36 +8,59 @@ export class Call implements IExpression {
 
   evaluate(sym_table: SymbolTable): IReturnEval | undefined {
     const func = sym_table.getFunction(this.id);
-    try {
-      const func_table = new SymbolTable(sym_table);
-      if (this.args !== undefined) {
-        func!.params!.forEach((param, i) => {
-          func_table.addSymbol({
-            id: param.id,
-            value: this.args![i].evaluate(func_table)!.value,
-            column: 0,
-            line: 0,
-            datatype: param.datatype,
-          });
-        });
-      } else {
-        throw new Error(
-          "Semantic error: The function " +
-            this.id +
-            " requires " +
-            func!.params!.length +
-            " parameters"
+
+    if (func === undefined) {
+      throw new Error(`Function ${this.id} not found`);
+    } else if (func.params!.length !== this.args!.length) {
+      throw new Error(
+        `Function ${this.id} expects ${func.params!.length} arguments`
+      );
+    } else {
+      try {
+        const func_table = new SymbolTable(
+          sym_table,
+          "call function " + this.id
         );
-      }
-      func!.body.forEach((statement) => {
-        statement.execute(func_table);
-      });
-    } catch (error: unknown) {
-      if (error instanceof ReturnEx) {
-        const eval_value = error.value;
-        return eval_value;
-      } else {
-        throw error;
+        if (this.args !== undefined) {
+          func!.params!.forEach((param, i) => {
+            func_table.addSymbol({
+              id: param.id,
+              value: this.args![i].evaluate(func_table)!.value,
+              column: 0,
+              line: 0,
+              datatype: param.datatype,
+            });
+          });
+        } else {
+          throw new Error(
+            "Semantic error: The function " +
+              this.id +
+              " requires " +
+              func!.params!.length +
+              " parameters"
+          );
+        }
+        func!.body.forEach((statement) => {
+          statement.execute(func_table);
+        });
+      } catch (error: unknown) {
+        if (error instanceof ReturnEx) {
+          const eval_value = error.value;
+          if (eval_value.type !== func!.datatype) {
+            throw new Error(
+              "Semantic error: The function " +
+                this.id +
+                " returns " +
+                func!.datatype +
+                " but the return value is " +
+                eval_value.type
+            );
+          } else {
+            return eval_value;
+          }
+        } else {
+          throw error;
+        }
       }
     }
   }
