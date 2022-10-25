@@ -128,7 +128,13 @@ export class SymbolTable {
   }
 
   public getArraySymbol(id: string, pos: number): ISymbol {
-    return this.getArray(id).value[pos];
+    const array = this.getArray(id);
+
+    if (pos < 0 || pos >= array.value.length) {
+      throw new Error(`Index out of bounds`);
+    } else {
+      return array.value[pos];
+    }
   }
 
   public createArray(id: string, size: number, datatype: Datatype): void {
@@ -150,13 +156,23 @@ export class SymbolTable {
         val = false;
         break;
     }
-
+    const array: Array<ISymbol> = [];
+    for (let i = 0; i < size; i++) {
+      array.push({
+        id,
+        value: val,
+        datatype,
+        column: 0,
+        line: 0,
+      });
+    }
     this.arrays.push({
       id,
-      size,
-      value: new Array(size).fill(val),
+      value: array,
       type: fnParseArrayTypes(datatype),
+      size,
     });
+
     console.log("[DEBUG]\t", `Array ${id} created`);
     this.debugArrays();
   }
@@ -187,7 +203,12 @@ export class SymbolTable {
   }
 
   public getMatrixSymbol(id: string, row: number, col: number): ISymbol {
-    return this.getMatrix(id).value[row][col];
+    const matrix = this.getMatrix(id);
+    if (row >= matrix.rows || col >= matrix.columns) {
+      throw new Error(`Matrix ${id} out of bounds`);
+    } else {
+      return matrix.value[row][col];
+    }
   }
 
   public createMatrix(
@@ -214,12 +235,26 @@ export class SymbolTable {
         break;
     }
 
+    const matrix: Array<Array<ISymbol>> = [];
+    for (let i = 0; i < rows; i++) {
+      const row: Array<ISymbol> = [];
+      for (let j = 0; j < cols; j++) {
+        row.push({
+          id,
+          value: val,
+          datatype,
+          column: 0,
+          line: 0,
+        });
+      }
+      matrix.push(row);
+    }
     this.matrixes.push({
       id,
+      value: matrix,
+      type: fnParseMatrixTypes(datatype),
       rows,
       columns: cols,
-      value: new Array(rows).fill(new Array(cols).fill(val)),
-      type: fnParseMatrixTypes(datatype),
     });
     console.log("[DEBUG]\t", `Matrix ${id} created`);
     this.debugMatrixes();

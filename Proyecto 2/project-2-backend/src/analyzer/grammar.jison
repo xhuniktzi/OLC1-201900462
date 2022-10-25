@@ -45,6 +45,8 @@
     import { Decrement } from "./expressions/Decrement";
     import { Cast } from "./expressions/Cast";
     import { Call } from "./expressions/Call";
+    import { AccessArray } from "./expressions/AccessArray";
+    import { AccessMatrix } from "./expressions/AccessMatrix";
 
 
     let errors: IError[] = [];
@@ -218,7 +220,9 @@ expr: arithmetic { $$ = $1; }
     | cast { $$ = $1; }
     | increment { $$ = $1; }
     | decrement { $$ = $1; }
-    | call { $$ = $1; };
+    | call { $$ = $1; }
+    | access_array { $$ = $1; }
+    | access_matrix { $$ = $1; };
 
 // relational expression
 relational: expr LESS expr { $$ = new Relational($1, RelationalOp.LESS_THAN, $3); }
@@ -348,7 +352,7 @@ list_list_expr: list_list_expr COMMA OPEN_BRACE list_expr CLOSE_BRACE { $1.push(
     | OPEN_BRACE list_expr CLOSE_BRACE { $$ = new Array<Array<IExpression>>(); $$[0] = $1; };
 
 // declare array two dimension
-declare_array_2: TYPE OPEN_BRACKET CLOSE_BRACKET OPEN_BRACKET CLOSE_BRACKET IDENTIFIER ASSIGNMENT NEW TYPE OPEN_BRACKET expr CLOSE_BRACKET OPEN_BRACKET expr CLOSE_BRACKET { $$ = new DeclareArrayTwo(fnParseDatatype($1), $6, undefined, $11, $13); }
+declare_array_2: TYPE OPEN_BRACKET CLOSE_BRACKET OPEN_BRACKET CLOSE_BRACKET IDENTIFIER ASSIGNMENT NEW TYPE OPEN_BRACKET expr CLOSE_BRACKET OPEN_BRACKET expr CLOSE_BRACKET { $$ = new DeclareArrayTwo(fnParseDatatype($1), $6, undefined, $11, $14); }
     | TYPE OPEN_BRACKET CLOSE_BRACKET OPEN_BRACKET CLOSE_BRACKET IDENTIFIER ASSIGNMENT OPEN_BRACE list_list_expr CLOSE_BRACE { $$ = new DeclareArrayTwo(fnParseDatatype($1), $6, $9, undefined, undefined); };
 
 // print
@@ -358,8 +362,11 @@ print_st: PRINT OPEN_PARENTHESIS expr CLOSE_PARENTHESIS { $$ = new Print($3); };
 println_st: PRINTLN OPEN_PARENTHESIS expr CLOSE_PARENTHESIS { $$ = new Println($3); };
 
 
-// // access array 1
-// access_array_1: IDENTIFIER OPEN_BRACKET expr CLOSE_BRACKET;
+// access array
+access_array: IDENTIFIER OPEN_BRACKET expr CLOSE_BRACKET { $$ = new AccessArray($1, $3); };
+
+// access matrix
+access_matrix: IDENTIFIER OPEN_BRACKET expr CLOSE_BRACKET OPEN_BRACKET expr CLOSE_BRACKET { $$ = new AccessMatrix($1, $3, $6); };
 
 
 // // // access array 2
