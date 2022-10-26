@@ -1,5 +1,6 @@
 import { ISemanticResult } from "../abstract/ISemanticResult";
 import { Datatype } from "../enums/EnumDatatype";
+import { SemanticErrorEx } from "../exceptions/SemanticErrorEx";
 import fnBooleanToInt from "./fnBooleanToInt";
 import fnCharToInt from "./fnCharToInt";
 
@@ -49,11 +50,15 @@ const fnSemanticDivision = (
 
   const type: Datatype = semanticTable[left_type][right_type]!;
   if (type === null) {
-    throw new Error("Semantic Error: Cannot divide two booleans or two chars.");
+    throw new SemanticErrorEx(
+      "Cannot divide two booleans or two chars.",
+      undefined,
+      undefined
+    );
   }
 
   if (right_value === 0) {
-    throw new Error("Semantic Error: Cannot divide by zero.");
+    throw new SemanticErrorEx("Cannot divide by zero.", undefined, undefined);
   }
 
   const semanticResult = {

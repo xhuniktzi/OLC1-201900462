@@ -1,10 +1,19 @@
 import { IExpression } from "../abstract/IExpression";
 import { IReturnEval } from "../abstract/IReturnEval";
+import { IStatement } from "../abstract/IStatement";
 import { ReturnEx } from "../exceptions/ReturnEx";
 import { SymbolTable } from "../sym_table/SymbolTable";
 
-export class Call implements IExpression {
-  constructor(private id: string, private args: IExpression[] | undefined) {}
+export class Call implements IExpression, IStatement {
+  constructor(
+    private id: string,
+    private args: IExpression[] | undefined,
+    public line: number,
+    public column: number
+  ) {}
+  execute(sym_table: SymbolTable): void {
+    throw new Error("Method not implemented.");
+  }
 
   evaluate(sym_table: SymbolTable): IReturnEval | undefined {
     const func = sym_table.getFunction(this.id);

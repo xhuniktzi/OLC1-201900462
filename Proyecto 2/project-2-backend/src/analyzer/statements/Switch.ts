@@ -3,6 +3,7 @@ import { IStatement } from "../abstract/IStatement";
 import { RelationalOp } from "../enums/EnumRelational";
 import { BreakLoopEx } from "../exceptions/BreakLoopEx";
 import { Relational } from "../expressions/Relational";
+import fnSemanticRelational from "../functions/fnSemanticRelational";
 import { SymbolTable } from "../sym_table/SymbolTable";
 import { Case } from "./Case";
 
@@ -10,7 +11,9 @@ export class Switch implements IStatement {
   public constructor(
     public condition: IExpression,
     public cases: Case[] | undefined,
-    public defaultCase: IStatement[] | undefined
+    public defaultCase: IStatement[] | undefined,
+    public line: number,
+    public column: number
   ) {}
 
   execute(sym_table: SymbolTable): void {
@@ -19,14 +22,19 @@ export class Switch implements IStatement {
       if (this.cases !== undefined) {
         let i = 0;
         this.cases!.forEach((case_eval, index) => {
+          const left_op = this.condition.evaluate(switch_table);
+          const right_op = case_eval.condition.evaluate(switch_table);
           if (
-            new Relational(
-              this.condition,
-              RelationalOp.EQUAL,
-              case_eval.condition
-            ).evaluate(switch_table).value
+            fnSemanticRelational(
+              left_op!.type,
+              right_op!.type,
+              left_op!.value,
+              right_op!.value,
+              RelationalOp.EQUAL
+            )
           ) {
             i = index;
+            return;
           }
         });
 

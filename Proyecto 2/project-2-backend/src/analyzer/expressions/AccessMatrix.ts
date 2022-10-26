@@ -6,7 +6,9 @@ export class AccessMatrix implements IExpression {
   constructor(
     private id: string,
     private row: IExpression,
-    private col: IExpression
+    private col: IExpression,
+    public line: number,
+    public column: number
   ) {}
   evaluate(sym_table: SymbolTable): IReturnEval | undefined {
     if (this.row.evaluate(sym_table)!.value < 0) {

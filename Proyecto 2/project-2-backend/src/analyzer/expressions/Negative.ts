@@ -4,7 +4,11 @@ import { Datatype } from "../enums/EnumDatatype";
 import { SymbolTable } from "../sym_table/SymbolTable";
 
 export class Negative implements IExpression {
-  constructor(private expression: IExpression) {}
+  constructor(
+    private expression: IExpression,
+    public line: number,
+    public column: number
+  ) {}
 
   evaluate(sym_table: SymbolTable): IReturnEval {
     const result = this.expression.evaluate(sym_table);

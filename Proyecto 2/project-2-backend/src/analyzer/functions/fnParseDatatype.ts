@@ -1,4 +1,5 @@
 import { Datatype } from "../enums/EnumDatatype";
+import { SemanticErrorEx } from "../exceptions/SemanticErrorEx";
 
 const fnParseDatatype = (datatype: string): Datatype => {
   switch (datatype) {
@@ -13,7 +14,11 @@ const fnParseDatatype = (datatype: string): Datatype => {
     case "char":
       return Datatype.CHAR;
     default:
-      throw new Error(`Datatype ${datatype} not supported`);
+      throw new SemanticErrorEx(
+        `Datatype ${datatype} not supported`,
+        undefined,
+        undefined
+      );
   }
 };
 

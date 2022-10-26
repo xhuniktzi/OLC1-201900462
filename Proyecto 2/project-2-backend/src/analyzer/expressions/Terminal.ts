@@ -7,7 +7,9 @@ import { SymbolTable } from "../sym_table/SymbolTable";
 export class Terminal implements IExpression {
   constructor(
     private type: Terminals,
-    private value: string | number | boolean
+    private value: string | number | boolean,
+    public line: number,
+    public column: number
   ) {}
 
   evaluate(sym_table: SymbolTable): IReturnEval {

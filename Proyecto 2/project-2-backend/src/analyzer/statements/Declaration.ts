@@ -2,13 +2,16 @@ import { IExpression } from "../abstract/IExpression";
 import { IReturnEval } from "../abstract/IReturnEval";
 import { IStatement } from "../abstract/IStatement";
 import { Datatype } from "../enums/EnumDatatype";
+import { SemanticErrorEx } from "../exceptions/SemanticErrorEx";
 import { SymbolTable } from "../sym_table/SymbolTable";
 
 export class Declaration implements IStatement {
   constructor(
     private type: Datatype,
     private ids: string[],
-    private value: IExpression | undefined = undefined
+    private value: IExpression | undefined = undefined,
+    public line: number,
+    public column: number
   ) {}
 
   execute(sym_table: SymbolTable): void {
@@ -37,13 +40,13 @@ export class Declaration implements IStatement {
         sym_table.addSymbol({
           id,
           datatype: this.type,
-          line: 0,
-          column: 0,
+          line: this.line,
+          column: this.column,
           value: eval_value!.value,
         });
       });
     } else {
-      throw new Error("Type mismatch");
+      throw new SemanticErrorEx("Type mismatch", this.line, this.column);
     }
   }
 }

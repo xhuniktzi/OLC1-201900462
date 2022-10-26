@@ -1,6 +1,7 @@
 import { ISemanticResult } from "../abstract/ISemanticResult";
 import { Datatype } from "../enums/EnumDatatype";
 import { RelationalOp } from "../enums/EnumRelational";
+import { SemanticErrorEx } from "../exceptions/SemanticErrorEx";
 import fnCharToInt from "./fnCharToInt";
 
 const fnSemanticRelational = (
@@ -51,11 +52,17 @@ const fnSemanticRelational = (
   const type: Datatype = semanticTable[left_type][right_type]!;
 
   if (type === null) {
-    throw new Error(
-      "Semantic Error: Cannot compare two booleans or two chars."
+    throw new SemanticErrorEx(
+      "Cannot compare two booleans or two chars.",
+      undefined,
+      undefined
     );
   } else if (type === Datatype.STRING) {
-    throw new Error("Semantic Error: Cannot compare two strings.");
+    throw new SemanticErrorEx(
+      "Cannot compare two strings.",
+      undefined,
+      undefined
+    );
   } else {
     switch (operator) {
       case RelationalOp.GREATER_THAN:
@@ -247,7 +254,11 @@ const fnSemanticRelational = (
         const value4 = semanticResult4[left_type][right_type]!;
         return { value: value4, type };
       default:
-        throw new Error("Semantic Error: Invalid relational operator.");
+        throw new SemanticErrorEx(
+          "Invalid relational operator.",
+          undefined,
+          undefined
+        );
     }
   }
 };

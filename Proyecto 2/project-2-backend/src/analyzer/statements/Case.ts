@@ -4,8 +4,10 @@ import { SymbolTable } from "../sym_table/SymbolTable";
 
 export class Case implements IStatement {
   public constructor(
-    public readonly condition: IExpression,
-    public readonly body: IStatement[]
+    public condition: IExpression,
+    public body: IStatement[],
+    public line: number,
+    public column: number
   ) {}
 
   public execute(sym_table: SymbolTable): void {

@@ -5,7 +5,12 @@ import fnSemanticCast from "../functions/fnSemanticCast";
 import { SymbolTable } from "../sym_table/SymbolTable";
 
 export class Cast implements IExpression {
-  constructor(private type: Datatype, private value: IExpression) {}
+  constructor(
+    private type: Datatype,
+    private value: IExpression,
+    public line: number,
+    public column: number
+  ) {}
   evaluate(sym_table: SymbolTable): IReturnEval {
     const expr = this.value.evaluate(sym_table);
 

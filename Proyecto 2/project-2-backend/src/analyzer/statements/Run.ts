@@ -1,32 +1,46 @@
 import { IExpression } from "../abstract/IExpression";
 import { IStatement } from "../abstract/IStatement";
+import { SemanticErrorEx } from "../exceptions/SemanticErrorEx";
 import { SymbolTable } from "../sym_table/SymbolTable";
 
 export class Run implements IStatement {
-  constructor(private id: string, private args: IExpression[] | undefined) {}
+  constructor(
+    private id: string,
+    private args: IExpression[] | undefined,
+    public line: number,
+    public column: number
+  ) {}
 
   execute(sym_table: SymbolTable): void {
     const func = sym_table.getFunction(this.id);
     if (this.args !== undefined) {
       if (func === undefined) {
-        throw new Error(`Function ${this.id} not found`);
+        throw new SemanticErrorEx(
+          `Function ${this.id} not found`,
+          this.line,
+          this.column
+        );
       } else if (func.params!.length !== this.args!.length) {
-        throw new Error(
-          `Function ${this.id} expects ${func.params!.length} arguments`
+        throw new SemanticErrorEx(
+          `Function ${this.id} expects ${func.params!.length} arguments`,
+          this.line,
+          this.column
         );
       }
       this.args.forEach((arg, i) => {
         const param = arg.evaluate(sym_table);
         if (param!.type !== func!.params![i].datatype) {
-          throw new Error(
-            "Semantic error: The function " +
+          throw new SemanticErrorEx(
+            "The function " +
               this.id +
               " expects " +
               func!.params![i].datatype +
               " but the argument " +
               i +
               " is " +
-              param!.type
+              param!.type,
+            this.line,
+            this.column
           );
         }
 

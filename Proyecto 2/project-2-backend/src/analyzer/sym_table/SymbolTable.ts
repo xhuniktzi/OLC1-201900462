@@ -2,8 +2,10 @@ import { ICallable } from "../abstract/ICallable";
 import { ISymArray } from "../abstract/ISymArray";
 import { ISymMatrix } from "../abstract/ISymMatrix";
 import { Datatype } from "../enums/EnumDatatype";
+import { SemanticErrorEx } from "../exceptions/SemanticErrorEx";
 import fnParseArrayTypes from "../functions/fnParseArrayTypes";
 import fnParseMatrixTypes from "../functions/fnParseMatrixTypes";
+import { Global } from "./Global";
 
 import { ISymbol } from "./ISymbol";
 
@@ -19,6 +21,7 @@ export class SymbolTable {
     private env: string
   ) {
     console.log("[DEBUG]\t", `Creating Symbol Table: ${env}`);
+    Global.tableList.push(this);
   }
 
   private debugTable(): void {
@@ -57,7 +60,11 @@ export class SymbolTable {
     console.log("[DEBUG]\t", `Adding symbol ${symbol.id} = ${symbol.value}`);
     this.debugTable();
     if (this.symbols.find((s) => s.id === symbol.id) !== undefined) {
-      throw new Error(`Symbol ${symbol.id} already exists`);
+      throw new SemanticErrorEx(
+        `Symbol ${symbol.id} already exists`,
+        symbol.line,
+        symbol.column
+      );
     } else {
       this.symbols.push(symbol);
     }
@@ -71,7 +78,7 @@ export class SymbolTable {
     if (result === undefined && this.parent !== undefined) {
       return this.parent.getSymbol(id);
     } else if (result === undefined) {
-      throw new Error(`Symbol ${id} not found`);
+      throw new SemanticErrorEx(`Symbol ${id} not found`, undefined, undefined);
     } else {
       return result;
     }
@@ -85,7 +92,7 @@ export class SymbolTable {
     if (symbol) {
       symbol.value = value;
     } else {
-      throw new Error(`Symbol ${id} not found`);
+      throw new SemanticErrorEx(`Symbol ${id} not found`, undefined, undefined);
     }
     console.log("[DEBUG]\t", `Symbol ${id} updated`);
     this.debugTable();
@@ -131,13 +138,19 @@ export class SymbolTable {
     const array = this.getArray(id);
 
     if (pos < 0 || pos >= array.value.length) {
-      throw new Error(`Index out of bounds`);
+      throw new SemanticErrorEx(`Index out of bounds`, undefined, undefined);
     } else {
       return array.value[pos];
     }
   }
 
-  public createArray(id: string, size: number, datatype: Datatype): void {
+  public createArray(
+    id: string,
+    size: number,
+    datatype: Datatype,
+    line: number,
+    column: number
+  ): void {
     console.log("[DEBUG]\t", `Creating array ${id}`);
     this.debugArrays();
 
@@ -162,8 +175,8 @@ export class SymbolTable {
         id,
         value: val,
         datatype,
-        column: 0,
-        line: 0,
+        column,
+        line,
       });
     }
     this.arrays.push({
@@ -205,7 +218,11 @@ export class SymbolTable {
   public getMatrixSymbol(id: string, row: number, col: number): ISymbol {
     const matrix = this.getMatrix(id);
     if (row >= matrix.rows || col >= matrix.columns) {
-      throw new Error(`Matrix ${id} out of bounds`);
+      throw new SemanticErrorEx(
+        `Matrix ${id} out of bounds`,
+        undefined,
+        undefined
+      );
     } else {
       return matrix.value[row][col];
     }
@@ -215,7 +232,9 @@ export class SymbolTable {
     id: string,
     rows: number,
     cols: number,
-    datatype: Datatype
+    datatype: Datatype,
+    line: number,
+    column: number
   ): void {
     console.log("[DEBUG]\t", `Creating matrix ${id}`);
     this.debugMatrixes();
@@ -243,8 +262,8 @@ export class SymbolTable {
           id,
           value: val,
           datatype,
-          column: 0,
-          line: 0,
+          column,
+          line,
         });
       }
       matrix.push(row);

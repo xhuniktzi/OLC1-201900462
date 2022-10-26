@@ -8,7 +8,9 @@ export class Logical implements IExpression {
   constructor(
     private left: IExpression,
     private operator: LogicalOp,
-    private right: IExpression
+    private right: IExpression,
+    public line: number,
+    public column: number
   ) {}
   evaluate(sym_table: SymbolTable): IReturnEval {
     const left = this.left.evaluate(sym_table);

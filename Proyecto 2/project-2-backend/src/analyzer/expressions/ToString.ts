@@ -5,7 +5,11 @@ import { Datatype } from "../enums/EnumDatatype";
 import { SymbolTable } from "../sym_table/SymbolTable";
 
 export class ToString implements IExpression {
-  constructor(private expr: IExpression) {}
+  constructor(
+    private expr: IExpression,
+    public line: number,
+    public column: number
+  ) {}
 
   evaluate(sym_table: SymbolTable): IReturnEval | undefined {
     const eval_value = this.expr.evaluate(sym_table);

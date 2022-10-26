@@ -1,5 +1,6 @@
 import { ISemanticResult } from "../abstract/ISemanticResult";
 import { Datatype } from "../enums/EnumDatatype";
+import { SemanticErrorEx } from "../exceptions/SemanticErrorEx";
 import fnBooleanToInt from "./fnBooleanToInt";
 import fnCharToInt from "./fnCharToInt";
 
@@ -49,7 +50,11 @@ const fnSemanticAdd = (
 
   const type: Datatype = semanticTable[left_type][right_type]!;
   if (type === null) {
-    throw new Error("Semantic Error: Cannot add two booleans or two chars.");
+    throw new SemanticErrorEx(
+      "Cannot add two booleans or two chars.",
+      undefined,
+      undefined
+    );
   }
 
   const semanticResult = {

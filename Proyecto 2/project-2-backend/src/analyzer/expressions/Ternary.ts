@@ -7,7 +7,9 @@ export class Ternary implements IExpression {
   constructor(
     private condition: IExpression,
     private trueExpression: IExpression,
-    private falseExpression: IExpression
+    private falseExpression: IExpression,
+    public line: number,
+    public column: number
   ) {}
 
   evaluate(sym_table: SymbolTable): IReturnEval {

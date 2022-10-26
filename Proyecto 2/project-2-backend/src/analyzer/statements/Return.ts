@@ -4,7 +4,11 @@ import { ReturnEx } from "../exceptions/ReturnEx";
 import { SymbolTable } from "../sym_table/SymbolTable";
 
 export class Return implements IStatement {
-  constructor(private expression: IExpression) {}
+  constructor(
+    private expression: IExpression,
+    public line: number,
+    public column: number
+  ) {}
 
   execute(sym_table: SymbolTable): void {
     const eval_value = this.expression.evaluate(sym_table);

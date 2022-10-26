@@ -13,7 +13,9 @@ export class Arithmetic implements IExpression {
   constructor(
     private left: IExpression,
     private operator: ArithmeticOp,
-    private right: IExpression
+    private right: IExpression,
+    public line: number,
+    public column: number
   ) {}
 
   evaluate(sym_table: SymbolTable): IReturnEval {

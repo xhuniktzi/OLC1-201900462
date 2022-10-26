@@ -9,7 +9,9 @@ export class Method implements ICallable {
   constructor(
     public id: string,
     public params: IParam[] | undefined,
-    public body: IStatement[]
+    public body: IStatement[],
+    public line: number,
+    public column: number
   ) {}
 
   execute(sym_table: SymbolTable): void {

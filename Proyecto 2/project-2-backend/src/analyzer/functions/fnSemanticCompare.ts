@@ -1,6 +1,7 @@
 import { ISemanticResult } from "../abstract/ISemanticResult";
 import { Datatype } from "../enums/EnumDatatype";
 import { RelationalOp } from "../enums/EnumRelational";
+import { SemanticErrorEx } from "../exceptions/SemanticErrorEx";
 import fnCharToInt from "./fnCharToInt";
 
 const fnSemanticCompare = (
@@ -51,7 +52,11 @@ const fnSemanticCompare = (
   const type: Datatype = semanticTable[left_type][right_type]!;
 
   if (type === null) {
-    throw new Error("Semantic Error: Cannot compare different types.");
+    throw new SemanticErrorEx(
+      "Cannot compare different types.",
+      undefined,
+      undefined
+    );
   }
 
   switch (operator) {
@@ -143,7 +148,7 @@ const fnSemanticCompare = (
       return { value: value2, type };
 
     default:
-      throw new Error("Semantic Error: Invalid operator.");
+      throw new Error("Invalid operator.");
   }
 };
 

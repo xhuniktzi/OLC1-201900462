@@ -3,7 +3,13 @@ import { IReturnEval } from "../abstract/IReturnEval";
 import { SymbolTable } from "../sym_table/SymbolTable";
 
 export class AccessArray implements IExpression {
-  constructor(private id: string, private index: IExpression) {}
+  constructor(
+    private id: string,
+    private index: IExpression,
+    public line: number,
+    public column: number
+  ) {}
+
   evaluate(sym_table: SymbolTable): IReturnEval | undefined {
     const eval_value = this.index.evaluate(sym_table);
     if (eval_value!.value < 0) {

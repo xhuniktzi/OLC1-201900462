@@ -5,7 +5,12 @@ import { ContinueLoopEx } from "../exceptions/ContinueLoopEx";
 import { SymbolTable } from "../sym_table/SymbolTable";
 
 export class DoUntil {
-  constructor(private condition: IExpression, private body: IStatement[]) {}
+  constructor(
+    private condition: IExpression,
+    private body: IStatement[],
+    public line: number,
+    public column: number
+  ) {}
 
   execute(sym_table: SymbolTable): void {
     do {

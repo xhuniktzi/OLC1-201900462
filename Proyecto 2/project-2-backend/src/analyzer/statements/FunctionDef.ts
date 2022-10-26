@@ -9,7 +9,9 @@ export class FunctionDef implements ICallable {
     public id: string,
     public params: IParam[] | undefined,
     public datatype: Datatype,
-    public body: IStatement[]
+    public body: IStatement[],
+    public line: number,
+    public column: number
   ) {}
 
   execute(sym_table: SymbolTable): void {

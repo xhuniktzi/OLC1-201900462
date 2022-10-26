@@ -1,6 +1,7 @@
 import { IExpression } from "../abstract/IExpression";
 import { IStatement } from "../abstract/IStatement";
 import { Datatype } from "../enums/EnumDatatype";
+import { SemanticErrorEx } from "../exceptions/SemanticErrorEx";
 import { SymbolTable } from "../sym_table/SymbolTable";
 import { Elif } from "./Elif";
 
@@ -9,13 +10,19 @@ export class If implements IStatement {
     private condition: IExpression,
     private if_body: IStatement[],
     private elifs: Elif[] | undefined = undefined,
-    private else_body: IStatement[] | undefined = undefined
+    private else_body: IStatement[] | undefined = undefined,
+    public line: number,
+    public column: number
   ) {}
 
   execute(sym_table: SymbolTable): void {
     const eval_value = this.condition.evaluate(sym_table);
     if (eval_value!.type !== Datatype.BOOLEAN) {
-      throw new Error("Condition must be boolean");
+      throw new SemanticErrorEx(
+        "Condition must be boolean",
+        this.line,
+        this.column
+      );
     }
 
     if (Boolean(eval_value!.value)) {
@@ -29,7 +36,11 @@ export class If implements IStatement {
       for (const elif of this.elifs) {
         const conditional = elif.condition.evaluate(sym_table);
         if (conditional!.type !== Datatype.BOOLEAN) {
-          throw new Error("Condition must be boolean");
+          throw new SemanticErrorEx(
+            "Condition must be boolean",
+            this.line,
+            this.column
+          );
         }
 
         if (Boolean(conditional!.value)) {

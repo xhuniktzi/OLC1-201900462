@@ -13,7 +13,9 @@ export class For implements IStatement {
     private init: Declaration | Assign,
     private condition: IExpression,
     private increment: Increment | Decrement | Assign,
-    private body: IStatement[]
+    private body: IStatement[],
+    public line: number,
+    public column: number
   ) {}
 
   execute(sym_table: SymbolTable): void {

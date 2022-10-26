@@ -1,5 +1,6 @@
 import { ISemanticResult } from "../abstract/ISemanticResult";
 import { Datatype } from "../enums/EnumDatatype";
+import { SemanticErrorEx } from "../exceptions/SemanticErrorEx";
 import fnBooleanToInt from "./fnBooleanToInt";
 
 const fnSemanticPower = (
@@ -48,8 +49,10 @@ const fnSemanticPower = (
 
   const type: Datatype = semanticTable[left_type][right_type]!;
   if (type === null) {
-    throw new Error(
-      `Semantic Error: Cannot operate ${left_type} with ${right_type}.`
+    throw new SemanticErrorEx(
+      `Cannot operate ${left_type} with ${right_type}.`,
+      undefined,
+      undefined
     );
   }
 

@@ -5,7 +5,12 @@ import { ContinueLoopEx } from "../exceptions/ContinueLoopEx";
 import { SymbolTable } from "../sym_table/SymbolTable";
 
 export class While implements IStatement {
-  constructor(private condition: IExpression, private body: IStatement[]) {}
+  constructor(
+    private condition: IExpression,
+    private body: IStatement[],
+    public line: number,
+    public column: number
+  ) {}
 
   execute(sym_table: SymbolTable): void {
     const eval_value = this.condition.evaluate(sym_table);

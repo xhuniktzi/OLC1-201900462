@@ -1,3 +1,5 @@
+import { SemanticErrorEx } from "../exceptions/SemanticErrorEx";
+
 const fnParseBoolean = (value: string): boolean => {
   value = value.toLowerCase();
   switch (value) {
@@ -6,7 +8,7 @@ const fnParseBoolean = (value: string): boolean => {
     case "false":
       return false;
     default:
-      throw new Error("Invalid boolean value.");
+      throw new SemanticErrorEx("Invalid boolean value.", undefined, undefined);
   }
 };
 

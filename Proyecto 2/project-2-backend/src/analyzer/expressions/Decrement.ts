@@ -1,10 +1,18 @@
 import { IExpression } from "../abstract/IExpression";
 import { IReturnEval } from "../abstract/IReturnEval";
+import { IStatement } from "../abstract/IStatement";
 import { Datatype } from "../enums/EnumDatatype";
 import { SymbolTable } from "../sym_table/SymbolTable";
 
-export class Decrement implements IExpression {
-  constructor(public identifier: string) {}
+export class Decrement implements IExpression, IStatement {
+  constructor(
+    public identifier: string,
+    public line: number,
+    public column: number
+  ) {}
+  execute(sym_table: SymbolTable): void {
+    throw new Error("Method not implemented.");
+  }
 
   evaluate(sym_table: SymbolTable): IReturnEval {
     const symbol = sym_table.getSymbol(this.identifier);
