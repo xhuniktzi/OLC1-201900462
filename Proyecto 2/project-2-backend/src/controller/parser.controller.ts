@@ -18,7 +18,8 @@ const parser = (req: Request, res: Response) => {
     });
 
     ast.forEach((statement) => {
-      statement.execute(table);
+      if (!(statement instanceof Method) && !(statement instanceof FunctionDef))
+        statement.execute(table);
     });
 
     const cout = table.printConsole();

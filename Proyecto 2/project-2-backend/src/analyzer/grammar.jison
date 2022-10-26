@@ -25,6 +25,8 @@
     import { Switch } from "./statements/Switch";
     import { DeclareArrayOne } from "./statements/DeclareArrayOne";
     import { DeclareArrayTwo } from "./statements/DeclareArrayTwo";
+    import { Run } from "./statements/Run";
+
 
     import fnParseDatatype from "./functions/fnParseDatatype";
     import fnParseBoolean from "./functions/fnParseBoolean";
@@ -47,6 +49,12 @@
     import { Call } from "./expressions/Call";
     import { AccessArray } from "./expressions/AccessArray";
     import { AccessMatrix } from "./expressions/AccessMatrix";
+    import { ToLower } from "./expressions/ToLower";
+    import { ToUpper } from "./expressions/ToUpper";
+    import { Round } from "./expressions/Round";
+    import { TypeOf } from "./expressions/TypeOf";
+    import { ToString } from "./expressions/ToString";
+
 
 
     let errors: IError[] = [];
@@ -153,6 +161,16 @@ True|False return 'LOGICAL';
 'void' return 'VOID';
 'print' return 'PRINT';
 'println' return 'PRINTLN';
+'tolower' return 'TOLOWER';
+'toupper' return 'TOUPPER';
+'round' return 'ROUND';
+'length' return 'LENGTH';
+'typeof' return 'TYPEOF';
+'tosting' return 'TOSTRING';
+'tochararray' return 'TOCHARARRAY';
+'push' return 'PUSH';
+'pop' return 'POP';
+'run' return 'RUN';
 
 // identifiers
 [0-9a-zA-Z_]+ return 'IDENTIFIER';
@@ -184,7 +202,7 @@ main_statements: main_statements main_statement { $1.push($2); $$ = $1; }
     | main_statement { $$ = new Array<IStatement>(); $$[0] = $1; };
 
 // main statement
-main_statement: standard_statement { $$ = $1; }
+main_statement: run_st END_SENTENCE { $$ = $1; }
     | function { $$ = $1; }
     | method { $$ = $1; };
 
@@ -205,7 +223,6 @@ standard_statement: declare_array_1 END_SENTENCE { $$ = $1; }
     | do_until { $$ = $1; }
     | for { $$ = $1; }
     | switch { $$ = $1; }
-
     | BREAK END_SENTENCE { $$ = new BreakLoop(); }
     | CONTINUE END_SENTENCE { $$ = new ContinueLoop(); }
     | RETURN expr END_SENTENCE { $$ = new Return($2); };
@@ -222,7 +239,12 @@ expr: arithmetic { $$ = $1; }
     | decrement { $$ = $1; }
     | call { $$ = $1; }
     | access_array { $$ = $1; }
-    | access_matrix { $$ = $1; };
+    | access_matrix { $$ = $1; }
+    | to_lower_st { $$ = $1; }
+    | to_upper_st { $$ = $1; }
+    | round_st { $$ = $1; }
+    | typeof_st { $$ = $1; }
+    | tostring_st { $$ = $1; };
 
 // relational expression
 relational: expr LESS expr { $$ = new Relational($1, RelationalOp.LESS_THAN, $3); }
@@ -355,12 +377,6 @@ list_list_expr: list_list_expr COMMA OPEN_BRACE list_expr CLOSE_BRACE { $1.push(
 declare_array_2: TYPE OPEN_BRACKET CLOSE_BRACKET OPEN_BRACKET CLOSE_BRACKET IDENTIFIER ASSIGNMENT NEW TYPE OPEN_BRACKET expr CLOSE_BRACKET OPEN_BRACKET expr CLOSE_BRACKET { $$ = new DeclareArrayTwo(fnParseDatatype($1), $6, undefined, $11, $14); }
     | TYPE OPEN_BRACKET CLOSE_BRACKET OPEN_BRACKET CLOSE_BRACKET IDENTIFIER ASSIGNMENT OPEN_BRACE list_list_expr CLOSE_BRACE { $$ = new DeclareArrayTwo(fnParseDatatype($1), $6, $9, undefined, undefined); };
 
-// print
-print_st: PRINT OPEN_PARENTHESIS expr CLOSE_PARENTHESIS { $$ = new Print($3); };
-
-// println
-println_st: PRINTLN OPEN_PARENTHESIS expr CLOSE_PARENTHESIS { $$ = new Println($3); };
-
 
 // access array
 access_array: IDENTIFIER OPEN_BRACKET expr CLOSE_BRACKET { $$ = new AccessArray($1, $3); };
@@ -368,30 +384,40 @@ access_array: IDENTIFIER OPEN_BRACKET expr CLOSE_BRACKET { $$ = new AccessArray(
 // access matrix
 access_matrix: IDENTIFIER OPEN_BRACKET expr CLOSE_BRACKET OPEN_BRACKET expr CLOSE_BRACKET { $$ = new AccessMatrix($1, $3, $6); };
 
+// print
+print_st: PRINT OPEN_PARENTHESIS expr CLOSE_PARENTHESIS { $$ = new Print($3); };
 
-// // // access array 2
-// // access_array_2: IDENTIFIER OPEN_BRACKET expr CLOSE_BRACKET OPEN_BRACKET expr CLOSE_BRACKET ;
+// println
+println_st: PRINTLN OPEN_PARENTHESIS expr CLOSE_PARENTHESIS { $$ = new Println($3); };
 
-// // // declaration array one dimension
-// // declaration_array_1: TYPE OPEN_BRACKET CLOSE_BRACKET IDENTIFIER ASSIGNMENT NEW TYPE OPEN_BRACKET expr CLOSE_BRACKET ;
+// to lower case
+to_lower_st: TOLOWER OPEN_PARENTHESIS expr CLOSE_PARENTHESIS { $$ = new ToLower($3); };
 
-// // // declaration array two dimension
-// // declaration_array_2: TYPE OPEN_BRACKET CLOSE_BRACKET OPEN_BRACKET CLOSE_BRACKET IDENTIFIER ASSIGNMENT NEW TYPE OPEN_BRACKET expr CLOSE_BRACKET OPEN_BRACKET expr CLOSE_BRACKET ;
+// to upper case
+to_upper_st: TOUPPER OPEN_PARENTHESIS expr CLOSE_PARENTHESIS { $$ = new ToUpper($3); };
 
+// round
+round_st: ROUND OPEN_PARENTHESIS expr CLOSE_PARENTHESIS { $$ = new Round($3); };
 
-// // // assign array two dimension
-// // assign_array_2: TYPE OPEN_BRACKET CLOSE_BRACKET OPEN_BRACKET CLOSE_BRACKET IDENTIFIER ASSIGNMENT OPEN_BRACE list_group CLOSE_BRACE ;
+// typeof
+typeof_st: TYPEOF OPEN_PARENTHESIS expr CLOSE_PARENTHESIS { $$ = new TypeOf($3); };
 
-// // // group of expressions
-// // group_expr: OPEN_BRACE list_expr CLOSE_BRACE ;
-
-// // // list of group of expressions
-// // list_group: list_group COMMA group_expr
-// //     | group_expr ;
-
-// // // list of expressions
-// // list_expr: list_expr COMMA expr
-// //     | expr ;
+// tostring
+tostring_st: TOSTRING OPEN_PARENTHESIS expr CLOSE_PARENTHESIS { $$ = new ToString($3); };
 
 
+// run
+run_st: RUN IDENTIFIER OPEN_PARENTHESIS list_expr CLOSE_PARENTHESIS { $$ = new Run($2, $4); }
+    | RUN IDENTIFIER OPEN_PARENTHESIS CLOSE_PARENTHESIS { $$ = new Run($2, undefined); };
 
+// // tochararray
+// tochararray_st: TOCHARARRAY OPEN_PARENTHESIS expr CLOSE_PARENTHESIS { $$ = new ToCharArray($3); };
+
+// push
+// push_st: PUSH OPEN_PARENTHESIS expr COMMA expr CLOSE_PARENTHESIS { $$ = new Push($3, $5); };
+
+// // pop
+// pop_st: POP OPEN_PARENTHESIS expr CLOSE_PARENTHESIS { $$ = new Pop($3); };
+
+// // length
+// length_st: LENGTH OPEN_PARENTHESIS expr CLOSE_PARENTHESIS { $$ = new Length($3); };
