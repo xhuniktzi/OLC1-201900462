@@ -1,6 +1,5 @@
 %{
-    import { IError } from './exceptions/IError';
-    import { EnumError } from './exceptions/EnumError';
+    import { LexicalErrorEx } from './exceptions/LexicalErrorEx';
 
     import { IStatement } from "./abstract/IStatement";
     import { IExpression } from "./abstract/IExpression";
@@ -57,17 +56,7 @@
 
 
 
-    let errors: IError[] = [];
-
-    const addError = (error: IError) => {
-        if (error.type === EnumError.LEXICAL_ERROR) {
-            error.message = `Caracter: " ${error.message} ", no reconocido como parte del lenguaje`;
-        } else if (error.type === EnumError.SYNTAX_ERROR) {
-            error.message = `No se esperaba: " ${error.message} ", como parte del lenguaje`;
-        }
-        console.error(error);
-        errors.push(error);
-    };
+    
 %}
 
 %lex
@@ -176,8 +165,7 @@ True|False return 'LOGICAL';
 [0-9a-zA-Z_]+ return 'IDENTIFIER';
 
 <<EOF>> return 'EOF'; // end of file
-. { addError({type: EnumError.LEXICAL_ERROR, message: yytext, line: yylloc.first_line,
-column: yylloc.first_column}); } // invalid token
+. { throw new LexicalErrorEx(`Token: ${yytext}, no reconocido como parte del lenguaje`, yylloc.first_line, yylloc.first_column); }
 
 /lex
 
@@ -228,9 +216,8 @@ standard_statement: declare_array_1 END_SENTENCE { $$ = $1; }
     | decrement END_SENTENCE { $$ = $1; }
     | BREAK END_SENTENCE { $$ = new BreakLoop(@1.first_line, @1.first_column); }
     | CONTINUE END_SENTENCE { $$ = new ContinueLoop(@1.first_line, @1.first_column); }
-    | RETURN expr END_SENTENCE { $$ = new Return($2, @1.first_line, @1.first_column); }
-    | error END_SENTENCE { addError({type: EnumError.SYNTAX_ERROR, message: yytext, line: @1.first_line,
-column: @1.first_column}); };
+    | RETURN expr END_SENTENCE { $$ = new Return($2, @1.first_line, @1.first_column); };
+
 
 // expression
 expr: arithmetic { $$ = $1; }
@@ -249,9 +236,8 @@ expr: arithmetic { $$ = $1; }
     | to_upper_st { $$ = $1; }
     | round_st { $$ = $1; }
     | typeof_st { $$ = $1; }
-    | tostring_st { $$ = $1; }
-    | error END_SENTENCE { addError({type: EnumError.SYNTAX_ERROR, message: yytext, line: @1.first_line,
-    column: @1.first_column}); };
+    | tostring_st { $$ = $1; };
+
 
 // relational expression
 relational: expr LESS expr { $$ = new Relational($1, RelationalOp.LESS_THAN, $3, @1.first_line, @1.first_column); }

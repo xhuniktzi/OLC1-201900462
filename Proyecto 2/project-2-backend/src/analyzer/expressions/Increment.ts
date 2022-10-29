@@ -2,6 +2,7 @@ import { IExpression } from "../abstract/IExpression";
 import { IReturnEval } from "../abstract/IReturnEval";
 import { IStatement } from "../abstract/IStatement";
 import { Datatype } from "../enums/EnumDatatype";
+import { SemanticErrorEx } from "../exceptions/SemanticErrorEx";
 import { SymbolTable } from "../sym_table/SymbolTable";
 
 export class Increment implements IExpression, IStatement {
@@ -12,7 +13,19 @@ export class Increment implements IExpression, IStatement {
   ) {}
 
   execute(sym_table: SymbolTable): void {
-    throw new Error("Method not implemented.");
+    const symbol = sym_table.getSymbol(this.identifier);
+    if (
+      symbol!.datatype === Datatype.INT ||
+      symbol!.datatype === Datatype.DOUBLE
+    ) {
+      sym_table.updateSymbol(this.identifier, Number(symbol!.value) + 1);
+    } else {
+      throw new SemanticErrorEx(
+        "Cannot increment a non numeric value",
+        this.line,
+        this.column
+      );
+    }
   }
   evaluate(sym_table: SymbolTable): IReturnEval {
     const symbol = sym_table.getSymbol(this.identifier);
@@ -26,7 +39,11 @@ export class Increment implements IExpression, IStatement {
         type: symbol!.datatype,
       };
     } else {
-      throw new Error("Cannot increment a non numeric value");
+      throw new SemanticErrorEx(
+        "Cannot increment a non numeric value",
+        this.line,
+        this.column
+      );
     }
   }
 }

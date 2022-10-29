@@ -1,19 +1,28 @@
-import { errors, TsLanguageParser } from "../analyzer/ts-parser";
+import { TsLanguageLexer, TsLanguageParser } from "../analyzer/ts-parser";
 import { Request, Response } from "express";
 import { IStatement } from "../analyzer/abstract/IStatement";
 import { SymbolTable } from "../analyzer/sym_table/SymbolTable";
 import { Method } from "../analyzer/statements/Method";
 import { FunctionDef } from "../analyzer/statements/FunctionDef";
 import { SemanticErrorEx } from "../analyzer/exceptions/SemanticErrorEx";
+import { LexicalErrorEx } from "../analyzer/exceptions/LexicalErrorEx";
+import { SyntaxErrorEx } from "../analyzer/exceptions/SyntaxErrorEx";
 
 const parser = (req: Request, res: Response) => {
   const parser = new TsLanguageParser();
+  const lexer = new TsLanguageLexer();
+  parser!.parseError = (_err: any, hash: any) => {
+    throw new SyntaxErrorEx(
+      `No se esperaba el token: ${hash.token}, Se esperaba: ${hash.expected}`,
+      hash.loc.first_line,
+      hash.loc.last_column
+    );
+  };
+
   const { text } = req.body;
   try {
     const ast: IStatement[] = parser.parse(text);
-    errors.forEach((error) => {
-      console.log(error);
-    });
+
     const table = new SymbolTable(undefined, "global");
 
     ast.forEach((statement) => {
@@ -27,18 +36,25 @@ const parser = (req: Request, res: Response) => {
     });
 
     const cout = table.printConsole();
-    res.send({
+    res.status(200).json({
       cout,
     });
   } catch (error: unknown) {
     if (error instanceof SemanticErrorEx) {
-      res.send({
+      res.status(200).json({
         cout: error.message,
       });
-      return;
+    } else if (error instanceof LexicalErrorEx) {
+      res.status(200).json({
+        cout: error.message,
+      });
+    } else if (error instanceof SyntaxErrorEx) {
+      res.status(200).json({
+        cout: error.message,
+      });
+    } else {
+      throw error;
     }
-    console.error(error);
-    res.send(500);
   }
 };
 
