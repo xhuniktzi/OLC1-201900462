@@ -1,4 +1,4 @@
-import { TsLanguageLexer, TsLanguageParser } from "../analyzer/ts-parser";
+import { TsLanguageParser } from "../analyzer/ts-parser";
 import { Request, Response } from "express";
 import { IStatement } from "../analyzer/abstract/IStatement";
 import { SymbolTable } from "../analyzer/sym_table/SymbolTable";
@@ -7,10 +7,10 @@ import { FunctionDef } from "../analyzer/statements/FunctionDef";
 import { SemanticErrorEx } from "../analyzer/exceptions/SemanticErrorEx";
 import { LexicalErrorEx } from "../analyzer/exceptions/LexicalErrorEx";
 import { SyntaxErrorEx } from "../analyzer/exceptions/SyntaxErrorEx";
+import { Global } from "../analyzer/sym_table/Global";
 
 const parser = (req: Request, res: Response) => {
   const parser = new TsLanguageParser();
-  const lexer = new TsLanguageLexer();
   parser!.parseError = (_err: any, hash: any) => {
     throw new SyntaxErrorEx(
       `No se esperaba el token: ${hash.token}, Se esperaba: ${hash.expected}`,
@@ -38,6 +38,7 @@ const parser = (req: Request, res: Response) => {
     const cout = table.printConsole();
     res.status(200).json({
       cout,
+      table: Global.getTable(),
     });
   } catch (error: unknown) {
     if (error instanceof SemanticErrorEx) {

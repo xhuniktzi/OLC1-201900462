@@ -10,7 +10,7 @@ import { Global } from "./Global";
 import { ISymbol } from "./ISymbol";
 
 export class SymbolTable {
-  private symbols: ISymbol[] = [];
+  public symbols: ISymbol[] = [];
   private console: string[] = [];
   private functions: ICallable[] = [];
   private arrays: ISymArray[] = [];
@@ -18,46 +18,46 @@ export class SymbolTable {
 
   public constructor(
     private parent: SymbolTable | undefined,
-    private env: string
+    public env: string
   ) {
-    console.log("[DEBUG]\t", `Creating Symbol Table: ${env}`);
+    // console.log("[DEBUG]\t", `Creating Symbol Table: ${env}`);
     Global.tableList.push(this);
   }
 
   private debugTable(): void {
-    console.log("[DEBUG]\t", "Symbol Table:");
-    console.log("[TABLE]\t");
+    // console.log("[DEBUG]\t", "Symbol Table:");
+    // console.log("[TABLE]\t");
     this.symbols.forEach((symbol) => {
-      console.log("[TABLE]\t", symbol.id, symbol.value);
+      // console.log("[TABLE]\t", symbol.id, symbol.value);
     });
   }
 
   private debugFunctions(): void {
-    console.log("[DEBUG]\t", "Functions:");
-    console.log("[FUNCTIONS]\t");
+    // console.log("[DEBUG]\t", "Functions:");
+    // console.log("[FUNCTIONS]\t");
     this.functions.forEach((func) => {
-      console.log("[FUNCTIONS]\t", func.id);
+      // console.log("[FUNCTIONS]\t", func.id);
     });
   }
 
   private debugArrays(): void {
-    console.log("[DEBUG]\t", "Arrays:");
-    console.log("[ARRAYS]\t");
+    // console.log("[DEBUG]\t", "Arrays:");
+    // console.log("[ARRAYS]\t");
     this.arrays.forEach((array) => {
-      console.log("[ARRAYS]\t", array.id);
+      // console.log("[ARRAYS]\t", array.id);
     });
   }
 
   private debugMatrixes(): void {
-    console.log("[DEBUG]\t", "Matrixes:");
-    console.log("[MATRIXES]\t");
+    // console.log("[DEBUG]\t", "Matrixes:");
+    // console.log("[MATRIXES]\t");
     this.matrixes.forEach((matrix) => {
-      console.log("[MATRIXES]\t", matrix.id);
+      // console.log("[MATRIXES]\t", matrix.id);
     });
   }
 
   public addSymbol(symbol: ISymbol): void {
-    console.log("[DEBUG]\t", `Adding symbol ${symbol.id} = ${symbol.value}`);
+    // console.log("[DEBUG]\t", `Adding symbol ${symbol.id} = ${symbol.value}`);
     this.debugTable();
     if (this.symbols.find((s) => s.id === symbol.id) !== undefined) {
       throw new SemanticErrorEx(
@@ -68,7 +68,7 @@ export class SymbolTable {
     } else {
       this.symbols.push(symbol);
     }
-    console.log("[DEBUG]\t", `Symbol ${symbol.id} added`);
+    // console.log("[DEBUG]\t", `Symbol ${symbol.id} added`);
     this.debugTable();
   }
 
@@ -85,7 +85,7 @@ export class SymbolTable {
   }
 
   public updateSymbol(id: string, value: string | boolean | number): void {
-    console.log("[DEBUG]\t", `Updating symbol ${id} = ${value}`);
+    // console.log("[DEBUG]\t", `Updating symbol ${id} = ${value}`);
     this.debugTable();
     const symbol = this.getSymbol(id);
 
@@ -94,7 +94,7 @@ export class SymbolTable {
     } else {
       throw new SemanticErrorEx(`Symbol ${id} not found`, undefined, undefined);
     }
-    console.log("[DEBUG]\t", `Symbol ${id} updated`);
+    // console.log("[DEBUG]\t", `Symbol ${id} updated`);
     this.debugTable();
   }
 
@@ -109,7 +109,7 @@ export class SymbolTable {
   public printConsole(): string {
     let result = "";
     this.console.forEach((text) => {
-      console.log("[CONSOLE]\t", text);
+      // console.log("[CONSOLE]\t", text);
       result += text;
     });
 
@@ -117,7 +117,7 @@ export class SymbolTable {
   }
 
   public addFunction(func: ICallable): void {
-    console.log("[DEBUG]\t", `Adding function ${func.id}`);
+    // console.log("[DEBUG]\t", `Adding function ${func.id}`);
     this.debugFunctions();
     if (this.parent === undefined) {
       this.functions.push(func);
@@ -151,7 +151,7 @@ export class SymbolTable {
     line: number,
     column: number
   ): void {
-    console.log("[DEBUG]\t", `Creating array ${id}`);
+    // console.log("[DEBUG]\t", `Creating array ${id}`);
     this.debugArrays();
 
     let val;
@@ -186,7 +186,7 @@ export class SymbolTable {
       size,
     });
 
-    console.log("[DEBUG]\t", `Array ${id} created`);
+    // console.log("[DEBUG]\t", `Array ${id} created`);
     this.debugArrays();
   }
 
@@ -236,7 +236,7 @@ export class SymbolTable {
     line: number,
     column: number
   ): void {
-    console.log("[DEBUG]\t", `Creating matrix ${id}`);
+    // console.log("[DEBUG]\t", `Creating matrix ${id}`);
     this.debugMatrixes();
     let val;
 
@@ -275,7 +275,7 @@ export class SymbolTable {
       rows,
       columns: cols,
     });
-    console.log("[DEBUG]\t", `Matrix ${id} created`);
+    // console.log("[DEBUG]\t", `Matrix ${id} created`);
     this.debugMatrixes();
   }
 
