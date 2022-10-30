@@ -9,6 +9,14 @@ export class ToLower implements IExpression {
     public line: number,
     public column: number
   ) {}
+  graph(): string {
+    let str: string = `node${this.value}${this.line}${this.column}[label="ToLower"];`;
+    str += `node${this.value}${this.line}${this.column} -> node${this.value}${this.line}${this.column}1;`;
+    str += `node${this.value}${this.line}${
+      this.column
+    }1[label="${this.value.graph()}"];`;
+    return str;
+  }
   evaluate(sym_table: SymbolTable): IReturnEval | undefined {
     const eval_value = this.value.evaluate(sym_table);
     if (eval_value!.type === Datatype.STRING) {

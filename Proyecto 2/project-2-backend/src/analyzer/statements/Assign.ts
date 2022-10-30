@@ -10,6 +10,43 @@ export class Assign implements IStatement {
     public line: number,
     public column: number
   ) {}
+  graph(): string {
+    let str: string = "node" + this.line + this.column + '[label="Assign"];\n';
+    str +=
+      "node" +
+      this.line +
+      this.column +
+      " -> node" +
+      this.line +
+      this.column +
+      "1;\n";
+    str += "node" + this.line + this.column + '1[label="Ids"];\n';
+    this.ids.forEach((id, i) => {
+      str +=
+        "node" +
+        this.line +
+        this.column +
+        "1 -> node" +
+        this.line +
+        this.column +
+        "1" +
+        i +
+        ";\n";
+      str +=
+        "node" + this.line + this.column + "1" + i + '[label="' + id + '"];\n';
+    });
+    str +=
+      "node" +
+      this.line +
+      this.column +
+      " -> node" +
+      this.line +
+      this.column +
+      "2;\n";
+    str += "node" + this.line + this.column + '2[label="Value"];\n';
+    str += this.value!.graph();
+    return str;
+  }
 
   execute(sym_table: SymbolTable): void {
     const eval_value = this.value!.evaluate(sym_table);

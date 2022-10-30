@@ -10,6 +10,7 @@ import { SyntaxErrorEx } from "../analyzer/exceptions/SyntaxErrorEx";
 import { Global } from "../analyzer/sym_table/Global";
 
 const parser = (req: Request, res: Response) => {
+  Global.clearTable(); // Clear the symbol table before parsing the new code
   const parser = new TsLanguageParser();
   parser!.parseError = (_err: any, hash: any) => {
     throw new SyntaxErrorEx(
@@ -36,9 +37,12 @@ const parser = (req: Request, res: Response) => {
     });
 
     const cout = table.printConsole();
+
+    const graph = ast.map((statement) => statement.graph()).join("");
     res.status(200).json({
       cout,
       table: Global.getTable(),
+      graph,
     });
   } catch (error: unknown) {
     if (error instanceof SemanticErrorEx) {

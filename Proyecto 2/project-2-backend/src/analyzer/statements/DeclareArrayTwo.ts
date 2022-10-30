@@ -13,6 +13,45 @@ export class DeclareArrayTwo implements IStatement {
     public line: number,
     public column: number
   ) {}
+  graph(): string {
+    let str: string = `node${this.id}${this.line}${this.column}[label="DeclareArrayTwo"];`;
+    str += `node${this.id}${this.line}${this.column} -> node${this.id}${this.line}${this.column}1;`;
+    str += `node${this.id}${this.line}${this.column + 1}[label="${
+      this.datatype
+    }"];`;
+    str += `node${this.id}${this.line}${this.column} -> node${this.id}${
+      this.line
+    }${this.column + 2};`;
+    str += `node${this.id}${this.line}${this.column + 2}[label="${this.id}"];`;
+    if (this.list_expr !== undefined) {
+      str += `node${this.id}${this.line}${this.column} -> node${this.id}${this.line}${this.column}3;`;
+      str += `node${this.id}${this.line}${this.column}3[label="ListExpr"];`;
+      this.list_expr.forEach((expr, i) => {
+        str += `node${this.id}${this.line}${this.column}3 -> node${this.id}${this.line}${this.column}3${i};`;
+        str += `node${this.id}${this.line}${this.column}3${i}[label="Expr"];`;
+        expr.forEach((expr, j) => {
+          str += `node${this.id}${this.line}${this.column}3${i} -> node${this.id}${this.line}${this.column}3${i}${j};`;
+          str += `node${this.id}${this.line}${this.column}3${i}${j}[label="Expr"];`;
+          str += expr.graph();
+        });
+      });
+    } else if (this.row !== undefined && this.col !== undefined) {
+      str += `node${this.id}${this.line}${this.column} -> node${this.id}${this.line}${this.column}3;`;
+      str += `node${this.id}${this.line}${this.column}3[label="Row"];`;
+      str += `node${this.id}${this.line}${this.column}3 -> node${this.id}${this.line}${this.column}31;`;
+      str += `node${this.id}${this.line}${this.column}31[label="Expr"];`;
+      str += this.row.graph();
+      str += `node${this.id}${this.line}${this.column}3 -> node${this.id}${this.line}${this.column}32;`;
+      str += `node${this.id}${this.line}${this.column}32[label="Col"];`;
+      str += `node${this.id}${this.line}${this.column}32 -> node${this.id}${this.line}${this.column}321;`;
+      str += `node${this.id}${this.line}${this.column}321[label="Expr"];`;
+      str += this.col.graph();
+    } else {
+      str += `node${this.id}${this.line}${this.column} -> node${this.id}${this.line}${this.column}3;`;
+      str += `node${this.id}${this.line}${this.column}3[label="Error"];`;
+    }
+    return str;
+  }
 
   execute(sym_table: SymbolTable): void {
     if (this.list_expr !== undefined) {

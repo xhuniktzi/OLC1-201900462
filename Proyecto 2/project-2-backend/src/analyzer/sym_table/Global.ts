@@ -1,5 +1,4 @@
 import { IRenderSymbol } from "../abstract/IRenderSymbol";
-import { ISymbol } from "./ISymbol";
 import { SymbolTable } from "./SymbolTable";
 
 export class Global {
@@ -22,5 +21,9 @@ export class Global {
     });
 
     return symbols;
+  }
+
+  public static clearTable() {
+    this.tableList.splice(0, this.tableList.length);
   }
 }

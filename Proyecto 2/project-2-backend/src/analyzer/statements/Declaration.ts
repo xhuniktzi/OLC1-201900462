@@ -13,6 +13,18 @@ export class Declaration implements IStatement {
     public line: number,
     public column: number
   ) {}
+  graph(): string {
+    let str: string = `node${this.line}${this.column}[label="Declaration"];`;
+    str += `node${this.line}${this.column} -> node${this.line}${this.column}1;`;
+    str += `node${this.line}${this.column}1[label="${this.type}"];`;
+    str += `node${this.line}${this.column} -> node${this.line}${this.column}2;`;
+    str += `node${this.line}${this.column}2[label="${this.ids.join(",")}"];`;
+    if (this.value) {
+      str += `node${this.line}${this.column} -> node${this.line}${this.column}3;`;
+      str += `node${this.line}${this.column}3[label="${this.value.graph()}"];`;
+    }
+    return str;
+  }
 
   execute(sym_table: SymbolTable): void {
     let eval_value: IReturnEval | undefined;

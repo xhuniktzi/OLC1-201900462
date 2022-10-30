@@ -9,6 +9,14 @@ export class Not implements IExpression {
     public line: number,
     public column: number
   ) {}
+  graph(): string {
+    let str = `node${this.expression}${this.line}${this.column}[label="Not"];`;
+    str += `node${this.expression}${this.line}${this.column} -> node${this.expression}${this.line}${this.column}1;`;
+    str += `node${this.expression}${this.line}${
+      this.column
+    }1[label="${this.expression.graph()}"];`;
+    return str;
+  }
   evaluate(sym_table: SymbolTable): IReturnEval {
     const expr = this.expression.evaluate(sym_table);
 

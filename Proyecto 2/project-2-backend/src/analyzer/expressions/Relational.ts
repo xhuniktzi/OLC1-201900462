@@ -13,6 +13,20 @@ export class Relational implements IExpression {
     public line: number,
     public column: number
   ) {}
+  graph(): string {
+    let str: string = `node${this.left}${this.line}${this.column}[label="Relational"];`;
+    str += `node${this.left}${this.line}${this.column} -> node${this.left}${this.line}${this.column}1;`;
+    str += `node${this.left}${this.line}${
+      this.column
+    }1[label="${this.left.graph()}"];`;
+    str += `node${this.left}${this.line}${this.column} -> node${this.left}${this.line}${this.column}2;`;
+    str += `node${this.left}${this.line}${this.column}2[label="${this.operator}"];`;
+    str += `node${this.left}${this.line}${this.column} -> node${this.left}${this.line}${this.column}3;`;
+    str += `node${this.left}${this.line}${
+      this.column
+    }3[label="${this.right.graph()}"];`;
+    return str;
+  }
 
   evaluate(sym_table: SymbolTable): IReturnEval {
     const left = this.left.evaluate(sym_table);

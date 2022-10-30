@@ -11,6 +11,16 @@ export class Cast implements IExpression {
     public line: number,
     public column: number
   ) {}
+  graph(): string {
+    let str: string = `node${this.value}${this.line}${this.column}[label="Cast"];`;
+    str += `node${this.value}${this.line}${this.column} -> node${this.value}${this.line}${this.column}1;`;
+    str += `node${this.value}${this.line}${
+      this.column
+    }1[label="${this.value.graph()}"];`;
+    str += `node${this.value}${this.line}${this.column} -> node${this.value}${this.line}${this.column}2;`;
+    str += `node${this.value}${this.line}${this.column}2[label="${this.type}"];`;
+    return str;
+  }
   evaluate(sym_table: SymbolTable): IReturnEval {
     const expr = this.value.evaluate(sym_table);
 

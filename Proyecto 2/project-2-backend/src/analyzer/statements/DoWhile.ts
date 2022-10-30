@@ -11,6 +11,23 @@ export class DoWhile implements IStatement {
     public line: number,
     public column: number
   ) {}
+  graph(): string {
+    let str: string = `node${this.line}${this.column}[label="DoWhile"];`;
+    str += `node${this.line}${this.column} -> node${this.line}${this.column}1;`;
+    str += `node${this.line}${this.column}1[label="Condition"];`;
+    str += `node${this.line}${this.column}1 -> node${this.line}${this.column}11;`;
+    str += `node${this.line}${
+      this.column
+    }11[label="${this.condition.graph()}"];`;
+    str += `node${this.line}${this.column} -> node${this.line}${this.column}2;`;
+    str += `node${this.line}${this.column}2[label="Body"];`;
+    this.body.forEach((statement, i) => {
+      str += `node${this.line}${this.column}2 -> node${this.line}${this.column}2${i};`;
+      str += `node${this.line}${this.column}2${i}[label="Statement"];`;
+      str += statement.graph();
+    });
+    return str;
+  }
 
   execute(sym_table: SymbolTable): void {
     do {

@@ -11,6 +11,10 @@ export class Terminal implements IExpression {
     public line: number,
     public column: number
   ) {}
+  graph(): string {
+    let str: string = `node${this.value}${this.line}${this.column}[label="${this.value}"];`;
+    return str;
+  }
 
   evaluate(sym_table: SymbolTable): IReturnEval {
     switch (this.type) {

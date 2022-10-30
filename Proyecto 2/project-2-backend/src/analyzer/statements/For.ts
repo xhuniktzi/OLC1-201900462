@@ -17,6 +17,32 @@ export class For implements IStatement {
     public line: number,
     public column: number
   ) {}
+  graph(): string {
+    let str: string = `node${this.line}${this.column}[label="For"];`;
+    str += `node${this.line}${this.column} -> node${this.line}${this.column}1;`;
+    str += `node${this.line}${this.column}1[label="Init"];`;
+    str += this.init.graph();
+    str += `node${this.line}${this.column} -> node${this.line}${this.column}2;`;
+    str += `node${this.line}${this.column}2[label="Condition"];`;
+    str += `node${this.line}${this.column}2 -> node${this.line}${this.column}21;`;
+    str += `node${this.line}${
+      this.column
+    }21[label="${this.condition.graph()}"];`;
+    str += `node${this.line}${this.column} -> node${this.line}${this.column}3;`;
+    str += `node${this.line}${this.column}3[label="Increment"];`;
+    str += `node${this.line}${this.column}3 -> node${this.line}${this.column}31;`;
+    str += `node${this.line}${
+      this.column
+    }31[label="${this.increment.graph()}"];`;
+    str += `node${this.line}${this.column} -> node${this.line}${this.column}4;`;
+    str += `node${this.line}${this.column}4[label="Body"];`;
+    this.body.forEach((statement, i) => {
+      str += `node${this.line}${this.column}4 -> node${this.line}${this.column}4${i};`;
+      str += `node${this.line}${this.column}4${i}[label="Statement"];`;
+      str += statement.graph();
+    });
+    return str;
+  }
 
   execute(sym_table: SymbolTable): void {
     const for_table = new SymbolTable(sym_table, "for");

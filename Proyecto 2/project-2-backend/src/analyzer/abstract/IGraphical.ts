@@ -1,3 +1,3 @@
 export interface IGraphical {
-  // graph(): string;
+  graph(): string;
 }

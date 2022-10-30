@@ -11,6 +11,26 @@ export class Increment implements IExpression, IStatement {
     public line: number,
     public column: number
   ) {}
+  graph(): string {
+    let str: string =
+      "node" + this.line + this.column + '[label="Increment"];\n';
+    str +=
+      "node" +
+      this.line +
+      this.column +
+      " -> node" +
+      this.line +
+      this.column +
+      "1;\n";
+    str +=
+      "node" +
+      this.line +
+      this.column +
+      '1[label="' +
+      this.identifier +
+      '"];\n';
+    return str;
+  }
 
   execute(sym_table: SymbolTable): void {
     const symbol = sym_table.getSymbol(this.identifier);

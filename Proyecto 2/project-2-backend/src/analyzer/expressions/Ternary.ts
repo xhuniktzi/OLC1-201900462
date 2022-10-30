@@ -11,6 +11,22 @@ export class Ternary implements IExpression {
     public line: number,
     public column: number
   ) {}
+  graph(): string {
+    let str: string = `node${this.condition}${this.line}${this.column}[label="Ternary"];`;
+    str += `node${this.condition}${this.line}${this.column} -> node${this.condition}${this.line}${this.column}1;`;
+    str += `node${this.condition}${this.line}${
+      this.column
+    }1[label="${this.condition.graph()}"];`;
+    str += `node${this.condition}${this.line}${this.column} -> node${this.condition}${this.line}${this.column}2;`;
+    str += `node${this.condition}${this.line}${
+      this.column
+    }2[label="${this.trueExpression.graph()}"];`;
+    str += `node${this.condition}${this.line}${this.column} -> node${this.condition}${this.line}${this.column}3;`;
+    str += `node${this.condition}${this.line}${
+      this.column
+    }3[label="${this.falseExpression.graph()}"];`;
+    return str;
+  }
 
   evaluate(sym_table: SymbolTable): IReturnEval {
     const condition = this.condition.evaluate(sym_table);

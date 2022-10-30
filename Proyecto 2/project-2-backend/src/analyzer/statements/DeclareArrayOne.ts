@@ -12,6 +12,30 @@ export class DeclareArrayOne implements IStatement {
     public line: number,
     public column: number
   ) {}
+  graph(): string {
+    let str: string = `node${this.id}${this.line}${this.column}[label="DeclareArrayOne"];`;
+    str += `node${this.id}${this.line}${this.column} -> node${this.id}${this.line}${this.column}1;`;
+    str += `node${this.id}${this.line}${this.column}1[label="${this.datatype}"];`;
+    str += `node${this.id}${this.line}${this.column} -> node${this.id}${this.line}${this.column}2;`;
+    str += `node${this.id}${this.line}${this.column}2[label="${this.id}"];`;
+    if (this.list_expr !== undefined) {
+      str += `node${this.id}${this.line}${this.column} -> node${this.id}${this.line}${this.column}3;`;
+      str += `node${this.id}${this.line}${this.column}3[label="ListExpr"];`;
+      this.list_expr.forEach((expr, i) => {
+        str += `node${this.id}${this.line}${this.column}3 -> node${this.id}${this.line}${this.column}3${i};`;
+        str += `node${this.id}${this.line}${this.column}3${i}[label="Expr"];`;
+        str += expr.graph();
+      });
+    } else if (this.size !== undefined) {
+      str += `node${this.id}${this.line}${this.column} -> node${this.id}${this.line}${this.column}3;`;
+      str += `node${this.id}${this.line}${this.column}3[label="Size"];`;
+      str += this.size.graph();
+    } else {
+      str += `node${this.id}${this.line}${this.column} -> node${this.id}${this.line}${this.column}3;`;
+      str += `node${this.id}${this.line}${this.column}3[label="Size"];`;
+    }
+    return str;
+  }
 
   execute(sym_table: SymbolTable): void {
     if (this.list_expr !== undefined) {

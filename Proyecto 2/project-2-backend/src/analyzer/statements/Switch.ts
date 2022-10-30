@@ -15,6 +15,32 @@ export class Switch implements IStatement {
     public line: number,
     public column: number
   ) {}
+  graph(): string {
+    let str: string = `node${this.line}${this.column}[label="Switch"];`;
+    str += `node${this.line}${this.column} -> node${this.line}${this.column}1;`;
+    str += `node${this.line}${
+      this.column
+    }1[label="${this.condition.graph()}"];`;
+    if (this.cases !== undefined) {
+      str += `node${this.line}${this.column} -> node${this.line}${this.column}2;`;
+      str += `node${this.line}${this.column}2[label="Cases"];`;
+      this.cases.forEach((statement, i) => {
+        str += `node${this.line}${this.column}2 -> node${this.line}${this.column}2${i};`;
+        str += `node${this.line}${this.column}2${i}[label="Statement"];`;
+        str += statement.graph();
+      });
+    }
+    if (this.defaultCase !== undefined) {
+      str += `node${this.line}${this.column} -> node${this.line}${this.column}3;`;
+      str += `node${this.line}${this.column}3[label="Default"];`;
+      this.defaultCase.forEach((statement, i) => {
+        str += `node${this.line}${this.column}3 -> node${this.line}${this.column}3${i};`;
+        str += `node${this.line}${this.column}3${i}[label="Statement"];`;
+        str += statement.graph();
+      });
+    }
+    return str;
+  }
 
   execute(sym_table: SymbolTable): void {
     const switch_table = new SymbolTable(sym_table, "switch");
