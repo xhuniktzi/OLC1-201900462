@@ -24,4 +24,28 @@
       <button type="button" (click)="onClickParser()">Parser</button>
     </div>
   </div>
+  <div class="row">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Tipo</th>
+          <th scope="col">Linea</th>
+          <th scope="col">Columna</th>
+          <th scope="col">Entorno</th>
+          <th scope="col">Valor</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let sym of symbols">
+          <td>{{ sym.id }}</td>
+          <td>{{ sym.datatype }}</td>
+          <td>{{ sym.line }}</td>
+          <td>{{ sym.column }}</td>
+          <td>{{ sym.env }}</td>
+          <td>{{ sym.value }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </form>

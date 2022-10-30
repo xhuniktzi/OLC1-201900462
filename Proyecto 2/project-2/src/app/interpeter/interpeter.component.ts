@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../services/api.service';
+import { IRenderSymbol } from '../services/IRenderSymbol';
 
 @Component({
   selector: 'app-interpeter',
@@ -10,6 +11,8 @@ export class InterpeterComponent implements OnInit {
   input_compiler: string = '';
   output_compiler: string = '';
 
+  symbols: IRenderSymbol[] = [];
+
   constructor(private api: ApiService) {}
 
   ngOnInit(): void {}
@@ -17,6 +20,9 @@ export class InterpeterComponent implements OnInit {
   onClickParser() {
     this.api.getApiData({ text: this.input_compiler }).subscribe((data) => {
       this.output_compiler = data.cout;
+      if (data.table != undefined) {
+        this.symbols = data.table;
+      }
     });
   }
 }
