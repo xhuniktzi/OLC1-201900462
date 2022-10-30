@@ -23,6 +23,9 @@ export class InterpeterComponent implements OnInit {
       if (data.table != undefined) {
         this.symbols = data.table;
       }
+      if (data.graph != undefined) {
+        console.log(data.graph);
+      }
     });
   }
 }
