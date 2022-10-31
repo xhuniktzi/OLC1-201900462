@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { graphviz } from 'd3-graphviz';
 import { ApiService } from '../services/api.service';
 import { IRenderSymbol } from '../services/IRenderSymbol';
-
+import { wasmFolder } from '@hpcc-js/wasm';
 @Component({
   selector: 'app-interpeter',
   templateUrl: './interpeter.component.html',
@@ -24,7 +25,8 @@ export class InterpeterComponent implements OnInit {
         this.symbols = data.table;
       }
       if (data.graph != undefined) {
-        console.log(data.graph);
+        wasmFolder('/assets'); // set the folder for wasm files
+        graphviz('#graph').renderDot(data.graph);
       }
     });
   }
