@@ -13,11 +13,11 @@ export class AccessMatrix implements IExpression {
     public column: number
   ) {}
 
-  uuid: Guid = Guid.create(); // Unique identifier
+  uuid: string = Guid.create().toString().replace(/-/gm, ""); // Unique identifier
   graph(): string {
     let str: string = `node${this.uuid} [label="AccessMatrix"];\n`;
 
-    str += `node${this.uuid} -> node${this.uuid}id [label="${this.id}"];\n`;
+    str += `node${this.uuid} -> node${this.uuid}id;\n node${this.uuid}id[label="${this.id}"];\n`;
 
     str += `node${this.uuid} -> node${this.row.uuid};\n`;
     str += this.row.graph();

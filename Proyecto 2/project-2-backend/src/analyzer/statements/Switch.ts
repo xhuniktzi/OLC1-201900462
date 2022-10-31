@@ -17,7 +17,7 @@ export class Switch implements IStatement {
     public column: number
   ) {}
 
-  uuid: Guid = Guid.create(); // Unique identifier
+  uuid: string = Guid.create().toString().replace(/-/gm, ""); // Unique identifier
   graph(): string {
     let str: string = `node${this.uuid} [label="Switch"];\n`;
     str += `node${this.uuid} -> node${this.condition.uuid};\n`;

@@ -14,10 +14,10 @@ export class Call implements IExpression, IStatement {
     public column: number
   ) {}
 
-  uuid: Guid = Guid.create(); // Unique identifier
+  uuid: string = Guid.create().toString().replace(/-/gm, ""); // Unique identifier
   graph(): string {
     let str: string = `node${this.uuid} [label="Call"];\n`;
-    str += `node${this.uuid} -> ${this.uuid}id [label="${this.id}"];\n`;
+    str += `node${this.uuid} -> node${this.uuid}id;\n node${this.uuid}id[label="${this.id}"];\n`;
     if (this.args !== undefined) {
       this.args.forEach((arg) => {
         str += `node${this.uuid} -> node${arg.uuid};\n`;
@@ -51,8 +51,8 @@ export class Call implements IExpression, IStatement {
           func_table.addSymbol({
             id: param.id,
             value: this.args![i].evaluate(func_table)!.value,
-            column: 0,
-            line: 0,
+            column: this.column,
+            line: this.line,
             datatype: param.datatype,
           });
         });
@@ -115,8 +115,8 @@ export class Call implements IExpression, IStatement {
           func_table.addSymbol({
             id: param.id,
             value: this.args![i].evaluate(func_table)!.value,
-            column: 0,
-            line: 0,
+            column: this.column,
+            line: this.line,
             datatype: param.datatype,
           });
         });

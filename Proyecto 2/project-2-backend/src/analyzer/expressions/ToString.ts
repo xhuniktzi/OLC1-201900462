@@ -13,7 +13,7 @@ export class ToString implements IExpression {
     public column: number
   ) {}
 
-  uuid: Guid = Guid.create(); // Unique identifier
+  uuid: string = Guid.create().toString().replace(/-/gm, ""); // Unique identifier
   graph(): string {
     let str: string = `node${this.uuid} [label="ToString"];\n`;
     str += `node${this.uuid} -> node${this.expr.uuid};\n`;
@@ -29,7 +29,7 @@ export class ToString implements IExpression {
       eval_value!.type === Datatype.CHAR
     ) {
       throw new SemanticErrorEx(
-        "Semantic error: The function toString expects a string or a boolean",
+        "The function toString expects a string or a boolean",
         this.line,
         this.column
       );

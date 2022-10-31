@@ -13,7 +13,7 @@ export class Terminal implements IExpression {
     public column: number
   ) {}
 
-  uuid: Guid = Guid.create(); // Unique identifier
+  uuid: string = Guid.create().toString().replace(/-/gm, ""); // Unique identifier
   graph(): string {
     let str: string = `node${this.uuid} [label="${this.value}"];\n`;
     return str;

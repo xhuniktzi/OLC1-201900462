@@ -15,14 +15,14 @@ export class Relational implements IExpression {
     public column: number
   ) {}
 
-  uuid: Guid = Guid.create(); // Unique identifier
+  uuid: string = Guid.create().toString().replace(/-/gm, ""); // Unique identifier
   graph(): string {
     let str: string = `node${this.uuid} [label="Relational"];\n`;
 
     str += `node${this.uuid} -> node${this.left.uuid};\n`;
     str += this.left.graph();
 
-    str += `node${this.uuid} -> node${this.uuid}op [label="${this.operator}"];\n`;
+    str += `node${this.uuid} -> node${this.uuid}op;\n node${this.uuid}op[label="${this.operator}"];\n`;
 
     str += `node${this.uuid} -> node${this.right.uuid};\n`;
     str += this.right.graph();

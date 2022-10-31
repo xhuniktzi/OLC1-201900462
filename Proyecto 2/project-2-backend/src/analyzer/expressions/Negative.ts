@@ -12,7 +12,7 @@ export class Negative implements IExpression {
     public column: number
   ) {}
 
-  uuid: Guid = Guid.create(); // Unique identifier
+  uuid: string = Guid.create().toString().replace(/-/gm, ""); // Unique identifier
   graph(): string {
     let str: string = `node${this.uuid} [label="Negative"];\n`;
     str += `node${this.uuid} -> node${this.expression.uuid};\n`;

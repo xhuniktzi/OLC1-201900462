@@ -12,11 +12,11 @@ export class Assign implements IStatement {
     public column: number
   ) {}
 
-  uuid: Guid = Guid.create(); // Unique identifier
+  uuid: string = Guid.create().toString().replace(/-/gm, ""); // Unique identifier
   graph(): string {
     let str: string = `node${this.uuid} [label="Assign"];\n`;
     this.ids.forEach((id, i) => {
-      str += `node${this.uuid} -> node${this.uuid}${id}${i} [label="${id}"];\n`;
+      str += `node${this.uuid} -> node${this.uuid}${i};\n node${this.uuid}${i}[label="${id}"];\n`;
     });
     str += `node${this.uuid} -> node${this.value!.uuid};\n`;
     str += this.value!.graph();

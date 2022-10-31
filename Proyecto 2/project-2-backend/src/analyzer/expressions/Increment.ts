@@ -13,10 +13,10 @@ export class Increment implements IExpression, IStatement {
     public column: number
   ) {}
 
-  uuid: Guid = Guid.create(); // Unique identifier
+  uuid: string = Guid.create().toString().replace(/-/gm, ""); // Unique identifier
   graph(): string {
     let str: string = `node${this.uuid} [label="Increment"];\n`;
-    str += `node${this.uuid} -> node${this.uuid}id [label="${this.identifier}"];\n`;
+    str += `node${this.uuid} -> node${this.uuid}id;\n node${this.uuid}id[label="${this.identifier}"];\n`;
     return str;
   }
 

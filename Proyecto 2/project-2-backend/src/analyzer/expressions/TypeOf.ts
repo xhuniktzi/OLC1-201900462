@@ -11,7 +11,7 @@ export class TypeOf implements IExpression {
     public column: number
   ) {}
 
-  uuid: Guid = Guid.create(); // Unique identifier
+  uuid: string = Guid.create().toString().replace(/-/gm, ""); // Unique identifier
   graph(): string {
     let str: string = `node${this.uuid} [label="TypeOf"];\n`;
     str += `node${this.uuid} -> node${this.value.uuid};\n`;

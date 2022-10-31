@@ -14,11 +14,11 @@ export class Cast implements IExpression {
     public column: number
   ) {}
 
-  uuid: Guid = Guid.create(); // Unique identifier
+  uuid: string = Guid.create().toString().replace(/-/gm, ""); // Unique identifier
   graph(): string {
     let str: string = `node${this.uuid} [label="Cast"];\n`;
 
-    str += `node${this.uuid} -> node${this.uuid}type [label="${this.type}"];\n`;
+    str += `node${this.uuid} -> node${this.uuid}type;\n node${this.uuid}type[label="${this.type}"];\n`;
 
     str += `node${this.uuid} -> node${this.value.uuid};\n`;
     str += this.value.graph();

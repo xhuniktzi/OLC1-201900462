@@ -12,11 +12,11 @@ export class AccessArray implements IExpression {
     public column: number
   ) {}
 
-  uuid: Guid = Guid.create(); // Unique identifier
+  uuid: string = Guid.create().toString().replace(/-/gm, ""); // Unique identifier
   graph(): string {
     let str: string = `node${this.uuid} [label="AccessArray"];\n`;
 
-    str += `node${this.uuid} -> node${this.uuid}id [label="${this.id}"];\n`;
+    str += `node${this.uuid} -> node${this.uuid}id;\n node${this.uuid}id[label="${this.id}"];\n`;
 
     str += `node${this.uuid} -> node${this.index.uuid};\n`;
     str += this.index.graph();

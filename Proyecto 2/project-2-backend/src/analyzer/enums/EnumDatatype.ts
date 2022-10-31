@@ -1,7 +1,7 @@
 export enum Datatype {
-  INT,
-  DOUBLE,
-  STRING,
-  BOOLEAN,
-  CHAR,
+  INT = "int",
+  DOUBLE = "double",
+  STRING = "string",
+  BOOLEAN = "boolean",
+  CHAR = "char",
 }

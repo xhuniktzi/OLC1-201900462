@@ -1,6 +1,6 @@
 import { Guid } from "typescript-guid";
 
 export interface IGraphical {
-  uuid: Guid;
+  uuid: string;
   graph(): string;
 }
