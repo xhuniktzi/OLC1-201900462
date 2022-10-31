@@ -1,3 +1,4 @@
+import { Guid } from "typescript-guid";
 import { IExpression } from "../abstract/IExpression";
 import { IStatement } from "../abstract/IStatement";
 import { SemanticErrorEx } from "../exceptions/SemanticErrorEx";
@@ -10,40 +11,14 @@ export class Assign implements IStatement {
     public line: number,
     public column: number
   ) {}
+
+  uuid: Guid = Guid.create(); // Unique identifier
   graph(): string {
-    let str: string = "node" + this.line + this.column + '[label="Assign"];\n';
-    str +=
-      "node" +
-      this.line +
-      this.column +
-      " -> node" +
-      this.line +
-      this.column +
-      "1;\n";
-    str += "node" + this.line + this.column + '1[label="Ids"];\n';
+    let str: string = `node${this.uuid} [label="Assign"];\n`;
     this.ids.forEach((id, i) => {
-      str +=
-        "node" +
-        this.line +
-        this.column +
-        "1 -> node" +
-        this.line +
-        this.column +
-        "1" +
-        i +
-        ";\n";
-      str +=
-        "node" + this.line + this.column + "1" + i + '[label="' + id + '"];\n';
+      str += `node${this.uuid} -> node${this.uuid}${id}${i} [label="${id}"];\n`;
     });
-    str +=
-      "node" +
-      this.line +
-      this.column +
-      " -> node" +
-      this.line +
-      this.column +
-      "2;\n";
-    str += "node" + this.line + this.column + '2[label="Value"];\n';
+    str += `node${this.uuid} -> node${this.value!.uuid};\n`;
     str += this.value!.graph();
     return str;
   }

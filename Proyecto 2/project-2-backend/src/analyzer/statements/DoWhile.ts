@@ -1,3 +1,4 @@
+import { Guid } from "typescript-guid";
 import { IExpression } from "../abstract/IExpression";
 import { IStatement } from "../abstract/IStatement";
 import { BreakLoopEx } from "../exceptions/BreakLoopEx";
@@ -11,19 +12,14 @@ export class DoWhile implements IStatement {
     public line: number,
     public column: number
   ) {}
+
+  uuid: Guid = Guid.create(); // Unique identifier
   graph(): string {
-    let str: string = `node${this.line}${this.column}[label="DoWhile"];`;
-    str += `node${this.line}${this.column} -> node${this.line}${this.column}1;`;
-    str += `node${this.line}${this.column}1[label="Condition"];`;
-    str += `node${this.line}${this.column}1 -> node${this.line}${this.column}11;`;
-    str += `node${this.line}${
-      this.column
-    }11[label="${this.condition.graph()}"];`;
-    str += `node${this.line}${this.column} -> node${this.line}${this.column}2;`;
-    str += `node${this.line}${this.column}2[label="Body"];`;
-    this.body.forEach((statement, i) => {
-      str += `node${this.line}${this.column}2 -> node${this.line}${this.column}2${i};`;
-      str += `node${this.line}${this.column}2${i}[label="Statement"];`;
+    let str: string = `node${this.uuid} [label="DoWhile"];\n`;
+    str += `node${this.uuid} -> node${this.condition.uuid};\n`;
+    str += this.condition.graph();
+    this.body.forEach((statement) => {
+      str += `node${this.uuid} -> node${statement.uuid};\n`;
       str += statement.graph();
     });
     return str;

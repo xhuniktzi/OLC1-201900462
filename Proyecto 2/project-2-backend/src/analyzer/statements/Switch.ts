@@ -1,3 +1,4 @@
+import { Guid } from "typescript-guid";
 import { IExpression } from "../abstract/IExpression";
 import { IStatement } from "../abstract/IStatement";
 import { RelationalOp } from "../enums/EnumRelational";
@@ -15,27 +16,21 @@ export class Switch implements IStatement {
     public line: number,
     public column: number
   ) {}
+
+  uuid: Guid = Guid.create(); // Unique identifier
   graph(): string {
-    let str: string = `node${this.line}${this.column}[label="Switch"];`;
-    str += `node${this.line}${this.column} -> node${this.line}${this.column}1;`;
-    str += `node${this.line}${
-      this.column
-    }1[label="${this.condition.graph()}"];`;
+    let str: string = `node${this.uuid} [label="Switch"];\n`;
+    str += `node${this.uuid} -> node${this.condition.uuid};\n`;
+    str += this.condition.graph();
     if (this.cases !== undefined) {
-      str += `node${this.line}${this.column} -> node${this.line}${this.column}2;`;
-      str += `node${this.line}${this.column}2[label="Cases"];`;
-      this.cases.forEach((statement, i) => {
-        str += `node${this.line}${this.column}2 -> node${this.line}${this.column}2${i};`;
-        str += `node${this.line}${this.column}2${i}[label="Statement"];`;
+      this.cases.forEach((statement) => {
+        str += `node${this.uuid} -> node${statement.uuid};\n`;
         str += statement.graph();
       });
     }
     if (this.defaultCase !== undefined) {
-      str += `node${this.line}${this.column} -> node${this.line}${this.column}3;`;
-      str += `node${this.line}${this.column}3[label="Default"];`;
-      this.defaultCase.forEach((statement, i) => {
-        str += `node${this.line}${this.column}3 -> node${this.line}${this.column}3${i};`;
-        str += `node${this.line}${this.column}3${i}[label="Statement"];`;
+      this.defaultCase.forEach((statement) => {
+        str += `node${this.uuid} -> node${statement.uuid};\n`;
         str += statement.graph();
       });
     }

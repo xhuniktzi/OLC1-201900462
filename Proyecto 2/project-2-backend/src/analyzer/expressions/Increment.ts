@@ -1,3 +1,4 @@
+import { Guid } from "typescript-guid";
 import { IExpression } from "../abstract/IExpression";
 import { IReturnEval } from "../abstract/IReturnEval";
 import { IStatement } from "../abstract/IStatement";
@@ -11,24 +12,11 @@ export class Increment implements IExpression, IStatement {
     public line: number,
     public column: number
   ) {}
+
+  uuid: Guid = Guid.create(); // Unique identifier
   graph(): string {
-    let str: string =
-      "node" + this.line + this.column + '[label="Increment"];\n';
-    str +=
-      "node" +
-      this.line +
-      this.column +
-      " -> node" +
-      this.line +
-      this.column +
-      "1;\n";
-    str +=
-      "node" +
-      this.line +
-      this.column +
-      '1[label="' +
-      this.identifier +
-      '"];\n';
+    let str: string = `node${this.uuid} [label="Increment"];\n`;
+    str += `node${this.uuid} -> node${this.uuid}id [label="${this.identifier}"];\n`;
     return str;
   }
 

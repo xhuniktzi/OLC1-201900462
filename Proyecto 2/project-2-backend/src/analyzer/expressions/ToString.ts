@@ -1,7 +1,9 @@
+import { Guid } from "typescript-guid";
 import { IExpression } from "../abstract/IExpression";
 import { IReturnEval } from "../abstract/IReturnEval";
 
 import { Datatype } from "../enums/EnumDatatype";
+import { SemanticErrorEx } from "../exceptions/SemanticErrorEx";
 import { SymbolTable } from "../sym_table/SymbolTable";
 
 export class ToString implements IExpression {
@@ -10,12 +12,12 @@ export class ToString implements IExpression {
     public line: number,
     public column: number
   ) {}
+
+  uuid: Guid = Guid.create(); // Unique identifier
   graph(): string {
-    let str: string = `node${this.expr}${this.line}${this.column}[label="ToString"];`;
-    str += `node${this.expr}${this.line}${this.column} -> node${this.expr}${this.line}${this.column}1;`;
-    str += `node${this.expr}${this.line}${
-      this.column
-    }1[label="${this.expr.graph()}"];`;
+    let str: string = `node${this.uuid} [label="ToString"];\n`;
+    str += `node${this.uuid} -> node${this.expr.uuid};\n`;
+    str += this.expr.graph();
     return str;
   }
 
@@ -26,8 +28,10 @@ export class ToString implements IExpression {
       eval_value!.type === Datatype.STRING ||
       eval_value!.type === Datatype.CHAR
     ) {
-      throw new Error(
-        "Semantic error: The function toString expects a string or a boolean"
+      throw new SemanticErrorEx(
+        "Semantic error: The function toString expects a string or a boolean",
+        this.line,
+        this.column
       );
     } else {
       return {

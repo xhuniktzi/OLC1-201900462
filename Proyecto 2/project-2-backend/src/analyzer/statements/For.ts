@@ -1,3 +1,4 @@
+import { Guid } from "typescript-guid";
 import { IExpression } from "../abstract/IExpression";
 import { IStatement } from "../abstract/IStatement";
 import { BreakLoopEx } from "../exceptions/BreakLoopEx";
@@ -17,28 +18,18 @@ export class For implements IStatement {
     public line: number,
     public column: number
   ) {}
+
+  uuid: Guid = Guid.create(); // Unique identifier
   graph(): string {
-    let str: string = `node${this.line}${this.column}[label="For"];`;
-    str += `node${this.line}${this.column} -> node${this.line}${this.column}1;`;
-    str += `node${this.line}${this.column}1[label="Init"];`;
+    let str: string = `node${this.uuid} [label="For"];\n`;
+    str += `node${this.uuid} -> node${this.init.uuid};\n`;
     str += this.init.graph();
-    str += `node${this.line}${this.column} -> node${this.line}${this.column}2;`;
-    str += `node${this.line}${this.column}2[label="Condition"];`;
-    str += `node${this.line}${this.column}2 -> node${this.line}${this.column}21;`;
-    str += `node${this.line}${
-      this.column
-    }21[label="${this.condition.graph()}"];`;
-    str += `node${this.line}${this.column} -> node${this.line}${this.column}3;`;
-    str += `node${this.line}${this.column}3[label="Increment"];`;
-    str += `node${this.line}${this.column}3 -> node${this.line}${this.column}31;`;
-    str += `node${this.line}${
-      this.column
-    }31[label="${this.increment.graph()}"];`;
-    str += `node${this.line}${this.column} -> node${this.line}${this.column}4;`;
-    str += `node${this.line}${this.column}4[label="Body"];`;
-    this.body.forEach((statement, i) => {
-      str += `node${this.line}${this.column}4 -> node${this.line}${this.column}4${i};`;
-      str += `node${this.line}${this.column}4${i}[label="Statement"];`;
+    str += `node${this.uuid} -> node${this.condition.uuid};\n`;
+    str += this.condition.graph();
+    str += `node${this.uuid} -> node${this.increment.uuid};\n`;
+    str += this.increment.graph();
+    this.body.forEach((statement) => {
+      str += `node${this.uuid} -> node${statement.uuid};\n`;
       str += statement.graph();
     });
     return str;

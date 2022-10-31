@@ -1,6 +1,8 @@
+import { Guid } from "typescript-guid";
 import { IExpression } from "../abstract/IExpression";
 import { IReturnEval } from "../abstract/IReturnEval";
 import { Datatype } from "../enums/EnumDatatype";
+import { SemanticErrorEx } from "../exceptions/SemanticErrorEx";
 import { SymbolTable } from "../sym_table/SymbolTable";
 
 export class Ternary implements IExpression {
@@ -11,27 +13,27 @@ export class Ternary implements IExpression {
     public line: number,
     public column: number
   ) {}
+
+  uuid: Guid = Guid.create(); // Unique identifier
   graph(): string {
-    let str: string = `node${this.condition}${this.line}${this.column}[label="Ternary"];`;
-    str += `node${this.condition}${this.line}${this.column} -> node${this.condition}${this.line}${this.column}1;`;
-    str += `node${this.condition}${this.line}${
-      this.column
-    }1[label="${this.condition.graph()}"];`;
-    str += `node${this.condition}${this.line}${this.column} -> node${this.condition}${this.line}${this.column}2;`;
-    str += `node${this.condition}${this.line}${
-      this.column
-    }2[label="${this.trueExpression.graph()}"];`;
-    str += `node${this.condition}${this.line}${this.column} -> node${this.condition}${this.line}${this.column}3;`;
-    str += `node${this.condition}${this.line}${
-      this.column
-    }3[label="${this.falseExpression.graph()}"];`;
+    let str: string = `node${this.uuid} [label="Ternary"];\n`;
+    str += `node${this.uuid} -> node${this.condition.uuid};\n`;
+    str += `node${this.uuid} -> node${this.trueExpression.uuid};\n`;
+    str += `node${this.uuid} -> node${this.falseExpression.uuid};\n`;
+    str += this.condition.graph();
+    str += this.trueExpression.graph();
+    str += this.falseExpression.graph();
     return str;
   }
 
   evaluate(sym_table: SymbolTable): IReturnEval {
     const condition = this.condition.evaluate(sym_table);
     if (condition!.type !== Datatype.BOOLEAN) {
-      throw new Error("Ternary condition! must be boolean");
+      throw new SemanticErrorEx(
+        "Ternary condition! must be boolean",
+        this.line,
+        this.column
+      );
     }
 
     if (condition!.value) {

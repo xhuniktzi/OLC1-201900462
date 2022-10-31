@@ -1,3 +1,4 @@
+import { Guid } from "typescript-guid";
 import { IExpression } from "../abstract/IExpression";
 import { IReturnEval } from "../abstract/IReturnEval";
 import { IStatement } from "../abstract/IStatement";
@@ -13,16 +14,12 @@ export class Declaration implements IStatement {
     public line: number,
     public column: number
   ) {}
+
+  uuid: Guid = Guid.create(); // Unique identifier
   graph(): string {
-    let str: string = `node${this.line}${this.column}[label="Declaration"];`;
-    str += `node${this.line}${this.column} -> node${this.line}${this.column}1;`;
-    str += `node${this.line}${this.column}1[label="${this.type}"];`;
-    str += `node${this.line}${this.column} -> node${this.line}${this.column}2;`;
-    str += `node${this.line}${this.column}2[label="${this.ids.join(",")}"];`;
-    if (this.value) {
-      str += `node${this.line}${this.column} -> node${this.line}${this.column}3;`;
-      str += `node${this.line}${this.column}3[label="${this.value.graph()}"];`;
-    }
+    let str: string = `node${this.uuid} [label="Declaration"];\n`;
+    str += `node${this.uuid} -> node${this.value!.uuid};\n`;
+    str += this.value!.graph();
     return str;
   }
 

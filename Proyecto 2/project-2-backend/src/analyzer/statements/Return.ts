@@ -1,3 +1,4 @@
+import { Guid } from "typescript-guid";
 import { IExpression } from "../abstract/IExpression";
 import { IStatement } from "../abstract/IStatement";
 import { ReturnEx } from "../exceptions/ReturnEx";
@@ -9,12 +10,12 @@ export class Return implements IStatement {
     public line: number,
     public column: number
   ) {}
+
+  uuid: Guid = Guid.create(); // Unique identifier
   graph(): string {
-    let str: string = `node${this.line}${this.column}[label="Return"];`;
-    str += `node${this.line}${this.column} -> node${this.line}${this.column}1;`;
-    str += `node${this.line}${
-      this.column
-    }1[label="${this.expression.graph()}"];`;
+    let str: string = `node${this.uuid} [label="Return"];\n`;
+    str += `node${this.uuid} -> node${this.expression.uuid};\n`;
+    str += this.expression.graph();
     return str;
   }
 

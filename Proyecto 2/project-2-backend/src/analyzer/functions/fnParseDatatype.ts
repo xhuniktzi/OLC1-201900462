@@ -2,7 +2,7 @@ import { Datatype } from "../enums/EnumDatatype";
 import { SemanticErrorEx } from "../exceptions/SemanticErrorEx";
 
 const fnParseDatatype = (datatype: string): Datatype => {
-  switch (datatype) {
+  switch (datatype.toLowerCase()) {
     case "int":
       return Datatype.INT;
     case "double":

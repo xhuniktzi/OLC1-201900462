@@ -1,3 +1,4 @@
+import { Guid } from "typescript-guid";
 import { IExpression } from "../abstract/IExpression";
 import { IReturnEval } from "../abstract/IReturnEval";
 import { RelationalOp } from "../enums/EnumRelational";
@@ -13,18 +14,19 @@ export class Relational implements IExpression {
     public line: number,
     public column: number
   ) {}
+
+  uuid: Guid = Guid.create(); // Unique identifier
   graph(): string {
-    let str: string = `node${this.left}${this.line}${this.column}[label="Relational"];`;
-    str += `node${this.left}${this.line}${this.column} -> node${this.left}${this.line}${this.column}1;`;
-    str += `node${this.left}${this.line}${
-      this.column
-    }1[label="${this.left.graph()}"];`;
-    str += `node${this.left}${this.line}${this.column} -> node${this.left}${this.line}${this.column}2;`;
-    str += `node${this.left}${this.line}${this.column}2[label="${this.operator}"];`;
-    str += `node${this.left}${this.line}${this.column} -> node${this.left}${this.line}${this.column}3;`;
-    str += `node${this.left}${this.line}${
-      this.column
-    }3[label="${this.right.graph()}"];`;
+    let str: string = `node${this.uuid} [label="Relational"];\n`;
+
+    str += `node${this.uuid} -> node${this.left.uuid};\n`;
+    str += this.left.graph();
+
+    str += `node${this.uuid} -> node${this.uuid}op [label="${this.operator}"];\n`;
+
+    str += `node${this.uuid} -> node${this.right.uuid};\n`;
+    str += this.right.graph();
+
     return str;
   }
 

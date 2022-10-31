@@ -1,3 +1,4 @@
+import { Guid } from "typescript-guid";
 import { IExpression } from "../abstract/IExpression";
 import { IStatement } from "../abstract/IStatement";
 import { SemanticErrorEx } from "../exceptions/SemanticErrorEx";
@@ -10,52 +11,11 @@ export class Run implements IStatement {
     public line: number,
     public column: number
   ) {}
+
+  uuid: Guid = Guid.create(); // Unique identifier
   graph(): string {
-    let str: string = "node" + this.line + this.column + '[label="Run"];\n';
-    str +=
-      "node" +
-      this.line +
-      this.column +
-      " -> node" +
-      this.line +
-      this.column +
-      "1;\n";
-    str += "node" + this.line + this.column + '1[label="' + this.id + '"];\n';
-    if (this.args !== undefined) {
-      str +=
-        "node" +
-        this.line +
-        this.column +
-        " -> node" +
-        this.line +
-        this.column +
-        "2;\n";
-      str += "node" + this.line + this.column + '2[label="Args"];\n';
-      this.args.forEach((arg, i) => {
-        str +=
-          "node" +
-          this.line +
-          this.column +
-          "2 -> node" +
-          this.line +
-          this.column +
-          "2" +
-          i +
-          ";\n";
-        str += "node" + this.line + this.column + "2" + i + '[label="Arg"];\n';
-        str += arg.graph();
-      });
-    } else {
-      str +=
-        "node" +
-        this.line +
-        this.column +
-        " -> node" +
-        this.line +
-        this.column +
-        "2;\n";
-      str += "node" + this.line + this.column + '2[label="Args"];\n';
-    }
+    let str: string = `node${this.uuid} [label="Run"];\n`;
+    str += `node${this.uuid} -> node${this.id};\n`;
     return str;
   }
 

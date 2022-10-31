@@ -1,6 +1,8 @@
+import { Guid } from "typescript-guid";
 import { IExpression } from "../abstract/IExpression";
 import { IReturnEval } from "../abstract/IReturnEval";
 import { Datatype } from "../enums/EnumDatatype";
+import { SemanticErrorEx } from "../exceptions/SemanticErrorEx";
 import fnSemanticCast from "../functions/fnSemanticCast";
 import { SymbolTable } from "../sym_table/SymbolTable";
 
@@ -11,16 +13,18 @@ export class Cast implements IExpression {
     public line: number,
     public column: number
   ) {}
+
+  uuid: Guid = Guid.create(); // Unique identifier
   graph(): string {
-    let str: string = `node${this.value}${this.line}${this.column}[label="Cast"];`;
-    str += `node${this.value}${this.line}${this.column} -> node${this.value}${this.line}${this.column}1;`;
-    str += `node${this.value}${this.line}${
-      this.column
-    }1[label="${this.value.graph()}"];`;
-    str += `node${this.value}${this.line}${this.column} -> node${this.value}${this.line}${this.column}2;`;
-    str += `node${this.value}${this.line}${this.column}2[label="${this.type}"];`;
+    let str: string = `node${this.uuid} [label="Cast"];\n`;
+
+    str += `node${this.uuid} -> node${this.uuid}type [label="${this.type}"];\n`;
+
+    str += `node${this.uuid} -> node${this.value.uuid};\n`;
+    str += this.value.graph();
     return str;
   }
+
   evaluate(sym_table: SymbolTable): IReturnEval {
     const expr = this.value.evaluate(sym_table);
 
@@ -53,7 +57,11 @@ export class Cast implements IExpression {
           };
       }
     } else {
-      throw new Error(`Cannot cast ${expr!.type} to ${this.type}`);
+      throw new SemanticErrorEx(
+        `Cannot cast ${expr!.type} to ${this.type}`,
+        this.line,
+        this.column
+      );
     }
   }
 }

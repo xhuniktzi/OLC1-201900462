@@ -1,3 +1,4 @@
+import { Guid } from "typescript-guid";
 import { IExpression } from "../abstract/IExpression";
 import { IReturnEval } from "../abstract/IReturnEval";
 import { Datatype } from "../enums/EnumDatatype";
@@ -9,12 +10,12 @@ export class Round implements IExpression {
     public line: number,
     public column: number
   ) {}
+
+  uuid: Guid = Guid.create(); // Unique identifier
   graph(): string {
-    let str: string = `node${this.value}${this.line}${this.column}[label="Round"];`;
-    str += `node${this.value}${this.line}${this.column} -> node${this.value}${this.line}${this.column}1;`;
-    str += `node${this.value}${this.line}${
-      this.column
-    }1[label="${this.value.graph()}"];`;
+    let str: string = `node${this.uuid} [label="Round"];\n`;
+    str += `node${this.uuid} -> node${this.value.uuid};\n`;
+    str += this.value.graph();
     return str;
   }
 

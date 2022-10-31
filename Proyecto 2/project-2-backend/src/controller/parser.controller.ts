@@ -8,6 +8,7 @@ import { SemanticErrorEx } from "../analyzer/exceptions/SemanticErrorEx";
 import { LexicalErrorEx } from "../analyzer/exceptions/LexicalErrorEx";
 import { SyntaxErrorEx } from "../analyzer/exceptions/SyntaxErrorEx";
 import { Global } from "../analyzer/sym_table/Global";
+import { Run } from "../analyzer/statements/Run";
 
 const parser = (req: Request, res: Response) => {
   Global.clearTable(); // Clear the symbol table before parsing the new code
@@ -31,14 +32,21 @@ const parser = (req: Request, res: Response) => {
       else if (statement instanceof FunctionDef) statement.execute(table);
     });
 
-    ast.forEach((statement) => {
-      if (!(statement instanceof Method) && !(statement instanceof FunctionDef))
-        statement.execute(table);
-    });
+    ast.find((statement) => statement instanceof Run)?.execute(table); // Execute the main method
 
     const cout = table.printConsole();
 
-    const graph = ast.map((statement) => statement.graph()).join("");
+    const graph = `digraph G {
+      rootNode [label=\"Raiz\"];\n
+      node[shape=\"rectangle\"];\n
+      splines=polyline;\n
+      concentrate=true;\n
+      ${ast
+        .map((statement) => {
+          return `rootNode -> node${statement.uuid};\n${statement.graph()}`;
+        })
+        .join("\n")} \n
+    }`;
     res.status(200).json({
       cout,
       table: Global.getTable(),

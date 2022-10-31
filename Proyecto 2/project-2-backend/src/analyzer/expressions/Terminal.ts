@@ -1,3 +1,4 @@
+import { Guid } from "typescript-guid";
 import { IExpression } from "../abstract/IExpression";
 import { IReturnEval } from "../abstract/IReturnEval";
 import { Datatype } from "../enums/EnumDatatype";
@@ -11,8 +12,10 @@ export class Terminal implements IExpression {
     public line: number,
     public column: number
   ) {}
+
+  uuid: Guid = Guid.create(); // Unique identifier
   graph(): string {
-    let str: string = `node${this.value}${this.line}${this.column}[label="${this.value}"];`;
+    let str: string = `node${this.uuid} [label="${this.value}"];\n`;
     return str;
   }
 

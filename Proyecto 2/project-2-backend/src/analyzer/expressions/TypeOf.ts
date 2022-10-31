@@ -1,3 +1,4 @@
+import { Guid } from "typescript-guid";
 import { IExpression } from "../abstract/IExpression";
 import { IReturnEval } from "../abstract/IReturnEval";
 import { Datatype } from "../enums/EnumDatatype";
@@ -9,12 +10,15 @@ export class TypeOf implements IExpression {
     public line: number,
     public column: number
   ) {}
+
+  uuid: Guid = Guid.create(); // Unique identifier
   graph(): string {
-    let str: string = `node${this.line}${this.column}[label="TypeOf"];`;
-    str += `node${this.line}${this.column} -> node${this.line}${this.column}1;`;
-    str += `node${this.line}${this.column}1[label="${this.value.graph()}"];`;
+    let str: string = `node${this.uuid} [label="TypeOf"];\n`;
+    str += `node${this.uuid} -> node${this.value.uuid};\n`;
+    str += this.value.graph();
     return str;
   }
+
   evaluate(sym_table: SymbolTable): IReturnEval | undefined {
     const eval_value = this.value.evaluate(sym_table);
     switch (eval_value!.type) {

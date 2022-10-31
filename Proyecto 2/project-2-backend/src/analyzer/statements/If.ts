@@ -1,3 +1,4 @@
+import { Guid } from "typescript-guid";
 import { IExpression } from "../abstract/IExpression";
 import { IStatement } from "../abstract/IStatement";
 import { Datatype } from "../enums/EnumDatatype";
@@ -14,34 +15,25 @@ export class If implements IStatement {
     public line: number,
     public column: number
   ) {}
+
+  uuid: Guid = Guid.create(); // Unique identifier
   graph(): string {
-    let str: string = `node${this.line}${this.column}[label="If"];`;
-    str += `node${this.line}${this.column} -> node${this.line}${this.column}1;`;
-    str += `node${this.line}${
-      this.column
-    }1[label="${this.condition.graph()}"];`;
-    str += `node${this.line}${this.column} -> node${this.line}${this.column}2;`;
-    str += `node${this.line}${this.column}2[label="If Body"];`;
-    this.if_body.forEach((statement, i) => {
-      str += `node${this.line}${this.column}2 -> node${this.line}${this.column}2${i};`;
-      str += `node${this.line}${this.column}2${i}[label="Statement"];`;
+    let str: string = `node${this.uuid} [label="If"];\n`;
+    str += `node${this.uuid} -> node${this.condition.uuid};\n`;
+    str += this.condition.graph();
+    this.if_body.forEach((statement) => {
+      str += `node${this.uuid} -> node${statement.uuid};\n`;
       str += statement.graph();
     });
     if (this.elifs !== undefined) {
-      str += `node${this.line}${this.column} -> node${this.line}${this.column}3;`;
-      str += `node${this.line}${this.column}3[label="Elifs"];`;
-      this.elifs.forEach((elif, i) => {
-        str += `node${this.line}${this.column}3 -> node${this.line}${this.column}3${i};`;
-        str += `node${this.line}${this.column}3${i}[label="Elif"];`;
+      this.elifs.forEach((elif) => {
+        str += `node${this.uuid} -> node${elif.uuid};\n`;
         str += elif.graph();
       });
     }
     if (this.else_body !== undefined) {
-      str += `node${this.line}${this.column} -> node${this.line}${this.column}4;`;
-      str += `node${this.line}${this.column}4[label="Else Body"];`;
-      this.else_body.forEach((statement, i) => {
-        str += `node${this.line}${this.column}4 -> node${this.line}${this.column}4${i};`;
-        str += `node${this.line}${this.column}4${i}[label="Statement"];`;
+      this.else_body.forEach((statement) => {
+        str += `node${this.uuid} -> node${statement.uuid};\n`;
         str += statement.graph();
       });
     }
