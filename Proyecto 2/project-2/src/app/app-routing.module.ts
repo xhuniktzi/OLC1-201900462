@@ -7,6 +7,11 @@ const routes: Routes = [
     loadChildren: () =>
       import('./interpeter/interpeter.module').then((m) => m.InterpeterModule),
   },
+  {
+    path: 'analyzer',
+    loadChildren: () =>
+      import('./analyzer/analyzer.module').then((m) => m.AnalyzerModule),
+  },
 ];
 
 @NgModule({
