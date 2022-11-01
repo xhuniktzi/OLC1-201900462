@@ -155,7 +155,7 @@ True|False return 'LOGICAL';
 'round' return 'ROUND';
 'length' return 'LENGTH';
 'typeof' return 'TYPEOF';
-'tosting' return 'TOSTRING';
+'tostring' return 'TOSTRING';
 'tochararray' return 'TOCHARARRAY';
 'push' return 'PUSH';
 'pop' return 'POP';
@@ -401,15 +401,3 @@ tostring_st: TOSTRING OPEN_PARENTHESIS expr CLOSE_PARENTHESIS { $$ = new ToStrin
 // run
 run_st: RUN IDENTIFIER OPEN_PARENTHESIS list_expr CLOSE_PARENTHESIS { $$ = new Run($2, $4, @1.first_line, @1.first_column); }
     | RUN IDENTIFIER OPEN_PARENTHESIS CLOSE_PARENTHESIS { $$ = new Run($2, undefined, @1.first_line, @1.first_column); };
-
-// // tochararray
-// tochararray_st: TOCHARARRAY OPEN_PARENTHESIS expr CLOSE_PARENTHESIS { $$ = new ToCharArray($3); };
-
-// push
-// push_st: PUSH OPEN_PARENTHESIS expr COMMA expr CLOSE_PARENTHESIS { $$ = new Push($3, $5); };
-
-// // pop
-// pop_st: POP OPEN_PARENTHESIS expr CLOSE_PARENTHESIS { $$ = new Pop($3); };
-
-// // length
-// length_st: LENGTH OPEN_PARENTHESIS expr CLOSE_PARENTHESIS { $$ = new Length($3); };

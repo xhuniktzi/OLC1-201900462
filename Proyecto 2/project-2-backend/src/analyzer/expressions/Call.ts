@@ -36,9 +36,25 @@ export class Call implements IExpression, IStatement {
         this.line,
         this.column
       );
-    } else if (func.params!.length !== this.args!.length) {
+    }
+
+    if (func.params !== undefined && this.args !== undefined) {
+      if (func.params.length !== this.args!.length) {
+        throw new SemanticErrorEx(
+          `Function ${this.id} expects ${func.params.length} arguments`,
+          this.line,
+          this.column
+        );
+      }
+    } else if (func.params !== undefined && this.args === undefined) {
       throw new SemanticErrorEx(
-        `Function ${this.id} expects ${func.params!.length} arguments`,
+        `Function ${this.id} expects ${func.params.length} arguments`,
+        this.line,
+        this.column
+      );
+    } else if (func.params === undefined && this.args !== undefined) {
+      throw new SemanticErrorEx(
+        `Function ${this.id} expects 0 arguments`,
         this.line,
         this.column
       );
@@ -46,45 +62,26 @@ export class Call implements IExpression, IStatement {
 
     try {
       const func_table = new SymbolTable(sym_table, "call function " + this.id);
+
       if (this.args !== undefined) {
-        func!.params!.forEach((param, i) => {
+        this.args.forEach((arg, index) => {
+          const value = arg.evaluate(sym_table);
           func_table.addSymbol({
-            id: param.id,
-            value: this.args![i].evaluate(func_table)!.value,
             column: this.column,
+            datatype: func!.params![index].datatype,
+            id: func!.params![index].id,
             line: this.line,
-            datatype: param.datatype,
+            value: value!.value,
           });
         });
-      } else {
-        throw new SemanticErrorEx(
-          "The function " +
-            this.id +
-            " requires " +
-            func!.params!.length +
-            " parameters",
-          this.line,
-          this.column
-        );
       }
+
       func!.body.forEach((statement) => {
         statement.execute(func_table);
       });
-    } catch (error: unknown) {
+    } catch (error) {
       if (error instanceof ReturnEx) {
-        const eval_value = error.value;
-        if (eval_value.type !== func!.datatype) {
-          throw new SemanticErrorEx(
-            "The function " +
-              this.id +
-              " returns " +
-              func!.datatype +
-              " but the return value is " +
-              eval_value.type,
-            this.line,
-            this.column
-          );
-        }
+        return;
       } else {
         throw error;
       }
@@ -100,9 +97,25 @@ export class Call implements IExpression, IStatement {
         this.line,
         this.column
       );
-    } else if (func.params!.length !== this.args!.length) {
+    }
+
+    if (func.params !== undefined && this.args !== undefined) {
+      if (func.params.length !== this.args!.length) {
+        throw new SemanticErrorEx(
+          `Function ${this.id} expects ${func.params.length} arguments`,
+          this.line,
+          this.column
+        );
+      }
+    } else if (func.params !== undefined && this.args === undefined) {
       throw new SemanticErrorEx(
-        `Function ${this.id} expects ${func.params!.length} arguments`,
+        `Function ${this.id} expects ${func.params.length} arguments`,
+        this.line,
+        this.column
+      );
+    } else if (func.params === undefined && this.args !== undefined) {
+      throw new SemanticErrorEx(
+        `Function ${this.id} expects 0 arguments`,
         this.line,
         this.column
       );
@@ -110,47 +123,26 @@ export class Call implements IExpression, IStatement {
 
     try {
       const func_table = new SymbolTable(sym_table, "call function " + this.id);
+
       if (this.args !== undefined) {
-        func!.params!.forEach((param, i) => {
+        this.args.forEach((arg, index) => {
+          const value = arg.evaluate(sym_table);
           func_table.addSymbol({
-            id: param.id,
-            value: this.args![i].evaluate(func_table)!.value,
             column: this.column,
+            datatype: func!.params![index].datatype,
+            id: func!.params![index].id,
             line: this.line,
-            datatype: param.datatype,
+            value: value!.value,
           });
         });
-      } else {
-        throw new SemanticErrorEx(
-          "The function " +
-            this.id +
-            " requires " +
-            func!.params!.length +
-            " parameters",
-          this.line,
-          this.column
-        );
       }
+
       func!.body.forEach((statement) => {
         statement.execute(func_table);
       });
-    } catch (error: unknown) {
+    } catch (error) {
       if (error instanceof ReturnEx) {
-        const eval_value = error.value;
-        if (eval_value.type !== func!.datatype) {
-          throw new SemanticErrorEx(
-            "The function " +
-              this.id +
-              " returns " +
-              func!.datatype +
-              " but the return value is " +
-              eval_value.type,
-            this.line,
-            this.column
-          );
-        } else {
-          return eval_value;
-        }
+        return error.value;
       } else {
         throw error;
       }
