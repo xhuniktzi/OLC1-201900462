@@ -18,8 +18,13 @@ export class Declaration implements IStatement {
   uuid: string = Guid.create().toString().replace(/-/gm, ""); // Unique identifier
   graph(): string {
     let str: string = `node${this.uuid} [label="Declaration"];\n`;
-    str += `node${this.uuid} -> node${this.value!.uuid};\n`;
-    str += this.value!.graph();
+    this.ids.forEach((id, i) => {
+      str += `node${this.uuid} -> node${this.uuid}${i};\n node${this.uuid}${i}[label="${id}"];\n`;
+    });
+    if (this.value !== undefined) {
+      str += `node${this.uuid} -> node${this.value!.uuid};\n`;
+      str += this.value!.graph();
+    }
     return str;
   }
 

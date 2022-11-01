@@ -17,8 +17,16 @@ export class DeclareArrayOne implements IStatement {
   uuid: string = Guid.create().toString().replace(/-/gm, ""); // Unique identifier
   graph(): string {
     let str: string = `node${this.uuid} [label="DeclareArrayOne"];\n`;
-    str += `node${this.uuid} -> node${this.size!.uuid};\n`; // TODO: Check this
-    str += this.size!.graph(); // TODO: Check this
+    if (this.size !== undefined) {
+      str += `node${this.uuid} -> node${this.size!.uuid};\n`;
+      str += this.size!.graph();
+    }
+    if (this.list_expr !== undefined) {
+      this.list_expr.forEach((expr) => {
+        str += `node${this.uuid} -> node${expr.uuid};\n`;
+        str += expr.graph();
+      });
+    }
     return str;
   }
 

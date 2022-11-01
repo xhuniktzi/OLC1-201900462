@@ -19,6 +19,7 @@ export class FunctionDef implements ICallable {
   graph(): string {
     let str: string = `node${this.uuid} [label="FunctionDef"];\n`;
     str += `node${this.uuid} -> node${this.uuid}id;\n node${this.uuid}id[label="${this.id}"];\n`;
+
     this.body.forEach((statement) => {
       str += `node${this.uuid} -> node${statement.uuid};\n`;
       str += statement.graph();

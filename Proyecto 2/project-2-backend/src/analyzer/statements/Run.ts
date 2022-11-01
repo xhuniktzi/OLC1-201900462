@@ -16,6 +16,12 @@ export class Run implements IStatement {
   graph(): string {
     let str: string = `node${this.uuid} [label="Run"];\n`;
     str += `node${this.uuid} ->  node${this.uuid}id;\n node${this.uuid}id[label="${this.id}"];\n`;
+    if (this.args !== undefined) {
+      this.args.forEach((arg) => {
+        str += `node${this.uuid} -> node${arg.uuid};\n`;
+        str += arg.graph();
+      });
+    }
     return str;
   }
 

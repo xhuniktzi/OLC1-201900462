@@ -18,8 +18,10 @@ export class Assign implements IStatement {
     this.ids.forEach((id, i) => {
       str += `node${this.uuid} -> node${this.uuid}${i};\n node${this.uuid}${i}[label="${id}"];\n`;
     });
-    str += `node${this.uuid} -> node${this.value!.uuid};\n`;
-    str += this.value!.graph();
+    if (this.value !== undefined) {
+      str += `node${this.uuid} -> node${this.value!.uuid};\n`;
+      str += this.value!.graph();
+    }
     return str;
   }
 

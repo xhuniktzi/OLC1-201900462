@@ -18,10 +18,24 @@ export class DeclareArrayTwo implements IStatement {
   uuid: string = Guid.create().toString().replace(/-/gm, ""); // Unique identifier
   graph(): string {
     let str: string = `node${this.uuid} [label="DeclareArrayTwo"];\n`;
-    str += `node${this.uuid} -> node${this.row!.uuid};\n`; // TODO: Check this
-    str += this.row!.graph(); // TODO: Check this
-    str += `node${this.uuid} -> node${this.col!.uuid};\n`; // TODO: Check this
-    str += this.col!.graph(); // TODO: Check this
+    if (this.row !== undefined) {
+      str += `node${this.uuid} -> node${this.row!.uuid};\n`; // TODO: Check this
+      str += this.row!.graph(); // TODO: Check this
+    }
+    if (this.col !== undefined) {
+      str += `node${this.uuid} -> node${this.col!.uuid};\n`; // TODO: Check this
+      str += this.col!.graph(); // TODO: Check this
+    }
+
+    if (this.list_expr !== undefined) {
+      this.list_expr.forEach((list) => {
+        list.forEach((expr) => {
+          str += `node${this.uuid} -> node${expr.uuid};\n`;
+          str += expr.graph();
+        });
+      });
+    }
+
     return str;
   }
 
