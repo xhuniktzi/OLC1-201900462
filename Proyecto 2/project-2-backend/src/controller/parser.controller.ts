@@ -36,21 +36,9 @@ const parser = (req: Request, res: Response) => {
 
     const cout = table.printConsole();
 
-    const graph = `digraph G {
-      rootNode [label=\"Raiz\"];\n
-      node[shape=\"rectangle\"];\n
-      splines=polyline;\n
-      concentrate=true;\n
-      ${ast
-        .map((statement) => {
-          return `rootNode -> node${statement.uuid};\n${statement.graph()}`;
-        })
-        .join("\n")} \n
-    }`;
     res.status(200).json({
       cout,
       table: Global.getTable(),
-      graph,
     });
   } catch (error: unknown) {
     if (error instanceof SemanticErrorEx) {
@@ -66,6 +54,7 @@ const parser = (req: Request, res: Response) => {
         cout: error.message,
       });
     } else {
+      console.error(error);
       throw error;
     }
   }

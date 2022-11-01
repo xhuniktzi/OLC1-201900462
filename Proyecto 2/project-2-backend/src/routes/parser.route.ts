@@ -1,10 +1,10 @@
 import { Router } from "express";
 import parser from "../controller/parser.controller";
-// import table from "../controller/table.controller";
+import image from "../controller/image.controller";
 
 const router = Router();
 
 router.post("/parse", parser);
-// router.get("/table", table);
+router.post("/image", image);
 
 export default router;

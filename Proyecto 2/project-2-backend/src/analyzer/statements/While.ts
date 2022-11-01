@@ -26,8 +26,7 @@ export class While implements IStatement {
   }
 
   execute(sym_table: SymbolTable): void {
-    const eval_value = this.condition.evaluate(sym_table);
-    while (Boolean(eval_value!.value)) {
+    while (Boolean(this.condition.evaluate(sym_table)?.value)) {
       try {
         const while_table: SymbolTable = new SymbolTable(sym_table, "while");
         this.body.forEach((statement) => {
