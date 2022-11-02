@@ -142,7 +142,21 @@ export class Call implements IExpression, IStatement {
       });
     } catch (error) {
       if (error instanceof ReturnEx) {
-        return error.value;
+        if (error.value === undefined) {
+          throw new SemanticErrorEx(
+            `Function ${this.id} must return a value`,
+            this.line,
+            this.column
+          );
+        }
+        if (error.value.type === func!.datatype) {
+          return error.value;
+        }
+        throw new SemanticErrorEx(
+          `Function ${this.id} expects return type ${func!.datatype}`,
+          this.line,
+          this.column
+        );
       } else {
         throw error;
       }

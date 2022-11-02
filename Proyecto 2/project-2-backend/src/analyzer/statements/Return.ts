@@ -6,7 +6,7 @@ import { SymbolTable } from "../sym_table/SymbolTable";
 
 export class Return implements IStatement {
   constructor(
-    private expression: IExpression,
+    private expression: IExpression | undefined,
     public line: number,
     public column: number
   ) {}
@@ -14,13 +14,19 @@ export class Return implements IStatement {
   uuid: string = Guid.create().toString().replace(/-/gm, ""); // Unique identifier
   graph(): string {
     let str: string = `node${this.uuid} [label="Return"];\n`;
-    str += `node${this.uuid} -> node${this.expression.uuid};\n`;
-    str += this.expression.graph();
+    if (this.expression !== undefined) {
+      str += `node${this.uuid} -> node${this.expression.uuid};\n`;
+      str += this.expression.graph();
+    }
     return str;
   }
 
   execute(sym_table: SymbolTable): void {
-    const eval_value = this.expression.evaluate(sym_table);
-    throw new ReturnEx(eval_value!);
+    if (this.expression !== undefined) {
+      const value = this.expression.evaluate(sym_table);
+      throw new ReturnEx(value);
+    } else {
+      throw new ReturnEx(undefined);
+    }
   }
 }

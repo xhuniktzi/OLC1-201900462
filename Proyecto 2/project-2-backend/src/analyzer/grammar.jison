@@ -216,7 +216,8 @@ standard_statement: declare_array_1 END_SENTENCE { $$ = $1; }
     | decrement END_SENTENCE { $$ = $1; }
     | BREAK END_SENTENCE { $$ = new BreakLoop(@1.first_line, @1.first_column); }
     | CONTINUE END_SENTENCE { $$ = new ContinueLoop(@1.first_line, @1.first_column); }
-    | RETURN expr END_SENTENCE { $$ = new Return($2, @1.first_line, @1.first_column); };
+    | RETURN expr END_SENTENCE { $$ = new Return($2, @1.first_line, @1.first_column); }
+     | RETURN END_SENTENCE { $$ = new Return(undefined, @1.first_line, @1.first_column); };
 
 
 // expression
