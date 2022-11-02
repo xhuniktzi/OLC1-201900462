@@ -43,42 +43,54 @@ export class Arithmetic implements IExpression {
           left!.type,
           right!.type,
           left!.value,
-          right!.value
+          right!.value,
+          this.line,
+          this.column
         );
       case ArithmeticOp.MINUS:
         return fnSemanticMinus(
           left!.type,
           right!.type,
           left!.value,
-          right!.value
+          right!.value,
+          this.line,
+          this.column
         );
       case ArithmeticOp.PRODUCT:
         return fnSemanticProduct(
           left!.type,
           right!.type,
           left!.value,
-          right!.value
+          right!.value,
+          this.line,
+          this.column
         );
       case ArithmeticOp.DIVISION:
         return fnSemanticDivision(
           left!.type,
           right!.type,
           left!.value,
-          right!.value
+          right!.value,
+          this.line,
+          this.column
         );
       case ArithmeticOp.POWER:
         return fnSemanticPower(
           left!.type,
           right!.type,
           left!.value,
-          right!.value
+          right!.value,
+          this.line,
+          this.column
         );
       case ArithmeticOp.MODULE:
         return fnSemanticModule(
           left!.type,
           right!.type,
           left!.value,
-          right!.value
+          right!.value,
+          this.line,
+          this.column
         );
     }
   }

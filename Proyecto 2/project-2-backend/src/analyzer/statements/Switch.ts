@@ -51,7 +51,9 @@ export class Switch implements IStatement {
               right_op!.type,
               left_op!.value,
               right_op!.value,
-              RelationalOp.EQUAL
+              RelationalOp.EQUAL,
+              this.line,
+              this.column
             )
           ) {
             i = index;

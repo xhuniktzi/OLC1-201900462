@@ -9,7 +9,9 @@ const fnSemanticRelational = (
   right_type: Datatype,
   left_value: string | number | boolean,
   right_value: string | number | boolean,
-  operator: RelationalOp
+  operator: RelationalOp,
+  line: number,
+  column: number
 ): ISemanticResult => {
   const semanticTable = {
     [Datatype.INT]: {
@@ -54,15 +56,11 @@ const fnSemanticRelational = (
   if (type === null) {
     throw new SemanticErrorEx(
       "Cannot compare two booleans or two chars.",
-      undefined,
-      undefined
+      line,
+      column
     );
   } else if (type === Datatype.STRING) {
-    throw new SemanticErrorEx(
-      "Cannot compare two strings.",
-      undefined,
-      undefined
-    );
+    throw new SemanticErrorEx("Cannot compare two strings.", line, column);
   } else {
     switch (operator) {
       case RelationalOp.GREATER_THAN:
@@ -254,11 +252,7 @@ const fnSemanticRelational = (
         const value4 = semanticResult4[left_type][right_type]!;
         return { value: value4, type };
       default:
-        throw new SemanticErrorEx(
-          "Invalid relational operator.",
-          undefined,
-          undefined
-        );
+        throw new SemanticErrorEx("Invalid relational operator.", line, column);
     }
   }
 };

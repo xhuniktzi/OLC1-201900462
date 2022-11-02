@@ -9,7 +9,9 @@ const fnSemanticCompare = (
   right_type: Datatype,
   left_value: string | number | boolean,
   right_value: string | number | boolean,
-  operator: RelationalOp
+  operator: RelationalOp,
+  line: number,
+  column: number
 ): ISemanticResult => {
   const semanticTable = {
     [Datatype.INT]: {
@@ -52,11 +54,7 @@ const fnSemanticCompare = (
   const type: Datatype = semanticTable[left_type][right_type]!;
 
   if (type === null) {
-    throw new SemanticErrorEx(
-      "Cannot compare different types.",
-      undefined,
-      undefined
-    );
+    throw new SemanticErrorEx("Cannot compare different types.", line, column);
   }
 
   switch (operator) {
@@ -148,7 +146,7 @@ const fnSemanticCompare = (
       return { value: value2, type };
 
     default:
-      throw new Error("Invalid operator.");
+      throw new SemanticErrorEx("Invalid operator.", line, column);
   }
 };
 

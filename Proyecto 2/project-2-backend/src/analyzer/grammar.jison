@@ -265,7 +265,7 @@ logical: expr AND expr { $$ = new Logical($1, LogicalOp.AND, $3, @1.first_line, 
 // values
 value: DECIMAL { $$ = new Terminal(Terminals.DECIMAL, Number($1), @1.first_line, @1.first_column); }
     | INTEGER { $$ = new Terminal(Terminals.INTEGER, Number($1), @1.first_line, @1.first_column); }
-    | LOGICAL { $$ = new Terminal(Terminals.LOGICAL, fnParseBoolean($1), @1.first_line, @1.first_column); }
+    | LOGICAL { $$ = new Terminal(Terminals.LOGICAL, fnParseBoolean($1, @1.first_line, @1.first_column), @1.first_line, @1.first_column); }
     | STRING { $$ = new Terminal(Terminals.STRING, $1, @1.first_line, @1.first_column); }
     | CHAR { $$ = new Terminal(Terminals.CHAR, $1, @1.first_line, @1.first_column); }
     | IDENTIFIER { $$ = new Terminal(Terminals.ID, $1, @1.first_line, @1.first_column); };
@@ -277,7 +277,7 @@ ternary: expr TERNARY_IF expr TERNARY_ELSE expr { $$ = new Ternary($1, $3, $5, @
 group: OPEN_PARENTHESIS expr CLOSE_PARENTHESIS { $$ = $2; };
 
 // cast
-cast: OPEN_PARENTHESIS TYPE CLOSE_PARENTHESIS expr { $$ = new Cast(fnParseDatatype($2), $4, @1.first_line, @1.first_column); };
+cast: OPEN_PARENTHESIS TYPE CLOSE_PARENTHESIS expr { $$ = new Cast(fnParseDatatype($2, @1.first_line, @1.first_column), $4, @1.first_line, @1.first_column); };
 
 // increment
 increment: IDENTIFIER INCREMENT { $$ = new Increment($1, @1.first_line, @1.first_column); };
@@ -290,8 +290,8 @@ list_identifiers: list_identifiers COMMA IDENTIFIER { $1.push($3); $$ = $1; }
     | IDENTIFIER { $$ = [$1]; };
 
 // declaration
-declaration: TYPE list_identifiers { $$ = new Declaration(fnParseDatatype($1), $2, undefined, @1.first_line, @1.first_column); }
-    | TYPE list_identifiers ASSIGNMENT expr { $$ = new Declaration(fnParseDatatype($1), $2, $4, @1.first_line, @1.first_column); };
+declaration: TYPE list_identifiers { $$ = new Declaration(fnParseDatatype($1, @1.first_line, @1.first_column), $2, undefined, @1.first_line, @1.first_column); }
+    | TYPE list_identifiers ASSIGNMENT expr { $$ = new Declaration(fnParseDatatype($1, @1.first_line, @1.first_column), $2, $4, @1.first_line, @1.first_column); };
 
 // assign
 assign: list_identifiers ASSIGNMENT expr { $$ = new Assign($1, $3, @1.first_line, @1.first_column); };
@@ -317,12 +317,12 @@ do_while: DO OPEN_BRACE standard_statements CLOSE_BRACE WHILE OPEN_PARENTHESIS e
 do_until: DO OPEN_BRACE standard_statements CLOSE_BRACE UNTIL OPEN_PARENTHESIS expr CLOSE_PARENTHESIS END_SENTENCE { $$ = new DoUntil($7, $3, @1.first_line, @1.first_column); };
 
 // parameters
-parameters: parameters COMMA TYPE IDENTIFIER { $1.push({datatype: fnParseDatatype($3), id: $4}); $$ = $1; }
-    | TYPE IDENTIFIER { $$ = new Array<IParam>(); $$[0] = {datatype: fnParseDatatype($1), id: $2}; };
+parameters: parameters COMMA TYPE IDENTIFIER { $1.push({datatype: fnParseDatatype($3, @1.first_line, @1.first_column), id: $4}); $$ = $1; }
+    | TYPE IDENTIFIER { $$ = new Array<IParam>(); $$[0] = {datatype: fnParseDatatype($1, @1.first_line, @1.first_column), id: $2}; };
 
 // function
-function: IDENTIFIER OPEN_PARENTHESIS parameters CLOSE_PARENTHESIS TERNARY_ELSE TYPE OPEN_BRACE standard_statements CLOSE_BRACE { $$ = new FunctionDef($1, $3, fnParseDatatype($6), $8, @1.first_line, @1.first_column); }
-    | IDENTIFIER OPEN_PARENTHESIS CLOSE_PARENTHESIS  TERNARY_ELSE TYPE OPEN_BRACE standard_statements CLOSE_BRACE { $$ = new FunctionDef($1, undefined, fnParseDatatype($5), $7, @1.first_line, @1.first_column); };
+function: IDENTIFIER OPEN_PARENTHESIS parameters CLOSE_PARENTHESIS TERNARY_ELSE TYPE OPEN_BRACE standard_statements CLOSE_BRACE { $$ = new FunctionDef($1, $3, fnParseDatatype($6, @1.first_line, @1.first_column), $8, @1.first_line, @1.first_column); }
+    | IDENTIFIER OPEN_PARENTHESIS CLOSE_PARENTHESIS  TERNARY_ELSE TYPE OPEN_BRACE standard_statements CLOSE_BRACE { $$ = new FunctionDef($1, undefined, fnParseDatatype($5, @1.first_line, @1.first_column), $7, @1.first_line, @1.first_column); };
 
 // method
 method: IDENTIFIER OPEN_PARENTHESIS parameters CLOSE_PARENTHESIS TERNARY_ELSE VOID OPEN_BRACE standard_statements CLOSE_BRACE { $$ = new Method($1, $3, $8, @1.first_line, @1.first_column); }
@@ -358,8 +358,8 @@ cases: cases CASE expr TERNARY_ELSE standard_statements { $1.push(new Case($3, $
     | CASE expr TERNARY_ELSE standard_statements { $$ = new Array<Case>(); $$[0] = new Case($2, $4,@1.first_line, @1.first_column); };
 
 // declare array one dimension
-declare_array_1: TYPE OPEN_BRACKET CLOSE_BRACKET IDENTIFIER ASSIGNMENT NEW TYPE OPEN_BRACKET expr CLOSE_BRACKET { $$ = new DeclareArrayOne(fnParseDatatype($1), $4, $9, undefined, @1.first_line, @1.first_column); }
-    | TYPE OPEN_BRACKET CLOSE_BRACKET IDENTIFIER ASSIGNMENT OPEN_BRACE list_expr CLOSE_BRACE { $$ = new DeclareArrayOne(fnParseDatatype($1), $4, undefined, $7, @1.first_line, @1.first_column); };
+declare_array_1: TYPE OPEN_BRACKET CLOSE_BRACKET IDENTIFIER ASSIGNMENT NEW TYPE OPEN_BRACKET expr CLOSE_BRACKET { $$ = new DeclareArrayOne(fnParseDatatype($1, @1.first_line, @1.first_column), $4, $9, undefined, @1.first_line, @1.first_column); }
+    | TYPE OPEN_BRACKET CLOSE_BRACKET IDENTIFIER ASSIGNMENT OPEN_BRACE list_expr CLOSE_BRACE { $$ = new DeclareArrayOne(fnParseDatatype($1, @1.first_line, @1.first_column), $4, undefined, $7, @1.first_line, @1.first_column); };
 
 list_expr: list_expr COMMA expr { $1.push($3); $$ = $1; }
     | expr { $$ = new Array<IExpression>(); $$[0] = $1; };
@@ -368,8 +368,8 @@ list_list_expr: list_list_expr COMMA OPEN_BRACE list_expr CLOSE_BRACE { $1.push(
     | OPEN_BRACE list_expr CLOSE_BRACE { $$ = new Array<Array<IExpression>>(); $$[0] = $1; };
 
 // declare array two dimension
-declare_array_2: TYPE OPEN_BRACKET CLOSE_BRACKET OPEN_BRACKET CLOSE_BRACKET IDENTIFIER ASSIGNMENT NEW TYPE OPEN_BRACKET expr CLOSE_BRACKET OPEN_BRACKET expr CLOSE_BRACKET { $$ = new DeclareArrayTwo(fnParseDatatype($1), $6, undefined, $11, $14, @1.first_line, @1.first_column); }
-    | TYPE OPEN_BRACKET CLOSE_BRACKET OPEN_BRACKET CLOSE_BRACKET IDENTIFIER ASSIGNMENT OPEN_BRACE list_list_expr CLOSE_BRACE { $$ = new DeclareArrayTwo(fnParseDatatype($1), $6, $9, undefined, undefined, @1.first_line, @1.first_column); };
+declare_array_2: TYPE OPEN_BRACKET CLOSE_BRACKET OPEN_BRACKET CLOSE_BRACKET IDENTIFIER ASSIGNMENT NEW TYPE OPEN_BRACKET expr CLOSE_BRACKET OPEN_BRACKET expr CLOSE_BRACKET { $$ = new DeclareArrayTwo(fnParseDatatype($1, @1.first_line, @1.first_column), $6, undefined, $11, $14, @1.first_line, @1.first_column); }
+    | TYPE OPEN_BRACKET CLOSE_BRACKET OPEN_BRACKET CLOSE_BRACKET IDENTIFIER ASSIGNMENT OPEN_BRACE list_list_expr CLOSE_BRACE { $$ = new DeclareArrayTwo(fnParseDatatype($1,@1.first_line, @1.first_column), $6, $9, undefined, undefined, @1.first_line, @1.first_column); };
 
 // access array
 access_array: IDENTIFIER OPEN_BRACKET expr CLOSE_BRACKET { $$ = new AccessArray($1, $3, @1.first_line, @1.first_column); };

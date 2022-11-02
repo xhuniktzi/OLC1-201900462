@@ -1,7 +1,11 @@
 import { Datatype } from "../enums/EnumDatatype";
 import { SemanticErrorEx } from "../exceptions/SemanticErrorEx";
 
-const fnParseDatatype = (datatype: string): Datatype => {
+const fnParseDatatype = (
+  datatype: string,
+  line: number,
+  column: number
+): Datatype => {
   switch (datatype.toLowerCase()) {
     case "int":
       return Datatype.INT;
@@ -16,8 +20,8 @@ const fnParseDatatype = (datatype: string): Datatype => {
     default:
       throw new SemanticErrorEx(
         `Datatype ${datatype} not supported`,
-        undefined,
-        undefined
+        line,
+        column
       );
   }
 };

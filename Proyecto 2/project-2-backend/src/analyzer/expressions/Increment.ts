@@ -21,12 +21,17 @@ export class Increment implements IExpression, IStatement {
   }
 
   execute(sym_table: SymbolTable): void {
-    const symbol = sym_table.getSymbol(this.identifier);
+    const symbol = sym_table.getSymbol(this.identifier, this.line, this.column);
     if (
       symbol!.datatype === Datatype.INT ||
       symbol!.datatype === Datatype.DOUBLE
     ) {
-      sym_table.updateSymbol(this.identifier, Number(symbol!.value) + 1);
+      sym_table.updateSymbol(
+        this.identifier,
+        Number(symbol!.value) + 1,
+        this.line,
+        this.column
+      );
     } else {
       throw new SemanticErrorEx(
         "Cannot increment a non numeric value",
@@ -36,12 +41,17 @@ export class Increment implements IExpression, IStatement {
     }
   }
   evaluate(sym_table: SymbolTable): IReturnEval {
-    const symbol = sym_table.getSymbol(this.identifier);
+    const symbol = sym_table.getSymbol(this.identifier, this.line, this.column);
     if (
       symbol!.datatype === Datatype.INT ||
       symbol!.datatype === Datatype.DOUBLE
     ) {
-      sym_table.updateSymbol(this.identifier, Number(symbol!.value) + 1);
+      sym_table.updateSymbol(
+        this.identifier,
+        Number(symbol!.value) + 1,
+        this.line,
+        this.column
+      );
       return {
         value: symbol!.value,
         type: symbol!.datatype,

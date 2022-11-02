@@ -31,7 +31,7 @@ export class Declaration implements IStatement {
   execute(sym_table: SymbolTable): void {
     let eval_value: IReturnEval | undefined;
 
-    if (this.value) {
+    if (this.value !== undefined) {
       eval_value = this.value.evaluate(sym_table);
     } else {
       switch (this.type) {

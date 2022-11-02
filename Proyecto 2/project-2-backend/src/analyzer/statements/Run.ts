@@ -75,6 +75,8 @@ export class Run implements IStatement {
     } catch (error: unknown) {
       if (error instanceof ReturnEx) {
         return;
+      } else {
+        throw error;
       }
     }
   }

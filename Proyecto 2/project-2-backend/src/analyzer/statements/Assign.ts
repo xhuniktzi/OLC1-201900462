@@ -29,10 +29,10 @@ export class Assign implements IStatement {
     const eval_value = this.value!.evaluate(sym_table);
 
     this.ids.forEach((id) => {
-      const symbol = sym_table.getSymbol(id);
+      const symbol = sym_table.getSymbol(id, this.line, this.column);
 
       if (symbol!.datatype === eval_value!.type) {
-        sym_table.updateSymbol(id, eval_value!.value);
+        sym_table.updateSymbol(id, eval_value!.value, this.line, this.column);
       } else {
         throw new SemanticErrorEx("Type mismatch", this.line, this.column);
       }

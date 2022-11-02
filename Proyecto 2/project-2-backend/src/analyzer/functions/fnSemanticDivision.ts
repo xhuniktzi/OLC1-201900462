@@ -8,7 +8,9 @@ const fnSemanticDivision = (
   left_type: Datatype,
   right_type: Datatype,
   left_value: string | number | boolean,
-  right_value: string | number | boolean
+  right_value: string | number | boolean,
+  line: number,
+  column: number
 ): ISemanticResult => {
   const semanticTable = {
     [Datatype.INT]: {
@@ -52,13 +54,13 @@ const fnSemanticDivision = (
   if (type === null) {
     throw new SemanticErrorEx(
       "Cannot divide two booleans or two chars.",
-      undefined,
-      undefined
+      line,
+      column
     );
   }
 
   if (right_value === 0) {
-    throw new SemanticErrorEx("Cannot divide by zero.", undefined, undefined);
+    throw new SemanticErrorEx("Cannot divide by zero.", line, column);
   }
 
   const semanticResult = {

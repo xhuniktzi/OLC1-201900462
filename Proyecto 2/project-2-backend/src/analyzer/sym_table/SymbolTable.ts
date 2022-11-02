@@ -72,22 +72,31 @@ export class SymbolTable {
     this.debugTable();
   }
 
-  public getSymbol(id: string): ISymbol | undefined {
+  public getSymbol(
+    id: string,
+    line: number,
+    column: number
+  ): ISymbol | undefined {
     const result = this.symbols.find((symbol) => symbol.id === id);
 
     if (result === undefined && this.parent !== undefined) {
-      return this.parent.getSymbol(id);
+      return this.parent.getSymbol(id, line, column);
     } else if (result === undefined) {
-      throw new SemanticErrorEx(`Symbol ${id} not found`, undefined, undefined);
+      throw new SemanticErrorEx(`Symbol ${id} not found`, line, column);
     } else {
       return result;
     }
   }
 
-  public updateSymbol(id: string, value: string | boolean | number): void {
+  public updateSymbol(
+    id: string,
+    value: string | boolean | number,
+    line: number,
+    column: number
+  ): void {
     // console.log("[DEBUG]\t", `Updating symbol ${id} = ${value}`);
     this.debugTable();
-    const symbol = this.getSymbol(id);
+    const symbol = this.getSymbol(id, line, column);
 
     if (symbol) {
       symbol.value = value;

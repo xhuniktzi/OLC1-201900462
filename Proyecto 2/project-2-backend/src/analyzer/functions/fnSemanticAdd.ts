@@ -8,7 +8,9 @@ const fnSemanticAdd = (
   left_type: Datatype,
   right_type: Datatype,
   left_value: string | number | boolean,
-  right_value: string | number | boolean
+  right_value: string | number | boolean,
+  line: number,
+  column: number
 ): ISemanticResult => {
   const semanticTable = {
     [Datatype.INT]: {
@@ -52,8 +54,8 @@ const fnSemanticAdd = (
   if (type === null) {
     throw new SemanticErrorEx(
       "Cannot add two booleans or two chars.",
-      undefined,
-      undefined
+      line,
+      column
     );
   }
 

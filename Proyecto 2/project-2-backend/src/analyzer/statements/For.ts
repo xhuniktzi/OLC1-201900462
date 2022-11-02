@@ -48,7 +48,12 @@ export class For implements IStatement {
           this.increment instanceof Decrement
         ) {
           const eval_value = this.increment.evaluate(for_table);
-          for_table.updateSymbol(this.increment.identifier, eval_value.value);
+          for_table.updateSymbol(
+            this.increment.identifier,
+            eval_value.value,
+            this.line,
+            this.column
+          );
         } else {
           this.increment.execute(for_table);
         }

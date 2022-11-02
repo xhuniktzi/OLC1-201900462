@@ -8,7 +8,9 @@ const fnSemanticMinus = (
   left_type: Datatype,
   right_type: Datatype,
   left_value: string | number | boolean,
-  right_value: string | number | boolean
+  right_value: string | number | boolean,
+  line: number,
+  column: number
 ): ISemanticResult => {
   const semanticTable = {
     [Datatype.INT]: {
@@ -52,8 +54,8 @@ const fnSemanticMinus = (
   if (type === null) {
     throw new SemanticErrorEx(
       "Cannot subtract two booleans or two chars.",
-      undefined,
-      undefined
+      line,
+      column
     );
   }
 

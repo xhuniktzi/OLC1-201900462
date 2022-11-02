@@ -32,7 +32,11 @@ export class Terminal implements IExpression {
       case Terminals.LOGICAL:
         return { value: Boolean(this.value), type: Datatype.BOOLEAN };
       case Terminals.ID:
-        const symbol = sym_table.getSymbol(this.value.toString());
+        const symbol = sym_table.getSymbol(
+          this.value.toString(),
+          this.line,
+          this.column
+        );
         switch (symbol!.datatype) {
           case Datatype.INT:
           case Datatype.DOUBLE:

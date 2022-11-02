@@ -42,7 +42,9 @@ export class Relational implements IExpression {
           right!.type,
           left!.value,
           right!.value,
-          this.operator
+          this.operator,
+          this.line,
+          this.column
         );
       case RelationalOp.GREATER_THAN:
       case RelationalOp.GREATER_THAN_EQUAL:
@@ -53,7 +55,9 @@ export class Relational implements IExpression {
           right!.type,
           left!.value,
           right!.value,
-          this.operator
+          this.operator,
+          this.line,
+          this.column
         );
     }
   }
