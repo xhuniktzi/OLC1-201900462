@@ -2,6 +2,28 @@
 <form>
   <div class="row">
     <div class="col-md-6">
+      <input
+        type="file"
+        name="txt-file"
+        id="txt-file"
+        (change)="handleFile($event)"
+      />
+    </div>
+    <div class="col-md-6">
+      <button type="button" class="btn btn-primary" (click)="save()">
+        Guardar
+      </button>
+      <input
+        type="text"
+        name="filename"
+        id="filename"
+        placeholder="nombre de archivo"
+        [(ngModel)]="filename"
+      />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
       <textarea
         name="input-compiler"
         id="input-compiler"

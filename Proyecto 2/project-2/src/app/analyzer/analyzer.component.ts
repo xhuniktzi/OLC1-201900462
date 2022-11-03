@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { graphviz } from 'd3-graphviz';
 import { wasmFolder } from '@hpcc-js/wasm';
 import { ApiService } from '../services/api.service';
+import { from } from 'rxjs';
 
 @Component({
   selector: 'app-analyzer',
@@ -11,9 +12,36 @@ import { ApiService } from '../services/api.service';
 export class AnalyzerComponent implements OnInit {
   input_compiler: string = '';
   output_compiler: string = '';
+  filename: string = '';
   constructor(private api: ApiService) {}
 
   ngOnInit(): void {}
+
+  handleFile(event: any) {
+    const upload = event.target.files[0];
+    from(upload!.text()).subscribe((data) => {
+      this.input_compiler = data as string;
+    });
+  }
+
+  downloadToFile(content: string, filename: string, contentType: string) {
+    const a = document.createElement('a');
+    const file = new Blob([content], { type: contentType });
+
+    a.href = URL.createObjectURL(file);
+    a.download = filename;
+    a.click();
+
+    URL.revokeObjectURL(a.href);
+  }
+
+  save() {
+    this.downloadToFile(
+      this.input_compiler,
+      `${this.filename}.txt`,
+      'text/plain'
+    );
+  }
 
   onClickParser() {
     this.api.getImage({ text: this.input_compiler }).subscribe((data) => {
